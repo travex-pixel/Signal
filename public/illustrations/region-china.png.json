@@ -1,0 +1,9 @@
+{
+  "generator": "scripts/illustrate.py",
+  "method": "procedural watercolour (OpenCV/numpy)",
+  "prompt": "a petrochemical cracker with columns and spheres in coral, watercolour",
+  "size": [
+    720,
+    540
+  ]
+}

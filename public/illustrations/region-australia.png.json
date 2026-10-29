@@ -1,0 +1,9 @@
+{
+  "generator": "scripts/illustrate.py",
+  "method": "procedural watercolour (OpenCV/numpy)",
+  "prompt": "a pale navy landmass with a coral harbour mark and inbound pellets, watercolour",
+  "size": [
+    720,
+    540
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "generator": "scripts/illustrate.py",
+  "method": "procedural watercolour (OpenCV/numpy)",
+  "prompt": "a waterfall chart from revenue down to profit, navy coral and cyan, watercolour",
+  "size": [
+    720,
+    540
+  ]
+}

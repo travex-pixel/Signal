@@ -1,0 +1,9 @@
+{
+  "generator": "scripts/illustrate.py",
+  "method": "procedural watercolour (OpenCV/numpy)",
+  "prompt": "a laden container ship in blue with coral containers on a cyan sea, watercolour",
+  "size": [
+    720,
+    540
+  ]
+}

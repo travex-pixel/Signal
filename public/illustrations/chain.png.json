@@ -1,0 +1,9 @@
+{
+  "generator": "scripts/illustrate.py",
+  "method": "procedural watercolour (OpenCV/numpy)",
+  "prompt": "a chain of pellets in coral cyan yellow and blue, watercolour",
+  "size": [
+    720,
+    540
+  ]
+}

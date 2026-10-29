@@ -1,0 +1,9 @@
+{
+  "generator": "scripts/illustrate.py",
+  "method": "procedural watercolour (OpenCV/numpy)",
+  "prompt": "two crossing ribbons in blue and yellow, an exchange rate, watercolour",
+  "size": [
+    720,
+    540
+  ]
+}

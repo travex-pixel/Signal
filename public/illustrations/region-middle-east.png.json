@@ -1,0 +1,9 @@
+{
+  "generator": "scripts/illustrate.py",
+  "method": "procedural watercolour (OpenCV/numpy)",
+  "prompt": "a narrow strait between two yellow landmasses with a single tanker, watercolour",
+  "size": [
+    720,
+    540
+  ]
+}

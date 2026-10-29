@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Reserve Bank of Australia - Media Releases</title>
+  <link href="https://www.rba.gov.au/media-releases/"/>
+  <updated>2026-10-28T05:30:00+11:00</updated>
+  <id>https://www.rba.gov.au/media-releases/</id>
+  <entry>
+    <title>Statement by the Monetary Policy Board: Monetary Policy Decision</title>
+    <link href="https://www.rba.gov.au/media-releases/2026/mr-26-20.html"/>
+    <id>https://www.rba.gov.au/media-releases/2026/mr-26-20.html</id>
+    <updated>2026-10-28T05:30:00+11:00</updated>
+    <summary>At its meeting today, the Board decided to leave the cash rate target unchanged at 3.60 per cent. Inflation has continued to moderate.</summary>
+  </entry>
+</feed>

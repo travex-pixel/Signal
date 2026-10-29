@@ -1,0 +1,9 @@
+{
+  "generator": "scripts/illustrate.py",
+  "method": "procedural watercolour (OpenCV/numpy)",
+  "prompt": "a stack of yellow and coral coins, watercolour",
+  "size": [
+    720,
+    540
+  ]
+}

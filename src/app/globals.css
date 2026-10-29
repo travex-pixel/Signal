@@ -1,0 +1,378 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   SIGNAL design tokens
+   Palette derived from Primaplas's public site (primaplas.com.au):
+   navy #231E4B, coral #EE5F5B, cyan #40C2D5, yellow #FABB14,
+   blue #2062AF, slate #8187A3. Text-safe tints are calibrated for
+   WCAG AA on white; the raw brand hues are reserved for marks, beads,
+   bars and data series.
+   ------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+
+  /* ground + surfaces */
+  --ground: #f4f5f9;
+  --surface: #ffffff;
+  --surface-2: #f9f9fc;
+  --hairline: #e4e6ef;
+  --hairline-strong: #cfd2e0;
+
+  /* ink */
+  --ink: #1c1a33;
+  --ink-2: #4a4d66;
+  --ink-3: #6e7190;
+  --ink-4: #9a9db5;
+
+  /* brand */
+  --navy: #231e4b;
+  --navy-800: #1a1638;
+  --navy-700: #352f66;
+  --navy-200: #c9c6dd;
+  --navy-100: #e8e7f1;
+
+  --coral: #ee5f5b;
+  --coral-text: #c4433f;
+  --coral-100: #fde8e7;
+
+  --cyan: #40c2d5;
+  --cyan-text: #157a8a;
+  --cyan-100: #ddf4f7;
+
+  --yellow: #fabb14;
+  --yellow-text: #7a5a00;
+  --yellow-100: #fef1c8;
+
+  --blue: #2062af;
+  --blue-text: #1c5699;
+  --blue-100: #dce7f6;
+
+  --slate: #8187a3;
+  --slate-text: #5b6180;
+  --slate-100: #e9eaf0;
+
+  /* region hues (mark, text-safe, tint) */
+  --region-sea: var(--cyan);
+  --region-sea-text: var(--cyan-text);
+  --region-sea-100: var(--cyan-100);
+  --region-china: var(--coral);
+  --region-china-text: var(--coral-text);
+  --region-china-100: var(--coral-100);
+  --region-usa: var(--blue);
+  --region-usa-text: var(--blue-text);
+  --region-usa-100: var(--blue-100);
+  --region-middle-east: var(--yellow);
+  --region-middle-east-text: var(--yellow-text);
+  --region-middle-east-100: var(--yellow-100);
+  --region-australia: var(--navy);
+  --region-australia-text: var(--navy);
+  --region-australia-100: var(--navy-100);
+  --region-global: var(--slate);
+  --region-global-text: var(--slate-text);
+  --region-global-100: var(--slate-100);
+
+  /* states */
+  --ok: #1f8a5b;
+  --ok-100: #e1f3ea;
+  --warn: #b7791f;
+  --warn-100: #fbefd6;
+  --danger: #c4433f;
+  --danger-100: #fde8e7;
+
+  /* radii, elevation, motion */
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --shadow-1: 0 1px 2px rgba(35, 30, 75, 0.06), 0 1px 1px rgba(35, 30, 75, 0.03);
+  --shadow-2: 0 2px 6px -1px rgba(35, 30, 75, 0.1), 0 12px 28px -16px rgba(35, 30, 75, 0.28);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast: 150ms;
+  --t-base: 220ms;
+}
+
+@theme inline {
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-ink-4: var(--ink-4);
+  --color-navy: var(--navy);
+  --color-navy-800: var(--navy-800);
+  --color-navy-700: var(--navy-700);
+  --color-navy-200: var(--navy-200);
+  --color-navy-100: var(--navy-100);
+  --color-coral: var(--coral);
+  --color-coral-text: var(--coral-text);
+  --color-coral-100: var(--coral-100);
+  --color-cyan: var(--cyan);
+  --color-cyan-text: var(--cyan-text);
+  --color-cyan-100: var(--cyan-100);
+  --color-yellow: var(--yellow);
+  --color-yellow-text: var(--yellow-text);
+  --color-yellow-100: var(--yellow-100);
+  --color-blue: var(--blue);
+  --color-blue-text: var(--blue-text);
+  --color-blue-100: var(--blue-100);
+  --color-slate: var(--slate);
+  --color-slate-text: var(--slate-text);
+  --color-slate-100: var(--slate-100);
+  --color-ok: var(--ok);
+  --color-ok-100: var(--ok-100);
+  --color-warn: var(--warn);
+  --color-warn-100: var(--warn-100);
+  --color-danger: var(--danger);
+  --color-danger-100: var(--danger-100);
+
+  --font-sans: var(--font-ui), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-reading), Georgia, "Times New Roman", serif;
+
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --shadow-1: var(--shadow-1);
+  --shadow-2: var(--shadow-2);
+
+  --ease-out: var(--ease-out);
+}
+
+/* ------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------ */
+html {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-ui), ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern", "liga", "calt";
+  scrollbar-color: var(--navy-200) transparent;
+  scrollbar-width: thin;
+  accent-color: var(--navy);
+  caret-color: var(--navy);
+}
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--yellow-100);
+  color: var(--navy);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+a {
+  text-underline-offset: 0.16em;
+  text-decoration-thickness: 1px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--navy-200);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* tabular figures for data */
+.tnum {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* ------------------------------------------------------------------
+   Reading column (long-form story, brief, lessons)
+   ------------------------------------------------------------------ */
+.prose-signal {
+  font-family: var(--font-reading), Georgia, serif;
+  font-size: 1.0625rem; /* 17px */
+  line-height: 1.6;
+  color: var(--ink);
+  max-width: 68ch;
+}
+.prose-signal p {
+  margin-block: 0 1em;
+}
+.prose-signal p:last-child {
+  margin-bottom: 0;
+}
+.prose-signal strong {
+  font-weight: 600;
+}
+.prose-signal h2 {
+  font-family: var(--font-ui), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 2.25rem 0 0.75rem;
+}
+.prose-signal > h2:first-child,
+.prose-signal > :first-child > h2:first-child {
+  margin-top: 0;
+}
+.prose-signal ul,
+.prose-signal ol {
+  padding-left: 1.25em;
+  margin: 0 0 1em;
+}
+.prose-signal li {
+  margin: 0.25em 0;
+}
+.prose-signal li::marker {
+  color: var(--ink-3);
+}
+.prose-signal p a,
+.prose-signal li a,
+.prose-signal dd a {
+  color: var(--blue-text);
+  text-decoration: underline;
+  text-decoration-color: var(--navy-200);
+}
+.prose-signal p a:hover,
+.prose-signal li a:hover,
+.prose-signal dd a:hover {
+  text-decoration-color: currentColor;
+}
+
+/* ------------------------------------------------------------------
+   The chain: bars and beads (from the Primaplas mark)
+   Six equal columns; the bar runs through the bead row; labels beneath.
+   ------------------------------------------------------------------ */
+.chain {
+  --chain-color: var(--navy);
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+.chain-step {
+  position: relative;
+  min-width: 0;
+}
+/* The bar: from this bead to the next one. */
+.chain-step::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  right: -6px;
+  top: 5px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--hairline-strong);
+  transition: background var(--t-fast) var(--ease-out);
+}
+.chain-step[data-last="true"]::before {
+  right: 0;
+}
+.chain-step[data-done="true"]::before {
+  background: var(--chain-color);
+}
+.chain-link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+  padding-bottom: 2px;
+}
+.chain-bead {
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 2px solid var(--hairline-strong);
+  flex: none;
+  transition:
+    border-color var(--t-fast) var(--ease-out),
+    background var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-out);
+}
+.chain-step[data-active="true"] .chain-bead,
+.chain-step[data-done="true"] .chain-bead {
+  border-color: var(--chain-color);
+}
+.chain-step[data-active="true"] .chain-bead {
+  background: var(--chain-color);
+}
+.chain-link:hover .chain-bead {
+  transform: scale(1.3);
+  border-color: var(--chain-color);
+}
+.chain-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  max-width: 100%;
+}
+
+/* ------------------------------------------------------------------
+   Motion
+   ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise {
+  animation: rise var(--t-base) var(--ease-out) both;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: -200% 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--hairline) 25%, var(--surface-2) 50%, var(--hairline) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+  border-radius: var(--r-sm);
+}
+
+/* View transitions between routes */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 180ms;
+}

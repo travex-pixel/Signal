@@ -1,0 +1,9 @@
+{
+  "generator": "scripts/illustrate.py",
+  "method": "procedural watercolour (OpenCV/numpy)",
+  "prompt": "stacked shipping containers in coral blue yellow and cyan, watercolour",
+  "size": [
+    720,
+    540
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "generator": "scripts/illustrate.py",
+  "method": "procedural watercolour (OpenCV/numpy)",
+  "prompt": "a loose pile of polymer pellets in coral, watercolour",
+  "size": [
+    720,
+    540
+  ]
+}

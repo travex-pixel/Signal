@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="https://www.abs.gov.au/"><title>ABS</title><link>https://www.abs.gov.au/</link><description>synthetic</description></channel>
+<item rdf:about="https://www.abs.gov.au/statistics/economy/international-trade/international-trade-goods/latest-release"><title>International Trade in Goods, September 2026</title><link>https://www.abs.gov.au/statistics/economy/international-trade/international-trade-goods/latest-release</link><description>The goods trade surplus narrowed to $4.1 billion as imports of machinery and industrial supplies rose 3.2 per cent while exports of iron ore fell.</description><dc:date>2026-10-28T00:30:00Z</dc:date></item>
+</rdf:RDF>

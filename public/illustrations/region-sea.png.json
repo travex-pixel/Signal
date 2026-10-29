@@ -1,0 +1,9 @@
+{
+  "generator": "scripts/illustrate.py",
+  "method": "procedural watercolour (OpenCV/numpy)",
+  "prompt": "an archipelago of cyan islands on a pale sea, watercolour",
+  "size": [
+    720,
+    540
+  ]
+}

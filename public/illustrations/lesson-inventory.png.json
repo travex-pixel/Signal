@@ -1,0 +1,9 @@
+{
+  "generator": "scripts/illustrate.py",
+  "method": "procedural watercolour (OpenCV/numpy)",
+  "prompt": "an hourglass filling with coral pellets, watercolour",
+  "size": [
+    720,
+    540
+  ]
+}

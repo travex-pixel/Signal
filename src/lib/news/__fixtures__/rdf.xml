@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel rdf:about="https://www.abs.gov.au/">
+    <title>ABS releases</title>
+    <link>https://www.abs.gov.au/</link>
+    <description>Latest releases</description>
+    <items><rdf:Seq><rdf:li rdf:resource="https://www.abs.gov.au/statistics/economy/international-trade/international-trade-goods/latest-release"/></rdf:Seq></items>
+  </channel>
+  <item rdf:about="https://www.abs.gov.au/statistics/economy/international-trade/international-trade-goods/latest-release">
+    <title>International Trade in Goods, September 2026</title>
+    <link>https://www.abs.gov.au/statistics/economy/international-trade/international-trade-goods/latest-release</link>
+    <description>Australia's trade surplus on goods narrowed as imports of machinery rose and iron ore exports fell.</description>
+    <dc:date>2026-10-28T00:30:00Z</dc:date>
+  </item>
+</rdf:RDF>

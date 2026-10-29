@@ -1,0 +1,9 @@
+{
+  "generator": "scripts/illustrate.py",
+  "method": "procedural watercolour (OpenCV/numpy)",
+  "prompt": "a balance scale, navy beam and cyan pans, watercolour",
+  "size": [
+    720,
+    540
+  ]
+}

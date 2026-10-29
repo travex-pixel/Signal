@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet title="XSL_formatting" type="text/xsl" href="/shared/bsp/xsl/rss/nolsol.xsl"?>
+<rss xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title><![CDATA[BBC News]]></title>
+    <description><![CDATA[BBC News - World]]></description>
+    <link>https://www.bbc.co.uk/news/world</link>
+    <lastBuildDate>Wed, 29 Oct 2026 02:10:14 GMT</lastBuildDate>
+    <item>
+      <title><![CDATA[Houthis say they will resume attacks on Red Sea shipping]]></title>
+      <description><![CDATA[Container lines are weighing a return to the Cape route as war-risk insurance premiums rise again.]]></description>
+      <link>https://www.bbc.co.uk/news/articles/c1example01?at_medium=RSS&amp;at_campaign=rss</link>
+      <guid isPermaLink="false">https://www.bbc.co.uk/news/articles/c1example01#0</guid>
+      <pubDate>Wed, 29 Oct 2026 01:30:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[Vietnam factory output rises as US tariff exemptions are extended]]></title>
+      <description><![CDATA[Manufacturers in Ho Chi Minh City report fuller order books after Washington extended tariff exemptions on some electronics.]]></description>
+      <link>https://www.bbc.co.uk/news/articles/c1example02</link>
+      <guid isPermaLink="false">https://www.bbc.co.uk/news/articles/c1example02#0</guid>
+      <pubDate>Tue, 28 Oct 2026 22:05:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[Football: Striker signs record deal]]></title>
+      <description><![CDATA[A celebrity striker signs a record contract.]]></description>
+      <link>https://www.bbc.co.uk/sport/football/c1example03</link>
+      <guid isPermaLink="false">https://www.bbc.co.uk/sport/football/c1example03#0</guid>
+      <pubDate>Tue, 28 Oct 2026 20:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[x]]></title>
+      <description><![CDATA[Malformed item with a too-short title and no link.]]></description>
+      <pubDate>Tue, 28 Oct 2026 20:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>
