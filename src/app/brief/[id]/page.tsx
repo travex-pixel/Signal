@@ -6,7 +6,6 @@ import { getAnalysis } from "@/lib/analysis/ai";
 import { getPersonalDigest } from "@/lib/data";
 import { formatDate, formatDateTime } from "@/lib/format";
 import { findStory } from "@/lib/news/pipeline";
-import { REGION_BY_ID } from "@/lib/news/regions";
 import { Empty } from "@/components/Empty";
 import { RegionBeads } from "@/components/RegionBead";
 import { Wordmark } from "@/components/shell/Wordmark";
@@ -41,7 +40,6 @@ async function Brief({ params }: { params: Promise<{ id: string }> }) {
   const related = digest.stories
     .filter((s) => s.id !== story.id && s.topics.some((t) => story.topics.includes(t)) && s.regions.some((r) => story.regions.includes(r)))
     .slice(0, 3);
-  const regions = a.regionsImplicated.map((r) => REGION_BY_ID[r].name);
 
   return (
     <article className="mx-auto w-full max-w-[760px] px-4 md:px-8 pt-6 md:pt-8 pb-12 print:max-w-none print:px-0 print:pt-0">
@@ -93,10 +91,7 @@ async function Brief({ params }: { params: Promise<{ id: string }> }) {
 
         <section>
           <h2>Regional implications</h2>
-          <p>
-            {regions.length > 0 ? `Regions implicated: ${regions.join(", ")}. ` : ""}
-            {a.implication[1].text}
-          </p>
+          <p>{a.implication[1].text}</p>
         </section>
 
         <section>

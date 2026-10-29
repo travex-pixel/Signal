@@ -12,7 +12,7 @@ import type { SourceDefinition } from "./types";
  */
 export function fixtureDir(): string | undefined {
   const dir = process.env.SIGNAL_FIXTURE_DIR;
-  return dir ? path.resolve(process.cwd(), dir) : undefined;
+  return dir ? path.resolve(/*turbopackIgnore: true*/ process.cwd(), dir) : undefined;
 }
 
 export function fixtureFetch(dir: string): typeof fetch {
@@ -21,7 +21,7 @@ export function fixtureFetch(dir: string): typeof fetch {
     const source = SOURCE_LOOKUP.get(url);
     if (!source) return new Response("no fixture", { status: 404 });
     try {
-      const xml = await readFile(path.join(dir, `${source.id}.xml`), "utf8");
+      const xml = await readFile(/*turbopackIgnore: true*/ path.join(dir, `${source.id}.xml`), "utf8");
       return new Response(xml, { status: 200, headers: { "content-type": "application/xml" } });
     } catch {
       return new Response("no fixture", { status: 404 });

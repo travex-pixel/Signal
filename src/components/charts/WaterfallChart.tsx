@@ -17,13 +17,13 @@ export function WaterfallChart({ steps, format, title, width = 560, height = 260
   const innerW = width - pad.left - pad.right;
   const innerH = height - pad.top - pad.bottom;
 
-  let running = 0;
-  const bars = steps.map((s) => {
+  const bars = steps.reduce<(WaterfallStep & { start: number; end: number })[]>((acc, s) => {
+    const running = acc.length ? acc[acc.length - 1].end : 0;
     const start = s.kind === "total" ? 0 : running;
     const end = s.kind === "total" ? s.value : running + s.value;
-    running = end;
-    return { ...s, start, end };
-  });
+    acc.push({ ...s, start, end });
+    return acc;
+  }, []);
   const min = Math.min(0, ...bars.map((b) => Math.min(b.start, b.end)));
   const max = Math.max(0, ...bars.map((b) => Math.max(b.start, b.end)));
   const span = max - min || 1;
@@ -51,11 +51,11 @@ export function WaterfallChart({ steps, format, title, width = 560, height = 260
               {next ? (
                 <line x1={x + barW} x2={pad.left + slot * (i + 1) + (slot - barW) / 2} y1={connectorY} y2={connectorY} stroke="var(--ink-4)" strokeWidth="1" strokeDasharray="2 3" />
               ) : null}
-              <text x={x + barW / 2} y={top - 7} textAnchor="middle" fontSize="11.5" fontWeight="600" fill="var(--ink)" className="tnum">
+              <text x={x + barW / 2} y={top - 7} textAnchor="middle" fontSize="13" fontWeight="600" fill="var(--ink)" className="tnum">
                 {b.kind === "delta" && b.value > 0 ? "+" : ""}
                 {format(labelValue)}
               </text>
-              <text x={x + barW / 2} y={height - pad.bottom + 18} textAnchor="middle" fontSize="11" fill="var(--ink-3)">
+              <text x={x + barW / 2} y={height - pad.bottom + 18} textAnchor="middle" fontSize="12.5" fill="var(--ink-3)">
                 {b.label}
               </text>
             </g>

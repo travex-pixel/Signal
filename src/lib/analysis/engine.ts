@@ -201,11 +201,6 @@ export function lcName(name: string): string {
   return /^(US|Chinese|Southeast|Australian|Middle)\b/.test(name) ? name : name[0].toLowerCase() + name.slice(1);
 }
 
-function lowerFirst(s: string): string {
-  if (!s) return s;
-  // Keep acronyms and proper nouns intact: only lower-case a leading capital followed by lower-case letters.
-  return /^[A-Z][a-z]/.test(s) ? s[0].toLowerCase() + s.slice(1) : s;
-}
 
 function firstSentence(s: string): string {
   const m = s.match(/^[^.]+\./);

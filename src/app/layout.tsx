@@ -22,6 +22,7 @@ export const metadata: Metadata = {
   title: { default: "SIGNAL", template: "%s · SIGNAL" },
   description: "Know what matters. Understand why. Speak with confidence.",
   applicationName: "SIGNAL",
+  robots: { index: false, follow: false },
 };
 
 export const viewport: Viewport = {

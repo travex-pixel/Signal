@@ -35,7 +35,7 @@ export function SourcePanel({ story, analysis, open = false }: { story: Story; a
     ...(story.discoveryUrl
       ? [{ k: "Discovered via", v: <span>Google News RSS (original URL recovered from the discovery link)</span> }]
       : story.url.includes("news.google.com")
-        ? [{ k: "Note", v: <span>The original article URL could not be recovered from Google News; the link above goes through Google's redirector to the publisher.</span> }]
+        ? [{ k: "Note", v: <span>The original article URL could not be recovered from Google News; the link above goes through Google&rsquo;s redirector to the publisher.</span> }]
         : []),
     { k: "Published", v: story.publishedAt ? `${formatDateTime(story.publishedAt, { year: "numeric" })} (Sydney)` : "Not stated in the feed" },
     { k: "Retrieved", v: `${formatDateTime(story.retrievedAt, { year: "numeric" })} (Sydney)` },

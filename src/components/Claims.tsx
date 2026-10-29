@@ -24,7 +24,7 @@ export function ClaimList({ claims }: { claims: Claim[] }) {
   return (
     <ul className="list-none p-0 m-0 space-y-3">
       {claims.map((c, i) => (
-        <li key={i} className="grid grid-cols-[auto_1fr] gap-x-3 items-start">
+        <li key={i} className="grid gap-y-1 gap-x-3 items-start sm:grid-cols-[auto_1fr]">
           <span className="pt-[3px]">
             <KindTag kind={c.kind} />
           </span>

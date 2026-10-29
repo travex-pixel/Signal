@@ -54,20 +54,20 @@ export function LineChart({
         {Array.from({ length: yTicks + 1 }, (_, i) => yMin + ((yMax - yMin) * i) / yTicks).map((v, i) => (
           <g key={i}>
             <line x1={pad.left} x2={width - pad.right} y1={y(v)} y2={y(v)} stroke={i === 0 ? "var(--hairline-strong)" : "var(--hairline)"} strokeWidth="1" />
-            <text x={pad.left - 8} y={y(v) + 3.5} textAnchor="end" fontSize="11" fill="var(--ink-3)" className="tnum">
+            <text x={pad.left - 8} y={y(v) + 3.5} textAnchor="end" fontSize="12.5" fill="var(--ink-3)" className="tnum">
               {formatY(v)}
             </text>
           </g>
         ))}
         {tickXs.map((v, i) => (
-          <text key={i} x={x(v)} y={height - pad.bottom + 18} textAnchor="middle" fontSize="11" fill="var(--ink-3)" className="tnum">
+          <text key={i} x={x(v)} y={height - pad.bottom + 18} textAnchor="middle" fontSize="12.5" fill="var(--ink-3)" className="tnum">
             {formatX(v)}
           </text>
         ))}
-        <text x={pad.left + innerW / 2} y={height - 6} textAnchor="middle" fontSize="11" fill="var(--ink-3)">
+        <text x={pad.left + innerW / 2} y={height - 6} textAnchor="middle" fontSize="12.5" fill="var(--ink-3)">
           {xLabel}
         </text>
-        <text x={12} y={14} fontSize="11" fill="var(--ink-3)">
+        <text x={12} y={14} fontSize="12.5" fill="var(--ink-3)">
           {yLabel}
         </text>
         <path d={path} fill="none" stroke={`var(--${hue})`} strokeWidth="2.25" strokeLinejoin="round" strokeLinecap="round" />
@@ -76,7 +76,7 @@ export function LineChart({
             <line x1={x(marker.x)} x2={x(marker.x)} y1={y(marker.y)} y2={pad.top + innerH} stroke="var(--coral)" strokeWidth="1" strokeDasharray="2 3" />
             <circle cx={x(marker.x)} cy={y(marker.y)} r="5" fill="var(--surface)" stroke="var(--coral)" strokeWidth="2.25" />
             {marker.label ? (
-              <text x={x(marker.x) + (marker.x > (xMin + xMax) / 2 ? -10 : 10)} y={y(marker.y) - 10} textAnchor={marker.x > (xMin + xMax) / 2 ? "end" : "start"} fontSize="11.5" fontWeight="600" fill="var(--coral-text)" className="tnum">
+              <text x={x(marker.x) + (marker.x > (xMin + xMax) / 2 ? -10 : 10)} y={y(marker.y) - 10} textAnchor={marker.x > (xMin + xMax) / 2 ? "end" : "start"} fontSize="13" fontWeight="600" fill="var(--coral-text)" className="tnum">
                 {marker.label}
               </text>
             ) : null}
