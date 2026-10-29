@@ -45,6 +45,8 @@ export interface SourceDefinition {
   attribution: string;
   /** True when the feed is a discovery mechanism (e.g. Google News) rather than the publisher's own feed. */
   discovery?: boolean;
+  /** For a discovery feed scoped to one publisher: items must match this on publisher name or host. */
+  publisherMatch?: RegExp;
   /** Ignore items older than this many hours. */
   maxAgeHours: number;
   /** Primary sources carry more evidentiary weight. */

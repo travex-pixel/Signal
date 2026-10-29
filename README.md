@@ -124,17 +124,17 @@ lexicons live in `src/lib/news/classify.ts`; business mechanisms in
 - **Verification.** A feed is described as live only when it has been fetched
   successfully; the Sources page reports the result of the last refresh for
   each feed, including the error for a degraded one, and `npm run test:live`
-  prints the same report from the command line. During this build 11 of the
-  16 sources were fetched successfully from the development environment:
-  the Reuters business and world discovery feeds, BBC World and BBC
-  Business, and all seven regional and topical discovery feeds. The five
-  Australian government feeds (RBA media releases, speeches and Statement
-  on Monetary Policy; ABS news; DFAT news) could not be reached because the
-  development environment's network policy blocked those hosts, so they are
-  listed as degraded until the first deployment confirms them. The ABS
-  statistics index and the DFAT statistics page are web pages rather than
-  feeds, so the registry points at the agencies' news feeds and links to
-  the statistics pages in the attribution.
+  prints the same report from the command line. During this build the three
+  Reserve Bank feeds (media releases, speeches, Statement on Monetary
+  Policy), the Reuters business and world discovery feeds, BBC World and BBC
+  Business, and all seven regional and topical discovery feeds were fetched
+  successfully. The ABS no longer publishes an RSS feed (its statistics
+  index and the legacy AUSSTATS feed both return 404) and no departmental
+  DFAT feed could be verified, so those two sources use Google News
+  discovery scoped to `abs.gov.au` and `dfat.gov.au`, which keeps the agency
+  as the publisher and links to its own pages; both were fetched
+  successfully. The ABS statistics page and the DFAT statistics page are
+  linked from each source's attribution as context.
 - **Google News discovery.** Newer Google News links encode the article in a
   form that cannot be decoded without a round trip to Google, which SIGNAL
   does not make. Those stories link through Google's redirector and the

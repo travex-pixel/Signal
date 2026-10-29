@@ -188,7 +188,7 @@ describe("publisher and noise weighting", () => {
 describe("dedupe", () => {
   it("collapses near-identical headlines and prefers stronger evidence", async () => {
     const feed = await parseFeed(fixture("google-news.xml"));
-    const variousReuters: SourceDefinition = { ...reuters, publisher: "Various (discovery)", evidenceWeight: 1 };
+    const variousReuters: SourceDefinition = { ...reuters, publisher: "Various (discovery)", publisherMatch: undefined, evidenceWeight: 1 };
     const stories = itemsToStories(feed.items, variousReuters, NOW);
     expect(stories).toHaveLength(3);
     const deduped = dedupeStories(stories);

@@ -126,11 +126,10 @@ export function itemsToStories(
       item.publisher?.trim() ||
       (source.discovery ? hostnameOf(url) ?? source.publisher : source.publisher);
 
-    // Discovery feeds for named publishers only count items from that publisher.
-    if (source.discovery && source.publisher !== "Various (discovery)") {
+    // Discovery feeds scoped to one publisher only count items from that publisher.
+    if (source.publisherMatch) {
       const host = hostnameOf(item.publisherUrl ?? url) ?? "";
-      const wanted = source.publisher.toLowerCase().split(" ")[0];
-      if (!host.includes(wanted) && !publisher.toLowerCase().includes(wanted)) continue;
+      if (!source.publisherMatch.test(host) && !source.publisherMatch.test(publisher)) continue;
     }
 
     const text = `${item.title} ${item.summary ?? ""}`;
