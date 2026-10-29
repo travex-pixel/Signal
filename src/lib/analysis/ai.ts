@@ -55,7 +55,8 @@ export function aiEnabled(): boolean {
 }
 
 export async function enrichAnalysis(story: Story, base: Analysis): Promise<Analysis> {
-  "use cache";
+  // Remote so one paid model call serves every server instance, not one per instance.
+  "use cache: remote";
   cacheLife({ stale: 3600, revalidate: 86400, expire: 7 * 86400 });
   if (!aiEnabled()) return base;
   try {

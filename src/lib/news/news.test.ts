@@ -272,3 +272,18 @@ describe("fetchSource", () => {
     expect(ok.stories[0].retrievedAt).toBe(NOW.toISOString());
   });
 });
+
+describe("headline echoes", () => {
+  it("drops a description that is only the headline and a long publisher name", async () => {
+    const { parseFeed } = await import("./parse");
+    const xml = `<?xml version="1.0"?><rss version="2.0"><channel><title>t</title>
+      <item><title>Regional Trade for Development - AANZFTA Stocktaking - Australian Government Department of Foreign Affairs and Trade</title>
+      <link>https://news.google.com/rss/articles/x</link><pubDate>Thu, 29 Oct 2026 01:00:00 GMT</pubDate>
+      <description>&lt;a href="x"&gt;Regional Trade for Development - AANZFTA Stocktaking&lt;/a&gt;&amp;nbsp;&amp;nbsp;&lt;font&gt;Australian Government Department of Foreign Affairs and Trade&lt;/font&gt;</description>
+      <source url="https://www.dfat.gov.au">Australian Government Department of Foreign Affairs and Trade</source></item>
+      </channel></rss>`;
+    const { items } = await parseFeed(xml);
+    expect(items[0].title).toBe("Regional Trade for Development - AANZFTA Stocktaking");
+    expect(items[0].summary).toBeUndefined();
+  });
+});

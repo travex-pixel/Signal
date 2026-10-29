@@ -1,10 +1,16 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "regions": ["syd1"],
+  "regions": [
+    "syd1"
+  ],
   "crons": [
     {
-      "path": "/api/refresh",
+      "path": "/api/refresh?run=morning",
       "schedule": "0 20 * * *"
+    },
+    {
+      "path": "/api/refresh?run=evening",
+      "schedule": "30 12 * * *"
     }
   ]
 }

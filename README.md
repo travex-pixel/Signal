@@ -122,16 +122,33 @@ lexicons live in `src/lib/news/classify.ts`; business mechanisms in
    settings need changing.
 2. Optionally add `ANTHROPIC_API_KEY` and `CRON_SECRET` as environment
    variables.
-3. `vercel.json` schedules `/api/refresh` once a day at 20:00 UTC (7am
-   Sydney during daylight time) so the digest is warm before a morning read.
-   Hobby plans allow only daily cron jobs; on a Pro plan you can shorten the
-   schedule (for example `*/20 * * * *`). Either way the digest revalidates
-   on demand after 15 minutes of staleness, so the cron is a warm-up, not a
-   requirement.
+3. `vercel.json` schedules `/api/refresh` twice a day: at 20:00 UTC (6 to 7am
+   Sydney) so the digest is warm before a morning read, and at 12:30 UTC (10:30
+   to 11:30pm Sydney) to keep the day under Past days. Hobby plans allow only
+   daily cron jobs and may fire them anywhere within the hour; both windows
+   stay on the same Sydney day. The digest also revalidates on demand after 15
+   minutes, so the crons are a warm-up and an archive, not a requirement.
+   For Past days, open the project's Storage tab, create a Blob store (choose
+   Private) and connect it. Vercel adds `BLOB_READ_WRITE_TOKEN` and redeploys.
+   Without a store the Past days page says the feature is not switched on.
 4. `vercel.json` pins the remaining server functions to Sydney (`syd1`),
    which Hobby plans allow for a single region.
 5. No database is needed. Preferences live in a cookie; the digest lives in
    the Next.js data cache.
+
+### Past days
+
+Each refresh keeps a copy of the day in Vercel Blob as `editions/YYYY-MM-DD.json`
+(Sydney calendar day), plus a small `editions/index.json` listing the days. A
+copy holds the day's top 40 stories, the lead, the three supporting stories,
+the meeting-brief picks and the full reasoning for each pick, so a past day
+reads exactly as it did even after the feeds or the reasoning engine change.
+The morning run writes the day's first copy and the evening run replaces it.
+`/editions` lists the days; `/editions/[date]` renders a day with Today's
+layout; its story and brief pages render the saved reasoning. Past-day pages
+never offer Ask SIGNAL, which answers from today's news. Storage is private by
+default; set `SIGNAL_BLOB_ACCESS=public` only for a store created as public.
+Locally, `SIGNAL_EDITIONS_DIR` keeps editions in a folder.
 
 ### How pages are served
 
@@ -145,6 +162,12 @@ pages are partially prerendered: the shell is static and the story content
 is served from the cached digest. Relative times ("3h ago") and the date are
 rendered from the digest's own timestamp and corrected in the browser once
 the page hydrates, so a static page never shows a wrong clock.
+
+The shared digest and AI enrichments use `'use cache: remote'`. On Vercel
+each function instance has its own memory, so the default in-memory cache is
+usually empty on a fresh instance: story and brief pages would refetch every
+feed, and every instance would pay for its own AI call. The remote cache is
+shared by all instances.
 
 A reader who has saved preferences carries the `signal-prefs` cookie. The
 proxy in `src/proxy.ts` rewrites their requests for `/`, `/regions/*` and

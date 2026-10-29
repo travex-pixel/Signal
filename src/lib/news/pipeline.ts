@@ -35,9 +35,12 @@ export async function buildDigest(now = new Date()): Promise<Digest> {
 }
 
 export async function getDigest(): Promise<Digest> {
-  "use cache";
+  "use cache: remote";
   // Visitors never wait on feeds: the cached digest is served and refreshed in the
   // background once it is 15 minutes old; only a week-old entry is rebuilt inline.
+  // Remote, not in-memory: on Vercel each function instance has its own memory,
+  // so an in-memory entry is usually missing on a fresh instance and the story
+  // and brief pages would refetch every feed. The remote cache is shared.
   cacheLife({ stale: 900, revalidate: 900, expire: 7 * 86400 });
   cacheTag(DIGEST_TAG);
   return buildDigest();

@@ -108,8 +108,13 @@ export async function parseFeed(xml: string): Promise<ParsedFeed> {
     const title = cleanTitle(d.title, publisher);
     // Discovery feeds often repeat the headline (plus publisher) as the description; that is not a summary.
     const normalised = (v: string) => v.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
-    if (normalised(summary).startsWith(normalised(title)) && normalised(summary).length - normalised(title).length < 40) {
-      summary = "";
+    // What is left after the headline is only noise when it is short or is just the publisher's name,
+    // however long that name is ("Australian Government Department of Foreign Affairs and Trade").
+    const s = normalised(summary);
+    const t = normalised(title);
+    if (s.startsWith(t)) {
+      const rest = s.slice(t.length).trim();
+      if (rest.length < 40 || (publisher && rest === normalised(publisher))) summary = "";
     }
     items.push({
       title,
