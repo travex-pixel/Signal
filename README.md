@@ -113,9 +113,12 @@ lexicons live in `src/lib/news/classify.ts`; business mechanisms in
    settings need changing.
 2. Optionally add `ANTHROPIC_API_KEY` and `CRON_SECRET` as environment
    variables.
-3. `vercel.json` schedules `/api/refresh` every 20 minutes so the digest stays
-   fresh between visits. Without the cron, the digest still revalidates on
-   demand after 15 minutes of staleness.
+3. `vercel.json` schedules `/api/refresh` once a day at 20:00 UTC (7am
+   Sydney during daylight time) so the digest is warm before a morning read.
+   Hobby plans allow only daily cron jobs; on a Pro plan you can shorten the
+   schedule (for example `*/20 * * * *`). Either way the digest revalidates
+   on demand after 15 minutes of staleness, so the cron is a warm-up, not a
+   requirement.
 4. No database is needed. Preferences live in a cookie; the digest lives in
    the Next.js data cache.
 
