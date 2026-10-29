@@ -35,7 +35,6 @@ async function BriefIndex() {
           <p className="mt-3 mb-0 font-serif text-[17px] leading-[1.5] text-ink-2 text-pretty">
             Pick a development. Get the issue, the evidence, the questions and a counterargument on one page, short by default and printable. Deeper reasoning stays one link away in the story view.
           </p>
-          <p className="mt-2 mb-0 text-[12.5px] text-ink-3">{todayLabel(now)}</p>
         </div>
         <Plate name="chain" width={220} className="hidden md:block flex-none -mt-6" />
       </div>
@@ -47,7 +46,11 @@ async function BriefIndex() {
           </Empty>
         </div>
       ) : (
-        <ol className="mt-8 m-0 p-0 list-none grid gap-x-10 md:grid-cols-2">
+        <>
+          <h2 className="mt-8 mb-0 text-[12px] font-semibold uppercase tracking-[0.07em] text-ink-3">
+            Today&rsquo;s picks <span className="text-ink-4 font-medium normal-case tracking-normal">· {todayLabel(now)}</span>
+          </h2>
+        <ol className="mt-2 m-0 p-0 list-none grid gap-x-10 md:grid-cols-2">
           {picks.map((s, i) => (
             <li key={s.id} className="border-t border-hairline py-4">
               <Link href={`/brief/${s.id}`} className="group grid grid-cols-[1.5rem_1fr] gap-x-2">
@@ -63,6 +66,7 @@ async function BriefIndex() {
             </li>
           ))}
         </ol>
+        </>
       )}
     </div>
   );
