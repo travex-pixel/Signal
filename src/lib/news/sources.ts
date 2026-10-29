@@ -78,7 +78,7 @@ export const SOURCES: SourceDefinition[] = [
     maxAgeHours: 24 * 30,
     evidenceWeight: 3,
     attribution:
-      "Australian Bureau of Statistics releases and media releases, discovered through Google News RSS scoped to abs.gov.au. The publisher is the ABS itself; data is Commonwealth of Australia, CC BY 4.0. The International Trade in Goods release is at abs.gov.au/statistics/economy/international-trade/international-trade-goods/latest-release.",
+      "Australian Bureau of Statistics releases and media releases, discovered through Google News RSS scoped to abs.gov.au. The publisher is the ABS itself. Data is Commonwealth of Australia, CC BY 4.0. The International Trade in Goods release is at abs.gov.au/statistics/economy/international-trade/international-trade-goods/latest-release.",
     notes: "The ABS no longer publishes an RSS feed (its statistics index and the legacy AUSSTATS feed both return 404), so this entry discovers ABS pages through Google News and keeps the ABS as publisher.",
   },
   {
@@ -95,8 +95,8 @@ export const SOURCES: SourceDefinition[] = [
     maxAgeHours: 24 * 30,
     evidenceWeight: 3,
     attribution:
-      "Australian Department of Foreign Affairs and Trade statements and news, discovered through Google News RSS scoped to dfat.gov.au; the publisher is DFAT itself. Trade statistics context: dfat.gov.au/trade/trade-and-investment-data-information-and-publications/trade-foreign-investment-statistics.",
-    notes: "DFAT's statistics page is a web page, not a feed, and no departmental RSS feed could be verified; discovery keeps DFAT's own pages as the source.",
+      "Australian Department of Foreign Affairs and Trade statements and news, discovered through Google News RSS scoped to dfat.gov.au. The publisher is DFAT itself. Trade statistics context: dfat.gov.au/trade/trade-and-investment-data-information-and-publications/trade-foreign-investment-statistics.",
+    notes: "DFAT's statistics page is a web page, not a feed, and no departmental RSS feed could be verified. Discovery keeps DFAT's own pages as the source.",
   },
   {
     id: "trade-minister",
@@ -130,7 +130,7 @@ export const SOURCES: SourceDefinition[] = [
     maxAgeHours: 48,
     evidenceWeight: 2,
     attribution:
-      "Reuters business coverage discovered through Google News RSS. Google News is the discovery mechanism, not Reuters' own feed; headlines link to the original article where the URL can be recovered.",
+      "Reuters business coverage discovered through Google News RSS. Google News is the discovery mechanism, not Reuters' own feed. Headlines link to the original article where the URL can be recovered.",
   },
   {
     id: "reuters-world-discovery",

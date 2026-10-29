@@ -92,7 +92,7 @@ describe("crossRegionalSignal", () => {
     const signal = crossRegionalSignal(stories);
     expect(signal?.topic).toBe("freight");
     expect(signal?.regions.sort()).toEqual(["middle-east", "sea"]);
-    expect(signal?.text).toContain("hypothesis");
+    expect(signal?.text).toContain("a possibility to test, not a fact");
     expect(crossRegionalSignal([stories[2]])).toBeUndefined();
   });
 });

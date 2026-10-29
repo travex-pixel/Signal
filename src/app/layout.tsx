@@ -17,11 +17,30 @@ const reading = Literata({
   display: "swap",
 });
 
+const siteUrl = process.env.SIGNAL_SITE_URL
+  ? new URL(process.env.SIGNAL_SITE_URL)
+  : process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? new URL(`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`)
+    : undefined;
+
 export const metadata: Metadata = {
+  metadataBase: siteUrl,
   title: { default: "SIGNAL", template: "%s · SIGNAL" },
   description: "Know what matters. Understand why. Speak with confidence.",
   applicationName: "SIGNAL",
   robots: { index: false, follow: false },
+  openGraph: {
+    type: "website",
+    siteName: "SIGNAL",
+    title: "SIGNAL",
+    description: "Daily business intelligence for an Australian importer. One story that matters, explained in plain words.",
+    locale: "en_AU",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SIGNAL",
+    description: "Daily business intelligence for an Australian importer. One story that matters, explained in plain words.",
+  },
 };
 
 export const viewport: Viewport = {

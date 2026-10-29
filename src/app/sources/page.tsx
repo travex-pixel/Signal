@@ -19,7 +19,7 @@ export default function SourcesPage() {
         Every feed SIGNAL reads, what it is for, and whether it answered on the last refresh.
       </p>
       <p className="mt-3 mb-0 text-[14.5px] leading-[1.5] text-ink-2 max-w-[62ch]">
-        Feeds are fetched server-side with timeouts, validated, deduplicated and cached. A source is described as live only when it has actually been fetched. Google News entries are discovery mechanisms, not the publisher&rsquo;s own feed; SIGNAL keeps the real publisher and, where it can, the original article link.
+        Feeds are fetched server-side with timeouts, validated, deduplicated and cached. A source is described as live only when it has actually been fetched. Google News entries are discovery mechanisms, not the publisher&rsquo;s own feed. SIGNAL keeps the real publisher and, where it can, the original article link.
       </p>
       <Suspense fallback={<div className="mt-8 skeleton h-5 w-64" />}>
         <SourceTable />
@@ -95,7 +95,7 @@ async function SourceTable() {
                   <td className="py-3 pr-4 text-ink-2 whitespace-nowrap">{TYPE_LABEL[s.type]}</td>
                   <td className="py-3 pr-4 text-ink-2">{s.regions.map((r) => REGION_BY_ID[r].short).join(", ")}</td>
                   <td className="py-3 pr-4 text-ink-2 whitespace-nowrap">every {s.refreshMinutes} min</td>
-                  <td className="py-3 pr-4 text-right tabular text-ink-2 whitespace-nowrap">{st ? `${st.keptCount} / ${st.itemCount}` : "—"}</td>
+                  <td className="py-3 pr-4 text-right tabular text-ink-2 whitespace-nowrap">{st ? `${st.keptCount} / ${st.itemCount}` : "none yet"}</td>
                   <td className="py-3 whitespace-nowrap">{statusCell(s.active, st)}</td>
                 </tr>
               );
@@ -105,7 +105,7 @@ async function SourceTable() {
       </div>
 
       <p className="mt-6 mb-0 text-[13px] leading-[1.5] text-ink-3 max-w-[62ch]">
-        Items shows stories kept after age and validation filters over items the feed carried. A degraded source is retried on the next refresh; the rest of the digest is unaffected.
+        Items shows stories kept after age and validation filters over items the feed carried. A degraded source is retried on the next refresh. The rest of the digest is unaffected.
       </p>
     </>
   );

@@ -4,12 +4,12 @@ import type { RegionId } from "@/lib/news/types";
 import { REGION_BY_ID } from "@/lib/news/regions";
 
 export const CHAIN_STEPS = [
-  { id: "event", label: "Event" },
-  { id: "evidence", label: "Evidence" },
-  { id: "mechanism", label: "Mechanism" },
-  { id: "implication", label: "Implication" },
-  { id: "options", label: "Options" },
-  { id: "meeting", label: "Meeting" },
+  { id: "event", label: "What happened" },
+  { id: "evidence", label: "How sure" },
+  { id: "mechanism", label: "How it works" },
+  { id: "implication", label: "What it means" },
+  { id: "options", label: "What to do" },
+  { id: "meeting", label: "In a meeting" },
 ] as const;
 
 export type ChainStepId = (typeof CHAIN_STEPS)[number]["id"];
@@ -52,7 +52,7 @@ export function Chain({
               >
                 <span className="chain-bead" aria-hidden="true" />
                 <span
-                  className={`chain-label ${compact ? "text-[9.5px] md:text-[10px]" : "text-[10px] md:text-[11px]"} font-semibold tracking-[0.01em] md:uppercase md:tracking-[0.05em] transition-colors duration-150 ${
+                  className={`chain-label ${compact ? "text-[10px] md:text-[11px]" : "text-[10.5px] md:text-[12px]"} font-semibold tracking-[0.01em] transition-colors duration-150 ${
                     isActive ? "text-ink" : "text-ink-3 group-hover:text-ink"
                   }`}
                 >

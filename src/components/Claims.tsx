@@ -1,10 +1,10 @@
 import type { Claim, ClaimKind } from "@/lib/analysis/types";
 
 const KIND: Record<ClaimKind, { label: string; className: string; title: string }> = {
-  fact: { label: "Fact", className: "bg-navy-100 text-navy", title: "Stated by the source" },
-  inference: { label: "Inference", className: "bg-blue-100 text-blue-text", title: "SIGNAL's reasoning from a named mechanism" },
-  hypothesis: { label: "Hypothesis", className: "bg-yellow-100 text-yellow-text", title: "Plausible, not confirmed" },
-  unknown: { label: "Unknown", className: "bg-slate-100 text-slate-text", title: "Would change the conclusion; not known" },
+  fact: { label: "Fact", className: "bg-navy-100 text-navy", title: "What the source says" },
+  inference: { label: "Our reading", className: "bg-blue-100 text-blue-text", title: "SIGNAL's reasoning, from how this kind of event usually works" },
+  hypothesis: { label: "Possible", className: "bg-yellow-100 text-yellow-text", title: "Could follow, not confirmed" },
+  unknown: { label: "Not known", className: "bg-slate-100 text-slate-text", title: "Would change the answer, and is not known" },
 };
 
 export function KindTag({ kind }: { kind: ClaimKind }) {

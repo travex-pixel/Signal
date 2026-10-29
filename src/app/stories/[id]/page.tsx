@@ -75,19 +75,19 @@ async function StoryView({ params }: { params: Promise<{ id: string }> }) {
 
           <div className="prose-signal mt-8">
             <section id="event" className="scroll-mt-28">
-              <h2>Event</h2>
+              <h2>What happened</h2>
               <ClaimList claims={analysis.event} />
             </section>
 
             <section id="evidence" className="scroll-mt-28">
-              <h2>Evidence</h2>
-              <p className="!mb-3 text-[15px] text-ink-2 font-sans">What the source establishes, what it does not, and how confident SIGNAL is.</p>
+              <h2>How sure we are</h2>
+              <p className="!mb-3 text-[15px] text-ink-2 font-sans">What the source shows, what it does not show, and how confident SIGNAL is.</p>
               <ul className="font-sans text-[15px] space-y-2">
                 {analysis.evidence.establishes.map((e, i) => (
-                  <li key={`e${i}`}><span className="font-semibold text-ok">Establishes.</span> {e}</li>
+                  <li key={`e${i}`}><span className="font-semibold text-ok">The source shows.</span> {e}</li>
                 ))}
                 {analysis.evidence.doesNotEstablish.map((e, i) => (
-                  <li key={`d${i}`}><span className="font-semibold text-warn">Does not establish.</span> {e}</li>
+                  <li key={`d${i}`}><span className="font-semibold text-warn">The source does not show.</span> {e}</li>
                 ))}
               </ul>
               <p className="mt-4 font-sans text-[15px]">
@@ -99,7 +99,7 @@ async function StoryView({ params }: { params: Promise<{ id: string }> }) {
             </section>
 
             <section id="mechanism" className="scroll-mt-28">
-              <h2>Business mechanism</h2>
+              <h2>How it works</h2>
               {analysis.mechanisms.map((m, i) => (
                 <div key={m.id} className={i > 0 ? "mt-5 pt-5 border-t border-hairline" : ""}>
                   <p className="!mb-1 font-sans text-[14px] font-semibold text-ink">{m.name}</p>
@@ -109,9 +109,9 @@ async function StoryView({ params }: { params: Promise<{ id: string }> }) {
             </section>
 
             <section id="implication" className="scroll-mt-28">
-              <h2>Commercial implication</h2>
+              <h2>What it means for an importer</h2>
               <ClaimList claims={analysis.implication} />
-              <h2 className="!mt-7">Second-order effects</h2>
+              <h2 className="!mt-7">What could follow</h2>
               <ClaimList claims={analysis.secondOrder} />
               <div className="mt-7 rounded-md bg-surface border border-hairline px-5 py-4">
                 <p className="!mb-1 font-sans text-[12px] font-semibold uppercase tracking-[0.06em] text-ink-3">Business relevance</p>
@@ -120,14 +120,14 @@ async function StoryView({ params }: { params: Promise<{ id: string }> }) {
             </section>
 
             <section id="options" className="scroll-mt-28">
-              <h2>Strategic options</h2>
+              <h2>What you could do</h2>
               <ol className="!pl-0 list-none space-y-4">
                 {analysis.options.map((o, i) => (
                   <li key={i} className="grid grid-cols-[1.5rem_1fr] gap-x-2">
                     <span className="font-sans text-[13px] font-semibold text-ink-4 tnum pt-[3px]">{i + 1}</span>
                     <span>
                       <span className="block">{o.action}</span>
-                      <span className="block mt-1 font-sans text-[13.5px] text-ink-3">Trade-off: {o.tradeoff}</span>
+                      <span className="block mt-1 font-sans text-[13.5px] text-ink-3">The cost of this: {o.tradeoff}</span>
                     </span>
                   </li>
                 ))}
@@ -135,13 +135,13 @@ async function StoryView({ params }: { params: Promise<{ id: string }> }) {
             </section>
 
             <section id="meeting" className="scroll-mt-28">
-              <h2>Meeting contribution</h2>
+              <h2>If it comes up in a meeting</h2>
               <dl className="m-0 space-y-4">
                 {[
-                  ["Observation", analysis.meeting.observation],
-                  ["Question", analysis.meeting.question],
-                  ["Counterpoint", analysis.meeting.counterpoint],
-                  ["Indicator to monitor", analysis.meeting.indicator],
+                  ["What you can say", analysis.meeting.observation],
+                  ["A question to ask", analysis.meeting.question],
+                  ["The other view", analysis.meeting.counterpoint],
+                  ["What to watch", analysis.meeting.indicator],
                 ].map(([k, v]) => (
                   <div key={k}>
                     <dt className="font-sans text-[12px] font-semibold uppercase tracking-[0.06em] text-ink-3">{k}</dt>
@@ -193,14 +193,14 @@ async function StoryView({ params }: { params: Promise<{ id: string }> }) {
               <div className="mt-3"><KindLegend /></div>
             </div>
             <div className="pt-5 border-t border-hairline">
-              <h2 className="m-0 text-[12px] font-semibold uppercase tracking-[0.07em] text-ink-3">Generated by</h2>
+              <h2 className="m-0 text-[12px] font-semibold uppercase tracking-[0.07em] text-ink-3">Who wrote this</h2>
               <p className="mt-2 mb-0 text-[13.5px] text-ink-2 leading-[1.5]">
                 {analysis.generatedBy === "ai"
-                  ? "The rule-based reasoning engine, refined by an AI model under the same labelling rules."
-                  : "SIGNAL's rule-based reasoning engine: a transparent library of business mechanisms matched to the story's topics and regions."}
+                  ? "SIGNAL's rule-based engine wrote the first draft. An AI model then sharpened it under the same labelling rules."
+                  : "SIGNAL's rule-based engine. It matches the story's topics and regions to a library of business mechanisms you can read in full."}
               </p>
               <p className="mt-2 mb-0 text-[13.5px] text-ink-2 leading-[1.5]">
-                <KindTag kind="fact" /> statements quote the source. Everything else is interpretation.
+                <KindTag kind="fact" /> lines quote the source. Everything else is SIGNAL&rsquo;s reading.
               </p>
             </div>
           </div>

@@ -94,7 +94,7 @@ export function assessConfidence(story: Story, related: number): Confidence {
   const level: Confidence["level"] = points >= 5 ? "high" : points >= 3 ? "medium" : "low";
   return {
     level,
-    reason: `The fact rests on ${reasons[0]}; ${reasons.slice(1).join("; ")}. The commercial reading is SIGNAL's inference from named mechanisms, not something the source states.`,
+    reason: `The fact rests on ${reasons[0]}. ${reasons.slice(1).map((r) => r[0].toUpperCase() + r.slice(1)).join(". ")}. The commercial reading is SIGNAL's own, drawn from named mechanisms. It is not something the source states.`,
   };
 }
 
@@ -130,10 +130,10 @@ export function analyzeStory(story: Story, digest?: Digest): Analysis {
     `That ${story.publisher} reported the development described in the headline${story.publishedAt ? " at the stated time" : ""}.`,
     story.summary
       ? "The specific detail in the summary above, as the publisher phrased it."
-      : "Only what the headline states; no further detail was available in the feed.",
+      : "Only what the headline states. No further detail was available in the feed.",
   ];
   const doesNotEstablish = [
-    "Any effect on a particular supplier, contract, price or shipment; those are inferences below.",
+    "Any effect on a particular supplier, contract, price or shipment. Those are SIGNAL's readings, below.",
     ...lead.unknowns,
   ];
 
@@ -146,7 +146,7 @@ export function analyzeStory(story: Story, digest?: Digest): Analysis {
           ? `The supplier region${supplierRegions.length > 1 ? "s" : ""} implicated: ${regionList(supplierRegions)}. Actual exposure depends on which suppliers, lanes and grades are involved, which this report does not establish.`
           : story.regions.includes("australia")
             ? "This is a home-market development: it reaches supplier relationships through the currency, financing cost and customer demand rather than through any one region."
-            : "No supplier region is named directly; the effect, if any, would arrive through global prices, freight or currency.",
+            : "No supplier region is named directly. Any effect would arrive through global prices, freight or currency.",
     },
   ];
   if (mechanisms[1]) {
@@ -170,7 +170,7 @@ export function analyzeStory(story: Story, digest?: Digest): Analysis {
       establishes,
       doesNotEstablish,
       interpretationNote:
-        "The event section quotes the source. The mechanism, implication, second-order effects, options and meeting contribution are SIGNAL's interpretation and are labelled as inference, hypothesis or unknown.",
+        "The 'what happened' section quotes the source. Everything after it is SIGNAL's reading, labelled as our reading, possible, or not known.",
     },
     mechanisms: mechanisms.map((m) => ({ id: m.id, name: m.name, chain: m.chain, topic: m.topics[0] })),
     implication,
@@ -246,6 +246,6 @@ export function crossRegionalSignal(
   }
   if (!best) return undefined;
   const mechanism = matchMechanisms({ topics: [best.topic], regions: best.regions }, 1)[0];
-  const text = `${best.stories.length} of today's stories share one mechanism, ${lcName(mechanism.name)}, across ${regionList(best.regions)}. ${firstSentence(mechanism.chain)} Whether these developments add up to one pressure or several unrelated ones is not established; the connecting mechanism is a hypothesis to test.`;
+  const text = `${best.stories.length} of today's stories share one mechanism, ${lcName(mechanism.name)}, across ${regionList(best.regions)}. ${firstSentence(mechanism.chain)} Whether these developments add up to one pressure or several unrelated ones is not established. The link between them is a possibility to test, not a fact.`;
   return { topic: best.topic, regions: best.regions, mechanism, stories: best.stories.slice(0, 4), text };
 }

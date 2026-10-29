@@ -15,6 +15,7 @@ import { Freshness } from "@/components/Freshness";
 import { Plate, type PlateName } from "@/components/Plate";
 import { RegionBeads } from "@/components/RegionBead";
 import { StoryMeta } from "@/components/StoryMeta";
+import { Welcome } from "@/components/Welcome";
 import { ButtonLink } from "@/components/Button";
 import { IconArrow } from "@/components/shell/icons";
 
@@ -38,6 +39,7 @@ async function Today() {
   return (
     <div className="mx-auto w-full max-w-[1280px] px-4 md:px-8 pt-6 md:pt-7 pb-6 flex-1 flex flex-col">
       <h1 className="sr-only">Today&rsquo;s Signal, {todayLabel(now)}</h1>
+      <Welcome />
 
       {!lead || !analysis ? (
         <div className="mt-8">
@@ -46,7 +48,7 @@ async function Today() {
             action={{ href: "/sources", label: "See source status" }}
           >
             {okSources === 0
-              ? "Every configured feed failed on the last refresh. SIGNAL does not show stand-in stories; it will try again on the next refresh."
+              ? "Every configured feed failed on the last refresh. SIGNAL does not show stand-in stories. It will try again on the next refresh."
               : "The feeds returned stories, but none scored high enough on relevance, evidence and recency to lead the day. Try the regional views or widen your preferences."}
           </Empty>
         </div>

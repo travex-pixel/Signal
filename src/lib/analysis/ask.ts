@@ -22,7 +22,7 @@ You answer questions using only the stories and analysis provided in the convers
 - When you reason beyond what a source states, say "SIGNAL's reading:" or "likely" so the reader can tell inference from fact.
 - Never assert a connection to a specific supplier, contract, price, shipment or internal arrangement. Say that exposure depends on details not in the material.
 - Cite by publisher and headline when you lean on a story, e.g. (Reuters: "...").
-- Plain, measured English for someone who will repeat it in a meeting. Short paragraphs. No bullet lists unless asked. No hype, no exclamation marks, no jargon.
+- Plain, measured English for a reader whose English is good but not native, who will repeat it in a meeting. Short sentences. Short paragraphs. Common words. Never use semicolons or dashes as punctuation. No bullet lists unless asked. No hype, no exclamation marks, no jargon.
 - Keep the Australian lens: the dollar, landed cost, lead times, demand, working capital, regulation.
 - Default to under 180 words unless the question asks for depth.
 - Do not mention the company name.`;
@@ -31,12 +31,12 @@ export function buildAskContext(digest: Digest, story?: Story): string {
   const top = digest.stories.slice(0, 14);
   const lines = top.map((s, i) => {
     const when = s.publishedAt ? formatDateTime(s.publishedAt, { year: "numeric" }) : "time not stated";
-    return `${i + 1}. [${s.publisher}, ${when}] "${s.title}"${s.summary ? ` — ${s.summary}` : ""} (regions: ${s.regions.join(", ")}; topics: ${s.topics.join(", ") || "none"})`;
+    return `${i + 1}. [${s.publisher}, ${when}] "${s.title}"${s.summary ? `: ${s.summary}` : ""} (regions: ${s.regions.join(", ")}. topics: ${s.topics.join(", ") || "none"})`;
   });
   let out = `Today's digest (${top.length} highest-ranked stories as of ${formatDateTime(digest.generatedAt, { year: "numeric" })} Sydney):\n${lines.join("\n")}`;
   if (story) {
     const a = analyzeStory(story, digest);
-    out += `\n\nThe reader is looking at this story: [${story.publisher}] "${story.title}"${story.summary ? ` — ${story.summary}` : ""}\nSIGNAL's rule-based analysis of it:\n${JSON.stringify(
+    out += `\n\nThe reader is looking at this story: [${story.publisher}] "${story.title}"${story.summary ? `: ${story.summary}` : ""}\nSIGNAL's rule-based analysis of it:\n${JSON.stringify(
       {
         mechanisms: a.mechanisms.map((m) => ({ name: m.name, chain: m.chain })),
         implication: a.implication.map((c) => `${c.kind}: ${c.text}`),

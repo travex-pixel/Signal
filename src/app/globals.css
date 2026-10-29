@@ -271,7 +271,7 @@ a {
 /* On narrow screens the chain keeps a readable minimum column and scrolls. */
 @media (max-width: 480px) {
   .chain {
-    grid-template-columns: repeat(6, minmax(62px, 1fr));
+    grid-template-columns: repeat(6, minmax(78px, 1fr));
     overflow-x: auto;
     padding-bottom: 2px;
     scrollbar-width: none;
@@ -337,6 +337,14 @@ a {
   overflow: hidden;
   text-overflow: clip;
   max-width: 100%;
+  padding-right: 8px;
+  line-height: 1.2;
+}
+/* Narrow columns let a two-word label wrap rather than clip. */
+@media (max-width: 480px) {
+  .chain-label {
+    white-space: normal;
+  }
 }
 
 /* ------------------------------------------------------------------

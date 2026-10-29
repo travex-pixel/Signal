@@ -126,7 +126,7 @@ async function RegionView({ params }: { params: Promise<{ region: string }> }) {
                 <h2 id="impl" className="m-0 text-[12px] font-semibold uppercase tracking-[0.07em] text-ink-3">Possible implications</h2>
                 <p className="mt-2 mb-0 font-serif text-[16px] leading-[1.55] text-ink max-w-[62ch]">{leadAnalysis.implication[0].text}</p>
                 <p className="mt-3 mb-0 text-[13.5px] text-ink-3 max-w-[62ch]">
-                  Read from the leading story through <em>{lcName(leadAnalysis.mechanisms[0].name)}</em>. An inference, not a fact; actual exposure depends on suppliers, lanes and grades.
+                  Read from the leading story through <em>{lcName(leadAnalysis.mechanisms[0].name)}</em>. This is our reading, not a fact. Real exposure depends on suppliers, lanes and grades.
                 </p>
                 <h2 className="mt-6 mb-0 text-[12px] font-semibold uppercase tracking-[0.07em] text-ink-3">Key unknowns</h2>
                 <ul className="mt-2 mb-0 pl-4 space-y-1.5 text-[14.5px] leading-[1.5] text-ink-2 max-w-[62ch]">
@@ -155,7 +155,7 @@ async function RegionView({ params }: { params: Promise<{ region: string }> }) {
           )}
           {mechanisms.length > 0 ? (
             <p className="mt-3 mb-0 text-[13.5px] leading-[1.5] text-ink-2">
-              Mechanisms in play: {mechanisms.map((m) => lcName(m.name)).join("; ")}.
+              How it works here: {mechanisms.map((m) => lcName(m.name)).join(", and ")}.
             </p>
           ) : null}
         </section>

@@ -14,7 +14,7 @@ export default function LearnPage() {
         <div className="max-w-[56ch]">
           <h1 className="m-0 text-[26px] md:text-[30px] leading-[1.15] font-semibold tracking-[-0.015em] text-ink">Financial fluency</h1>
           <p className="mt-3 mb-0 font-serif text-[17px] leading-[1.5] text-ink-2 text-pretty">
-            Eight short lessons and seven working simulators, each built around one commercial mechanism. Every story&rsquo;s reasoning ends in a principle; these are the principles in full, with the arithmetic you can test yourself. All figures are illustrative.
+            Eight short lessons and seven working simulators, each built around one commercial mechanism. Every story&rsquo;s reasoning ends in a principle. These are the principles in full, with the arithmetic you can test yourself. All figures are illustrative.
           </p>
         </div>
         <Plate name="pellets-cyan" width={200} className="hidden md:block flex-none -mt-8" />

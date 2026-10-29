@@ -18,7 +18,7 @@ export default function PreferencesPage({ searchParams }: { searchParams: Promis
         Tune how much weight each region and topic carries in the ranking.
       </p>
       <p className="mt-3 mb-0 text-[14.5px] leading-[1.5] text-ink-2 max-w-[62ch]">
-        Defaults put the four supplier regions first, with Australia as the home-market lens and global context behind. Emphasis changes ranking; it never invents stories. Settings are kept in a cookie in this browser.
+        Defaults put the four supplier regions first, with Australia as the home-market lens and global context behind. Emphasis changes the order. It never invents stories. Settings are kept in a cookie in this browser.
       </p>
       <Suspense fallback={null}>
         <SavedNotice searchParams={searchParams} />

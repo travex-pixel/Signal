@@ -186,7 +186,7 @@ export const SIMULATORS: Simulator[] = [
           ],
           format: (x) => fmtMoney(x),
         },
-        reading: `Freight is ${fmtPct(o.freightShareNowPct)} of landed cost, so a ${fmtPct(v.freightChangePct, 0)} change in container rates moves landed cost by ${fmtPct(o.landedChangePct)}. ${Math.abs(v.freightChangePct) >= 50 ? "A dramatic freight headline becomes a modest landed-cost change for dense goods; for lighter products the share, and the effect, is larger." : "Small freight moves barely register in landed cost for dense goods."}`,
+        reading: `Freight is ${fmtPct(o.freightShareNowPct)} of landed cost, so a ${fmtPct(v.freightChangePct, 0)} change in container rates moves landed cost by ${fmtPct(o.landedChangePct)}. ${Math.abs(v.freightChangePct) >= 50 ? "A dramatic freight headline becomes a modest landed-cost change for dense goods. For lighter products the share, and the effect, is larger." : "Small freight moves barely register in landed cost for dense goods."}`,
         assumptions: ["Duty is charged on the FOB value only.", "Freight is spread evenly over the tonnes in the container.", "Currency is held constant."],
       };
     },
@@ -227,8 +227,8 @@ export const SIMULATORS: Simulator[] = [
           ],
           format: money,
         },
-        reading: `A ${fmtPct(Math.abs(v.volumeChangePct), 0)} ${v.volumeChangePct < 0 ? "fall" : "rise"} in volume moves EBITDA by ${money(volumeEffect)}; a ${fmtPct(Math.abs(v.priceChangePct))} price ${v.priceChangePct < 0 ? "cut" : "rise"} moves it by ${money(priceEffect)}. Break-even is a ${fmtPct(Math.abs(o.breakEvenVolumeChangePct), 0)} fall in volume at current prices.`,
-        assumptions: ["Cost of goods scales with volume; fixed costs do not move.", "A price change applies to all volume sold after the change.", "The price response does not itself change volume (test that by moving both)."],
+        reading: `A ${fmtPct(Math.abs(v.volumeChangePct), 0)} ${v.volumeChangePct < 0 ? "fall" : "rise"} in volume moves EBITDA by ${money(volumeEffect)}. A ${fmtPct(Math.abs(v.priceChangePct))} price ${v.priceChangePct < 0 ? "cut" : "rise"} moves it by ${money(priceEffect)}. Break-even is a ${fmtPct(Math.abs(o.breakEvenVolumeChangePct), 0)} fall in volume at current prices.`,
+        assumptions: ["Cost of goods moves with volume. Fixed costs do not.", "A price change applies to all volume sold after the change.", "The price response does not itself change volume (test that by moving both)."],
       };
     },
   },
@@ -345,7 +345,7 @@ export const SIMULATORS: Simulator[] = [
           format: money,
         },
         reading: `The business funds ${fmtNum(o.cashConversionDays)} days of its cost of goods, ${money(o.netWorkingCapital)} of working capital, costing about ${money(o.annualFinancingCost)} a year at ${fmtPct(v.ratePct, 2)}. Each day cut from the cycle frees about ${money(o.cashPerDay)}.`,
-        assumptions: ["Receivables are measured on revenue; inventory and payables on cost of goods.", "A simple average-day model; seasonality is ignored.", "All working capital is financed at the stated rate."],
+        assumptions: ["Unpaid invoices are measured on revenue. Inventory and bills owed are measured on cost of goods.", "A simple average-day model. Seasonality is ignored.", "All working capital is financed at the stated rate."],
       };
     },
   },

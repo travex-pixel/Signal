@@ -74,59 +74,59 @@ async function Brief({ params }: { params: Promise<{ id: string }> }) {
 
       <div className="prose-signal mt-6 max-w-none">
         <section>
-          <h2>The issue in plain English</h2>
+          <h2>What happened, in plain words</h2>
           <p>{a.event[0].text}</p>
           {a.event[1] ? <p>{a.event[1].text}</p> : null}
         </section>
 
         <section>
-          <h2>Strongest available evidence</h2>
+          <h2>What the source shows</h2>
           <ul>
             {a.evidence.establishes.map((e, i) => <li key={i}>{e}</li>)}
           </ul>
-          <p className="font-sans text-[14px] text-ink-3">Not established: {a.evidence.doesNotEstablish[0]}</p>
+          <p className="font-sans text-[14px] text-ink-3">The source does not show: {lowerFirst(a.evidence.doesNotEstablish[0])}</p>
         </section>
 
         <section>
-          <h2>Why it matters commercially</h2>
+          <h2>Why it matters for the business</h2>
           <p>{a.mechanisms[0].chain}</p>
           <p>{a.implication[0].text}</p>
         </section>
 
         <section>
-          <h2>Regional implications</h2>
+          <h2>What it means by region</h2>
           <p>{a.implication[1].text}</p>
         </section>
 
         <section>
-          <h2>Risks and opportunities</h2>
+          <h2>Risks and chances</h2>
           <ul>
             {a.secondOrder.filter((c) => c.kind === "hypothesis").map((c, i) => <li key={i}>{c.text}</li>)}
           </ul>
         </section>
 
         <section>
-          <h2>Questions worth asking</h2>
+          <h2>Questions to ask</h2>
           <ol>
             <li>{a.meeting.question}</li>
             {a.options.slice(0, 2).map((o, i) => (
-              <li key={i}>Should we {lowerFirst(o.action).replace(/\.$/, "")}? (Trade-off: {lowerFirst(o.tradeoff)})</li>
+              <li key={i}>Should we {lowerFirst(o.action).replace(/\.$/, "")}? (The cost: {lowerFirst(o.tradeoff)})</li>
             ))}
           </ol>
         </section>
 
         <section>
-          <h2>A credible counterargument</h2>
+          <h2>The other view</h2>
           <p>{a.meeting.counterpoint}</p>
         </section>
 
         <section>
-          <h2>What to monitor next</h2>
+          <h2>What to watch</h2>
           <p>{a.meeting.indicator}</p>
         </section>
 
         <section>
-          <h2>If asked for a view</h2>
+          <h2>If someone asks what you think</h2>
           <p className="italic">{a.meeting.observation}</p>
           <p className="font-sans text-[13.5px] text-ink-3">
             Confidence is {a.confidence.level}: {a.confidence.reason}
@@ -134,7 +134,7 @@ async function Brief({ params }: { params: Promise<{ id: string }> }) {
         </section>
 
         <section className="pt-6 border-t border-hairline">
-          <h2>Source notes</h2>
+          <h2>Sources</h2>
           <ul className="font-sans text-[14px]">
             <li>
               {story.publisher}: <a href={story.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1">{story.title} <IconExternal /></a>
@@ -148,7 +148,7 @@ async function Brief({ params }: { params: Promise<{ id: string }> }) {
             ))}
           </ul>
           <p className="font-sans text-[13px] text-ink-3">
-            The evidence section quotes the source; everything else is SIGNAL&rsquo;s interpretation. Nothing here asserts a connection to a specific supplier, contract or shipment.
+            The evidence section quotes the source. Everything else is SIGNAL&rsquo;s reading. Nothing here asserts a connection to a specific supplier, contract or shipment.
           </p>
         </section>
       </div>

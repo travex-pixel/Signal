@@ -129,7 +129,7 @@ export function AskSignal({
             <div className="mt-2">
               <div className="flex items-center gap-2">
                 <KindTag kind="inference" />
-                <span className="text-[12px] text-ink-3">Answered from today&rsquo;s stories; not advice.</span>
+                <span className="text-[12px] text-ink-3">Answered from today&rsquo;s stories. Not advice.</span>
               </div>
               <p className="mt-2 mb-0 font-serif text-[16px] leading-[1.55] text-ink whitespace-pre-wrap">
                 {answer}

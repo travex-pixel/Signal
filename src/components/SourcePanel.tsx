@@ -35,7 +35,7 @@ export function SourcePanel({ story, analysis, open = false }: { story: Story; a
     ...(story.discoveryUrl
       ? [{ k: "Discovered via", v: <span>Google News RSS (original URL recovered from the discovery link)</span> }]
       : story.url.includes("news.google.com")
-        ? [{ k: "Note", v: <span>The original article URL could not be recovered from Google News; the link above goes through Google&rsquo;s redirector to the publisher.</span> }]
+        ? [{ k: "Note", v: <span>The original article URL could not be recovered from Google News. The link above goes through Google&rsquo;s redirector to the publisher.</span> }]
         : []),
     { k: "Published", v: story.publishedAt ? `${formatDateTime(story.publishedAt, { year: "numeric" })} (Sydney)` : "Not stated in the feed" },
     { k: "Retrieved", v: `${formatDateTime(story.retrievedAt, { year: "numeric" })} (Sydney)` },
@@ -67,7 +67,7 @@ export function SourcePanel({ story, analysis, open = false }: { story: Story; a
       k: "Why it ranked here",
       v: (
         <span className="text-ink-2">
-          Score {story.relevance.score}: {story.relevance.reasons.join("; ")}.
+          Score {story.relevance.score}: {story.relevance.reasons.join(", ")}.
         </span>
       ),
     },
@@ -75,7 +75,7 @@ export function SourcePanel({ story, analysis, open = false }: { story: Story; a
       k: "Filed under",
       v: (
         <span className="text-ink-2">
-          Regions {story.regions.join(", ")}{story.countries.length ? ` (${story.countries.join(", ")})` : ""}; topics {story.topics.join(", ") || "none matched"}. Tags come from a transparent keyword lexicon, not a model.
+          Regions: {story.regions.join(", ")}{story.countries.length ? ` (${story.countries.join(", ")})` : ""}. Topics: {story.topics.join(", ") || "none matched"}. Tags come from a plain keyword list, not a model.
         </span>
       ),
     },
