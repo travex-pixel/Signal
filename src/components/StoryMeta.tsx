@@ -1,5 +1,6 @@
 import { relativeTime } from "@/lib/format";
 import type { Story } from "@/lib/news/types";
+import { Ago } from "./Clock";
 import { RegionBeads } from "./RegionBead";
 
 /** Publisher, time and region beads: the datasheet line under every headline. */
@@ -13,7 +14,7 @@ export function StoryMeta({ story, now, showRegions = true, className = "" }: { 
         <>
           <span aria-hidden="true">·</span>
           <time dateTime={story.publishedAt} className="tnum">
-            {relativeTime(story.publishedAt, now)}
+            <Ago iso={story.publishedAt} fallback={relativeTime(story.publishedAt, now)} />
           </time>
         </>
       ) : null}

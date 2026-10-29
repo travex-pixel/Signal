@@ -5,14 +5,14 @@ type Variant = "primary" | "secondary" | "ghost";
 
 const styles: Record<Variant, string> = {
   primary:
-    "bg-navy text-white hover:bg-navy-700 active:bg-navy-800 shadow-1",
+    "btn-primary text-white",
   secondary:
-    "bg-surface text-navy border border-hairline-strong hover:border-navy-200 hover:bg-surface-2 active:bg-navy-100",
+    "bg-surface text-navy border border-hairline-strong shadow-1 hover:border-navy-200 hover:bg-surface-2 hover:shadow-2 active:bg-navy-100",
   ghost: "text-navy hover:bg-navy-100 active:bg-navy-200/60",
 };
 
 const base =
-  "inline-flex items-center justify-center gap-1.5 h-9 px-3.5 rounded-md text-[13.5px] font-semibold whitespace-nowrap transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none";
+  "inline-flex items-center justify-center gap-1.5 h-9 px-3.5 rounded-md text-[13.5px] font-semibold whitespace-nowrap transition-[background-color,border-color,box-shadow,transform] duration-150 active:translate-y-px disabled:opacity-50 disabled:pointer-events-none";
 
 export function ButtonLink({ variant = "secondary", className = "", children, ...rest }: ComponentProps<typeof Link> & { variant?: Variant; children: ReactNode }) {
   return (

@@ -71,7 +71,7 @@ export function AskSignal({
   }
 
   return (
-    <section aria-labelledby={`${id}-h`} className={compact || inline ? "" : "rounded-lg bg-surface border border-hairline px-5 py-5 md:px-6"}>
+    <section aria-labelledby={`${id}-h`} className={compact || inline ? "" : "paper px-5 py-5 md:px-6"}>
       <h2 id={`${id}-h`} className={inline ? "sr-only" : "m-0 text-[12px] font-semibold uppercase tracking-[0.07em] text-ink-3"}>
         Ask SIGNAL
       </h2>

@@ -52,7 +52,7 @@ async function SimulatorView({ params }: { params: Promise<{ slug: string }> }) 
         <Plate name={def.plate} width={120} className="hidden sm:block flex-none -mt-4" />
       </header>
 
-      <div className="mt-8">
+      <div className="mt-7 paper px-5 py-5 md:px-8 md:py-7">
         <Simulator slug={def.slug} />
       </div>
 

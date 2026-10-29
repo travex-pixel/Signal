@@ -177,7 +177,7 @@ export function analyzeStory(story: Story, digest?: Digest): Analysis {
     secondOrder,
     options: lead.options.slice(0, 3),
     meeting: {
-      observation: `${story.publisher} reported${story.publishedAt ? ` ${relativeDay(story.publishedAt)}` : ""}: “${story.title}”. The mechanism that matters for us is ${lcName(lead.name)}: ${firstSentence(lead.chain)}`,
+      observation: `${story.publisher} reported${story.publishedAt ? ` on ${dayOf(story.publishedAt)}` : ""}: “${story.title}”. The mechanism that matters for us is ${lcName(lead.name)}: ${firstSentence(lead.chain)}`,
       question: lead.question,
       counterpoint: lead.counterpoint,
       indicator: lead.indicator,
@@ -210,13 +210,9 @@ function firstSentence(s: string): string {
   return m ? m[0] : s;
 }
 
-function relativeDay(iso: string): string {
-  const diff = Date.now() - Date.parse(iso);
-  const hours = diff / 36e5;
-  if (hours < 1) return "within the hour";
-  if (hours < 24) return `${Math.round(hours)} hours ago`;
-  const days = Math.round(hours / 24);
-  return days === 1 ? "yesterday" : `${days} days ago`;
+/** The day a story was published, Sydney time, as said aloud: "29 October". No clock is read, so prerendered pages stay pure. */
+function dayOf(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-AU", { timeZone: "Australia/Sydney", day: "numeric", month: "long" });
 }
 
 /**

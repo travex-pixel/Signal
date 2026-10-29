@@ -47,7 +47,7 @@ export function Welcome() {
   return (
     <aside
       aria-label="Welcome to SIGNAL"
-      className="rise mb-5 rounded-lg bg-navy text-white px-5 py-4 md:px-6 md:py-5 flex items-start gap-4"
+      className="rise mb-5 rounded-xl navy-gloss text-white px-5 py-4 md:px-6 md:py-5 flex items-start gap-4"
     >
       <div className="min-w-0 flex-1">
         <p className="m-0 font-sans text-[15px] md:text-[16px] font-semibold leading-[1.35]">

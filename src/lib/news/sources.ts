@@ -98,20 +98,6 @@ export const SOURCES: SourceDefinition[] = [
       "Australian Department of Foreign Affairs and Trade statements and news, discovered through Google News RSS scoped to dfat.gov.au. The publisher is DFAT itself. Trade statistics context: dfat.gov.au/trade/trade-and-investment-data-information-and-publications/trade-foreign-investment-statistics.",
     notes: "DFAT's statistics page is a web page, not a feed, and no departmental RSS feed could be verified. Discovery keeps DFAT's own pages as the source.",
   },
-  {
-    id: "trade-minister",
-    publisher: "Minister for Trade",
-    url: "https://www.trademinister.gov.au/rss.xml",
-    type: "government",
-    regions: ["australia", "global"],
-    topics: ["trade", "geopolitics"],
-    active: true,
-    refreshMinutes: 180,
-    maxAgeHours: 24 * 21,
-    evidenceWeight: 3,
-    attribution: "Media releases and speeches of the Australian Minister for Trade (trademinister.gov.au official RSS feed).",
-    notes: "Feed URL from the govau media-release-sources directory. Listed as degraded until a fetch succeeds.",
-  },
 
   // ---------------------------------------------------------------
   // Wire and broadcaster discovery

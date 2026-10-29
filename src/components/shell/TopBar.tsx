@@ -6,7 +6,7 @@ import { Wordmark } from "./Wordmark";
 
 export function TopBar() {
   return (
-    <header className="bg-navy text-white print:hidden">
+    <header className="topbar text-white print:hidden">
       <div className="mx-auto max-w-[1280px] px-4 md:px-8 h-14 flex items-center justify-between gap-6">
         <Link href="/" className="rounded-md focus-visible:outline-white" aria-label="SIGNAL home">
           <Wordmark />

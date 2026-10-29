@@ -26,7 +26,7 @@ export async function GET(request: Request) {
   revalidateTag(DIGEST_TAG, "max");
 
   const digest = await getDigest();
-  const { lead, supporting } = selectForToday(digest.stories, { supporting: 3 });
+  const { lead, supporting } = selectForToday(digest.stories, { supporting: 7, minScore: 6 });
   let warmed = 0;
   if (aiEnabled()) {
     const stories = [lead, ...supporting].filter((s) => s !== undefined);

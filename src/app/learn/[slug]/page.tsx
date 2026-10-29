@@ -44,7 +44,7 @@ async function Lesson({ params }: { params: Promise<{ slug: string }> }) {
       </nav>
 
       <div className="mt-5 grid gap-10 lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-16">
-        <div className="min-w-0 max-w-[68ch]">
+        <div className="min-w-0 max-w-[calc(68ch+4rem)] paper px-5 py-6 md:px-8 md:py-8">
           <header className="flex items-start gap-6">
             <div className="min-w-0">
               <h1 className="m-0 text-[28px] md:text-[34px] leading-[1.12] font-semibold tracking-[-0.015em] text-ink text-balance">{lesson.title}</h1>
@@ -77,7 +77,7 @@ async function Lesson({ params }: { params: Promise<{ slug: string }> }) {
           </div>
 
           {sim ? (
-            <div className="mt-8 rounded-lg bg-navy text-white px-6 py-5 flex flex-wrap items-center justify-between gap-4">
+            <div className="mt-8 rounded-xl navy-gloss text-white px-6 py-5 flex flex-wrap items-center justify-between gap-4">
               <div className="min-w-0 max-w-[48ch]">
                 <p className="m-0 text-[16px] font-semibold">Try {sim.title.toLowerCase()} with your own numbers</p>
                 <p className="mt-1 mb-0 text-[13.5px] text-navy-100">{sim.question}</p>

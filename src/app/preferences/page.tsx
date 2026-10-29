@@ -44,7 +44,7 @@ async function PreferencesForm() {
   await connection();
   const prefs = await getPreferences();
   return (
-    <form action={savePreferences} className="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-16 max-w-[1100px]">
+    <form action={savePreferences} className="mt-7 paper px-5 py-5 md:px-8 md:py-7 grid gap-10 lg:grid-cols-2 lg:gap-16 max-w-[1100px]">
       <fieldset className="m-0 p-0 border-0 min-w-0">
         <legend className="text-[12px] font-semibold uppercase tracking-[0.07em] text-ink-3">Regions</legend>
         <div className="mt-2 divide-y divide-hairline">

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { connection } from "next/server";
 import { Suspense } from "react";
 import { getDigest } from "@/lib/news/pipeline";
 import { SOURCES } from "@/lib/news/sources";
@@ -29,7 +28,6 @@ export default function SourcesPage() {
 }
 
 async function SourceTable() {
-  await connection();
   const digest = await getDigest();
   const statusById = new Map(digest.sources.map((s) => [s.id, s]));
   const ok = digest.sources.filter((s) => s.ok).length;
@@ -48,7 +46,7 @@ async function SourceTable() {
       </p>
 
       {/* Narrow screens: one stacked entry per source, status first. */}
-      <ul className="md:hidden mt-5 m-0 p-0 list-none divide-y divide-hairline">
+      <ul className="md:hidden mt-5 paper px-5 py-1 m-0 list-none divide-y divide-hairline">
         {SOURCES.map((s) => {
           const st = statusById.get(s.id);
           return (
@@ -69,7 +67,7 @@ async function SourceTable() {
         })}
       </ul>
 
-      <div className="hidden md:block mt-5 overflow-x-auto">
+      <div className="hidden md:block mt-5 paper px-6 py-2 overflow-x-auto">
         <table className="w-full min-w-[720px] border-collapse text-[13.5px]">
           <thead>
             <tr className="text-left text-[11.5px] uppercase tracking-[0.06em] text-ink-3">

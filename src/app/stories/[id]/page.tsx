@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { connection } from "next/server";
 import { Suspense } from "react";
 import { aiEnabled, getAnalysis } from "@/lib/analysis/ai";
 import { AskSignal } from "@/components/AskSignal";
-import { getPersonalDigest } from "@/lib/data";
-import { findStory } from "@/lib/news/pipeline";
+import { findStory, getDigest } from "@/lib/news/pipeline";
 import { REGION_BY_ID } from "@/lib/news/regions";
 import { Chain } from "@/components/Chain";
 import { ClaimList, KindLegend, KindTag } from "@/components/Claims";
@@ -28,8 +26,7 @@ export default function StoryPage({ params }: { params: Promise<{ id: string }> 
 
 async function StoryView({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  await connection();
-  const { digest } = await getPersonalDigest();
+  const digest = await getDigest();
   const story = findStory(digest, id);
   if (!story) {
     return (
@@ -40,8 +37,8 @@ async function StoryView({ params }: { params: Promise<{ id: string }> }) {
       </div>
     );
   }
-  const analysis = await getAnalysis(story, digest.stories);
-  const now = new Date();
+  const analysis = await getAnalysis(story, digest);
+  const now = new Date(digest.generatedAt);
   const region = story.regions[0];
   const regionMeta = REGION_BY_ID[region];
 
@@ -57,7 +54,7 @@ async function StoryView({ params }: { params: Promise<{ id: string }> }) {
       </nav>
 
       <div className="mt-5 grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-16">
-        <div className="min-w-0 max-w-[68ch]">
+        <div className="min-w-0 max-w-[calc(68ch+4rem)] paper px-5 py-6 md:px-8 md:py-8">
           <StoryMeta story={story} now={now} />
           <h1 className="mt-3 mb-0 text-[26px] md:text-[34px] leading-[1.12] font-semibold tracking-[-0.015em] text-ink text-balance">{story.title}</h1>
           <p className="mt-4 mb-0 flex flex-wrap items-center gap-x-4 gap-y-2 text-[13.5px]">
@@ -69,7 +66,7 @@ async function StoryView({ params }: { params: Promise<{ id: string }> }) {
             </Link>
           </p>
 
-          <div className="mt-7 sticky top-0 z-10 -mx-4 px-4 py-3 md:mx-0 md:px-0 bg-ground border-b border-hairline">
+          <div className="mt-7 sticky top-0 z-10 -mx-5 px-5 md:-mx-8 md:px-8 py-3 bg-surface/95 backdrop-blur border-b border-hairline">
             <Chain href={`/stories/${story.id}`} region={region} compact />
           </div>
 
@@ -113,7 +110,7 @@ async function StoryView({ params }: { params: Promise<{ id: string }> }) {
               <ClaimList claims={analysis.implication} />
               <h2 className="!mt-7">What could follow</h2>
               <ClaimList claims={analysis.secondOrder} />
-              <div className="mt-7 rounded-md bg-surface border border-hairline px-5 py-4">
+              <div className="mt-7 rounded-lg bg-surface-2 border border-hairline px-5 py-4">
                 <p className="!mb-1 font-sans text-[12px] font-semibold uppercase tracking-[0.06em] text-ink-3">Business relevance</p>
                 <p className="!mb-0 text-[15.5px]">{analysis.businessRelevance}</p>
               </div>
@@ -154,7 +151,7 @@ async function StoryView({ params }: { params: Promise<{ id: string }> }) {
               </div>
             </section>
 
-            <section className="mt-10 rounded-lg bg-navy text-white px-6 py-5" aria-label="The principle">
+            <section className="mt-10 rounded-xl navy-gloss text-white px-6 py-5" aria-label="The principle">
               <p className="!mb-1 font-sans text-[17px] font-semibold text-white">
                 <span className="text-navy-200 font-medium">The principle: </span>
                 {analysis.principle.title}

@@ -20,7 +20,8 @@ export default function LearnPage() {
         <Plate name="pellets-cyan" width={200} className="hidden md:block flex-none -mt-8" />
       </div>
 
-      <section className="mt-8" aria-labelledby="lessons">
+      <div className="mt-7 paper px-5 py-5 md:px-8 md:py-7">
+      <section aria-labelledby="lessons">
         <h2 id="lessons" className="m-0 text-[12px] font-semibold uppercase tracking-[0.07em] text-ink-3">Lessons</h2>
         <ol className="mt-2 m-0 p-0 list-none grid md:grid-cols-2 gap-x-10">
           {LESSONS.map((l, i) => (
@@ -39,7 +40,7 @@ export default function LearnPage() {
         </ol>
       </section>
 
-      <section className="mt-10" aria-labelledby="sims">
+      <section className="mt-10 pt-8 border-t border-hairline" aria-labelledby="sims">
         <h2 id="sims" className="m-0 text-[12px] font-semibold uppercase tracking-[0.07em] text-ink-3">Commercial simulators</h2>
         <ul className="mt-2 m-0 p-0 list-none grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8">
           {SIMULATORS.map((s) => (
@@ -53,6 +54,7 @@ export default function LearnPage() {
           ))}
         </ul>
       </section>
+      </div>
     </div>
   );
 }

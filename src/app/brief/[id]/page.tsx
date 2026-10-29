@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { connection } from "next/server";
 import { Suspense } from "react";
 import { aiEnabled, getAnalysis } from "@/lib/analysis/ai";
 import { AskSignal } from "@/components/AskSignal";
-import { getPersonalDigest } from "@/lib/data";
 import { formatDate, formatDateTime } from "@/lib/format";
-import { findStory } from "@/lib/news/pipeline";
+import { findStory, getDigest } from "@/lib/news/pipeline";
+import { TodayDate } from "@/components/Clock";
 import { Empty } from "@/components/Empty";
 import { RegionBeads } from "@/components/RegionBead";
 import { Wordmark } from "@/components/shell/Wordmark";
@@ -26,8 +25,7 @@ export default function BriefPage({ params }: { params: Promise<{ id: string }> 
 
 async function Brief({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  await connection();
-  const { digest } = await getPersonalDigest();
+  const digest = await getDigest();
   const story = findStory(digest, id);
   if (!story) {
     return (
@@ -38,13 +36,13 @@ async function Brief({ params }: { params: Promise<{ id: string }> }) {
       </div>
     );
   }
-  const a = await getAnalysis(story, digest.stories);
+  const a = await getAnalysis(story, digest);
   const related = digest.stories
     .filter((s) => s.id !== story.id && s.topics.some((t) => story.topics.includes(t)) && s.regions.some((r) => story.regions.includes(r)))
     .slice(0, 3);
 
   return (
-    <article className="mx-auto w-full max-w-[760px] px-4 md:px-8 pt-6 md:pt-8 pb-12 print:max-w-none print:px-0 print:pt-0">
+    <article className="mx-auto w-full max-w-[820px] px-4 md:px-8 pt-6 md:pt-8 pb-12 print:max-w-none print:px-0 print:pt-0">
       <div className="flex items-center justify-between gap-4 print:hidden">
         <nav aria-label="Breadcrumb" className="text-[12.5px] text-ink-3">
           <Link href="/brief" className="hover:text-ink">Briefs</Link>
@@ -54,10 +52,11 @@ async function Brief({ params }: { params: Promise<{ id: string }> }) {
         <PrintButton />
       </div>
 
-      <header className="mt-5 pb-5 border-b border-hairline">
+      <div className="mt-5 paper px-5 py-6 md:px-8 md:py-8 print:shadow-none print:border-0 print:p-0 print:rounded-none">
+      <header className="pb-5 border-b border-hairline">
         <div className="hidden print:flex items-center justify-between gap-6 mb-4 pr-2">
           <Wordmark tone="dark" />
-          <span className="text-[12px] text-ink-3">Meeting brief · {formatDate(new Date().toISOString())}</span>
+          <span className="text-[12px] text-ink-3">Meeting brief · <TodayDate long fallback={formatDate(digest.generatedAt)} /></span>
         </div>
         <h1 className="m-0 text-[24px] md:text-[30px] leading-[1.15] font-semibold tracking-[-0.01em] text-ink text-balance">{story.title}</h1>
         <p className="mt-3 mb-0 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-ink-3">
@@ -151,6 +150,8 @@ async function Brief({ params }: { params: Promise<{ id: string }> }) {
             The evidence section quotes the source. Everything else is SIGNAL&rsquo;s reading. Nothing here asserts a connection to a specific supplier, contract or shipment.
           </p>
         </section>
+      </div>
+
       </div>
 
       {aiEnabled() ? (

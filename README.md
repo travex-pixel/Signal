@@ -128,8 +128,34 @@ lexicons live in `src/lib/news/classify.ts`; business mechanisms in
    schedule (for example `*/20 * * * *`). Either way the digest revalidates
    on demand after 15 minutes of staleness, so the cron is a warm-up, not a
    requirement.
-4. No database is needed. Preferences live in a cookie; the digest lives in
+4. `vercel.json` pins the remaining server functions to Sydney (`syd1`),
+   which Hobby plans allow for a single region.
+5. No database is needed. Preferences live in a cookie; the digest lives in
    the Next.js data cache.
+
+### How pages are served
+
+Today, the regional views, the brief index, the Sources page and the Learn
+section are prerendered static pages. Vercel serves them from its edge
+network with no server function in the path, so a visit from Australia is a
+short hop rather than a cold start in another continent. Each one carries the
+digest's cache lifetime (15 minutes revalidate, a week of stale service), so
+it refreshes in the background and the daily cron purges it. Story and brief
+pages are partially prerendered: the shell is static and the story content
+is served from the cached digest. Relative times ("3h ago") and the date are
+rendered from the digest's own timestamp and corrected in the browser once
+the page hydrates, so a static page never shows a wrong clock.
+
+A reader who has saved preferences carries the `signal-prefs` cookie. The
+proxy in `src/proxy.ts` rewrites their requests for `/`, `/regions/*` and
+`/brief` to the matching `/personal/*` routes, which read the cookie and
+re-rank. The address bar does not change, and readers without the cookie
+never leave the static path.
+
+When `ANTHROPIC_API_KEY` is set, a story page waits at most 2.5 seconds for
+the AI enrichment. A cached enrichment arrives in milliseconds; a cold one
+finishes after the response and is used on the next render. The daily refresh
+pre-enriches the lead and the seven supporting stories.
 
 ## Source status and limitations
 

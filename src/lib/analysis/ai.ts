@@ -2,8 +2,9 @@ import "server-only";
 import Anthropic from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { cacheLife } from "next/cache";
+import { after } from "next/server";
 import { z } from "zod";
-import type { Story } from "@/lib/news/types";
+import type { Digest, Story } from "@/lib/news/types";
 import { analyzeStory } from "./engine";
 import type { Analysis } from "./types";
 
@@ -108,8 +109,19 @@ export async function enrichAnalysis(story: Story, base: Analysis): Promise<Anal
   }
 }
 
-export async function getAnalysis(story: Story, digestStories?: Story[]): Promise<Analysis> {
-  const base = analyzeStory(story, digestStories ? { stories: digestStories, sources: [], generatedAt: "" } : undefined);
+/**
+ * The analysis for a page, with a time budget. A cached enrichment returns in
+ * milliseconds and is used. A cold one is given `budgetMs`; if it is not back
+ * by then the page ships the rule-based analysis now and the enrichment
+ * finishes after the response, so the next render of the page has it.
+ */
+export async function getAnalysis(story: Story, digest?: Digest, budgetMs = 2500): Promise<Analysis> {
+  const base = analyzeStory(story, digest);
   if (!aiEnabled()) return base;
-  return enrichAnalysis(story, base);
+  const pending = enrichAnalysis(story, base);
+  const timer = new Promise<undefined>((resolve) => setTimeout(() => resolve(undefined), budgetMs));
+  const result = await Promise.race([pending, timer]);
+  if (result) return result;
+  after(() => pending.catch(() => undefined));
+  return base;
 }

@@ -57,7 +57,7 @@ export function buildAskContext(digest: Digest, story?: Story): string {
 export async function* streamAnswer(question: string, context: string): AsyncGenerator<string> {
   const client = new Anthropic();
   const stream = client.messages.stream({
-    model: process.env.SIGNAL_AI_MODEL || "claude-opus-5-5",
+    model: process.env.SIGNAL_ASK_MODEL || "claude-sonnet-5-5",
     max_tokens: 900,
     system: [{ type: "text", text: ASK_SYSTEM, cache_control: { type: "ephemeral" } }],
     messages: [

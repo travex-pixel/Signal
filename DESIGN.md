@@ -256,7 +256,7 @@ The build refuses the card-grid-of-summaries and the hero metric. There are no g
 **Key Characteristics:**
 - The chain is the signature: bars and beads from the Primaplas mark, used as the six-step reasoning chain and as region beads.
 - Datasheet rhythm: uppercase 12px labels over values, two-column `dt`/`dd` evidence, lining figures on every number and tabular figures only where a column must align.
-- Navy shell, cool ground, white objects; depth by hairline and tone, not shadow.
+- Navy shell with a soft gloss, cool washed ground, one sheet of white paper per view with a far, faint shadow; inside the sheet, depth by hairline and tone.
 - Two typefaces with strict jobs: Schibsted Grotesk for UI, headlines and labels; Literata at 17px for reading.
 - Region hue is information: cyan SEA, coral China, blue USA, yellow Middle East, navy Australia, slate global.
 - Claims wear their kind: Fact, Inference, Hypothesis, Unknown tags in four tints.
@@ -336,14 +336,17 @@ Today is built to fit 1440×900 without scrolling: lead left (bead line, headlin
 
 ## Elevation & Depth
 
-Depth is tonal and linear. Ground (#F4F5F9) is the page; surface (#FFFFFF) marks a discrete object; hairlines mark edges. Nothing floats at rest except the skip link, and even the shadows are navy-tinted so they read as paper on paper rather than UI on glass. The sticky chain bar and the mobile tab bar use translucency and `backdrop-blur` rather than a shadow to show that content passes beneath them.
+Depth is soft and physical. The page is a cool wash (`#F8F8FC` fading to `#EEEFF6`, fixed), and the reading content sits on one sheet of white paper per view: `.paper` is surface, a 16px radius, a hairline of white and `shadow-card`, a navy-tinted shadow that falls far and faint so the sheet reads as resting on the desk, not hovering. Within the sheet, hairlines still divide; nothing nests a second card inside the paper except the quiet `surface-2` "Business relevance" note. Navy fields (top bar, welcome, principle, primary button) carry a gentle vertical gloss (`navy-700` to `navy` to `navy-800`) with a one-pixel inner highlight, so they read as lacquer rather than flat fill. The sticky chain bar and the mobile tab bar use translucency and `backdrop-blur`, the tab bar with a faint upward shadow.
 
 ### Shadow Vocabulary
-- **shadow-1** (`box-shadow: 0 1px 2px rgba(35,30,75,0.06), 0 1px 1px rgba(35,30,75,0.03)`): the primary button only; a hint of weight on the one navy object in the content area.
-- **shadow-2** (`box-shadow: 0 2px 6px -1px rgba(35,30,75,0.10), 0 12px 28px -16px rgba(35,30,75,0.28)`): the focused skip link; reserved for anything that must float over content.
+- **shadow-1** (`0 1px 2px rgba(35,30,75,0.06), 0 1px 1px rgba(35,30,75,0.03)`): secondary buttons at rest.
+- **shadow-2** (`0 2px 6px -1px rgba(35,30,75,0.10), 0 12px 28px -16px rgba(35,30,75,0.28)`): secondary buttons on hover, the focused skip link.
+- **shadow-card** (`0 1px 1px rgba(35,30,75,0.03), 0 2px 8px -2px rgba(35,30,75,0.07), 0 20px 48px -28px rgba(35,30,75,0.22)`): the paper sheet.
+- **shadow-float** (`0 4px 12px -4px rgba(35,30,75,0.18), 0 28px 60px -30px rgba(35,30,75,0.38)`): glossy navy objects (welcome strip, principle callout).
+- **Primary button**: gloss gradient plus an inner highlight and a tight navy shadow that deepens on hover; it drops one pixel when pressed.
 
 ### Named Rules
-**The Hairline Rule.** Containers are made by a 1px `hairline` border or a `divide-y`, not by a shadow. A card is surface plus hairline plus 12px radius; a list is hairlines alone. `shadow-1` belongs to the primary button and `shadow-2` to floating UI; nothing else casts one.
+**The One Sheet Rule.** Each view has one sheet of paper. Inside it, containers are hairlines and `divide-y`, never nested cards. Shadows belong to the sheet, to buttons and to glossy navy objects; a list never casts one.
 
 ## Shapes
 
