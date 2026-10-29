@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
-import { getAnalysis } from "@/lib/analysis/ai";
+import { aiEnabled } from "@/lib/analysis/ai";
+import { analyzeStory } from "@/lib/analysis/engine";
+import { AskSignal } from "@/components/AskSignal";
 import { crossRegionalSignal } from "@/lib/analysis/engine";
 import { getPersonalDigest } from "@/lib/data";
 import { todayLabel, truncateSentences } from "@/lib/format";
@@ -30,7 +32,7 @@ async function Today() {
   const now = new Date();
   const { lead, supporting } = selectForToday(digest.stories, { supporting: 3 });
   const signal = crossRegionalSignal(digest.stories);
-  const analysis = lead ? await getAnalysis(lead, digest.stories) : undefined;
+  const analysis = lead ? analyzeStory(lead, digest) : undefined;
   const okSources = digest.sources.filter((s) => s.ok).length;
 
   return (
@@ -176,11 +178,21 @@ async function Today() {
               </Link>
             </section>
 
+
           </aside>
 
-          <div className="lg:col-span-2 mt-auto pt-4 border-t border-hairline flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
-            <p className="m-0 text-[12px] text-ink-3">{todayLabel(now)}</p>
-            <Freshness sources={digest.sources} generatedAt={digest.generatedAt} storyCount={digest.stories.length} fixtures={digest.fixtures} />
+          <div className="lg:col-span-2 mt-auto pt-3 border-t border-hairline">
+            <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3">
+              {aiEnabled() ? (
+                <div className="w-full lg:w-auto lg:flex-1 lg:max-w-[62ch]">
+                  <AskSignal inline placeholder="Ask SIGNAL about today's stories…" />
+                </div>
+              ) : null}
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                <p className="m-0 text-[12px] text-ink-3">{todayLabel(now)}</p>
+                <Freshness sources={digest.sources} generatedAt={digest.generatedAt} storyCount={digest.stories.length} fixtures={digest.fixtures} />
+              </div>
+            </div>
           </div>
         </div>
       )}

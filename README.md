@@ -58,10 +58,19 @@ designed for Vercel. The basic news experience needs no credentials.
    indicator), a confidence rating with reasons, and the underlying principle
    linked to a lesson. It never asserts a link to a specific supplier,
    contract or shipment.
-6. **Optional AI enrichment** (`analysis/ai.ts`). With `ANTHROPIC_API_KEY`
-   set, the rule-based draft is refined by Claude under the same labelling
-   rules through structured output; any failure or refusal falls back to the
-   rule-based analysis.
+6. **Optional AI** (`analysis/ai.ts`, `analysis/ask.ts`). With
+   `ANTHROPIC_API_KEY` set, two things switch on. The story and brief pages
+   refine the rule-based analysis with Claude under the same labelling rules
+   (structured output, cached per story; any failure or refusal falls back
+   to the rule-based text; Today never waits on it). And **Ask SIGNAL**
+   appears on Today, story and brief pages: a question box answered from
+   the stories in the current digest, streamed in, labelled as
+   interpretation, with the same rules about facts, inference and supplier
+   claims. The answer endpoint (`/api/ask`) only ever sees the digest and the
+   rule-based analysis, caps questions at 500 characters and allows twelve
+   questions a minute per address. Because the site has no login, anyone
+   with the URL can ask; keep the URL private or add Vercel's deployment
+   protection if that matters.
 
 ## Local development
 
@@ -96,7 +105,7 @@ Copy `.env.example`; every variable is optional.
 
 | Variable | Purpose |
 |---|---|
-| `ANTHROPIC_API_KEY` | Enables AI enrichment of the analysis. Unset means fully rule-based. |
+| `ANTHROPIC_API_KEY` | Enables Ask SIGNAL and AI refinement of the analysis. Unset means fully rule-based, question box hidden. |
 | `SIGNAL_AI_MODEL` | Model for enrichment (default `claude-opus-5-5`). |
 | `CRON_SECRET` | Protects `/api/refresh`. Vercel sends it automatically for cron invocations. |
 | `SIGNAL_USER_AGENT` | Overrides the User-Agent sent to feed publishers. |

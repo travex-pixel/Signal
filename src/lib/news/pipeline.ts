@@ -36,17 +36,24 @@ export async function buildDigest(now = new Date()): Promise<Digest> {
 
 export async function getDigest(): Promise<Digest> {
   "use cache";
-  cacheLife({ stale: 300, revalidate: 900, expire: 3600 });
+  // Visitors never wait on feeds: the cached digest is served and refreshed in the
+  // background once it is 15 minutes old; only a week-old entry is rebuilt inline.
+  cacheLife({ stale: 900, revalidate: 900, expire: 7 * 86400 });
   cacheTag(DIGEST_TAG);
   return buildDigest();
 }
 
 /** Re-ranks a cached digest for the reader's preferences without refetching. */
 export function applyPreferences(digest: Digest, prefs: Preferences): Digest {
+  const customised =
+    Object.keys(prefs.regionEmphasis).length > 0 || Object.keys(prefs.topicEmphasis).length > 0;
+  if (!customised) return digest;
   const now = new Date(digest.generatedAt);
   const stories = digest.stories
     .map((s) => {
-      const classification = classify(`${s.title} ${s.summary ?? ""}`, [s.regions[0]]);
+      const classification = s.scores
+        ? { topicScores: s.scores.topics, regionScores: s.scores.regions }
+        : classify(`${s.title} ${s.summary ?? ""}`, [s.regions[0]]);
       const { relevance: _ignored, ...rest } = s;
       void _ignored;
       return { ...rest, relevance: scoreStory(rest, classification, now, prefs) } as Story;

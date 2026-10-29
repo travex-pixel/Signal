@@ -15,7 +15,6 @@ const reading = Literata({
   variable: "--font-reading",
   subsets: ["latin"],
   display: "swap",
-  axes: ["opsz"],
 });
 
 export const metadata: Metadata = {

@@ -5,7 +5,7 @@ import { scoreStory, type Preferences } from "./rank";
 import type { SourceDefinition, SourceStatus, Story } from "./types";
 import { canonicalizeUrl, hostnameOf, isGoogleNewsUrl, unwrapGoogleNewsUrl } from "./urls";
 
-const DEFAULT_TIMEOUT_MS = 9_000;
+const DEFAULT_TIMEOUT_MS = 6_000;
 
 function userAgent(): string {
   return (
@@ -151,6 +151,7 @@ export function itemsToStories(
       regions: classification.regions,
       countries: classification.countries,
       topics: classification.topics,
+      scores: { regions: classification.regionScores, topics: classification.topicScores },
     };
     stories.push({ ...partial, relevance: scoreStory(partial, classification, now, prefs) });
   }

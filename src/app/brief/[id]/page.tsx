@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
-import { getAnalysis } from "@/lib/analysis/ai";
+import { aiEnabled, getAnalysis } from "@/lib/analysis/ai";
+import { AskSignal } from "@/components/AskSignal";
 import { getPersonalDigest } from "@/lib/data";
 import { formatDate, formatDateTime } from "@/lib/format";
 import { findStory } from "@/lib/news/pipeline";
@@ -151,6 +152,12 @@ async function Brief({ params }: { params: Promise<{ id: string }> }) {
           </p>
         </section>
       </div>
+
+      {aiEnabled() ? (
+        <div className="mt-8 print:hidden">
+          <AskSignal storyId={story.id} suggestions={["Give me a one-sentence version for a meeting", "What is the strongest objection to this?"]} />
+        </div>
+      ) : null}
 
       <p className="mt-8 print:hidden">
         <Link href={`/stories/${story.id}`} className="inline-flex items-center gap-1 text-[13.5px] font-semibold text-blue-text hover:text-navy">

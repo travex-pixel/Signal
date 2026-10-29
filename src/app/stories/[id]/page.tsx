@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
-import { getAnalysis } from "@/lib/analysis/ai";
+import { aiEnabled, getAnalysis } from "@/lib/analysis/ai";
+import { AskSignal } from "@/components/AskSignal";
 import { getPersonalDigest } from "@/lib/data";
 import { findStory } from "@/lib/news/pipeline";
 import { REGION_BY_ID } from "@/lib/news/regions";
@@ -166,6 +167,19 @@ async function StoryView({ params }: { params: Promise<{ id: string }> }) {
               ) : null}
             </section>
           </div>
+
+          {aiEnabled() ? (
+            <div className="mt-8">
+              <AskSignal
+                storyId={story.id}
+                suggestions={[
+                  "Explain this like I'm new to the industry",
+                  "What would change your reading of this?",
+                  "What should I ask a supplier about this?",
+                ]}
+              />
+            </div>
+          ) : null}
 
           <div className="mt-10">
             <SourcePanel story={story} analysis={analysis} />

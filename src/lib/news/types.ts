@@ -85,6 +85,8 @@ export interface Story {
   countries: string[];
   topics: TopicId[];
   relevance: RelevanceScore;
+  /** Lexicon match strengths kept so preference re-ranking is cheap. */
+  scores?: { regions: Partial<Record<RegionId, number>>; topics: Partial<Record<TopicId, number>> };
 }
 
 export interface RelevanceScore {
