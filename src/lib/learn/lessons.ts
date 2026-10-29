@@ -100,7 +100,7 @@ export const LESSONS: Lesson[] = [
     slug: "working-capital",
     title: "Working capital and cash conversion",
     oneLiner: "How many days of cash the business lends to its customers and its warehouse before suppliers lend it back.",
-    plate: "lesson-inventory",
+    plate: "lesson-cycle",
     minutes: 4,
     concept: [
       "The cash conversion cycle counts the days between paying a supplier and being paid by a customer: days of inventory, plus days customers take to pay, minus days taken to pay suppliers. Each day in the cycle is cash the business must fund.",
@@ -134,7 +134,7 @@ export const LESSONS: Lesson[] = [
     slug: "inventory-and-service-levels",
     title: "Inventory, stockouts and service levels",
     oneLiner: "Why the last few points of service level cost the most, and what lead-time variability does to the stock you must hold.",
-    plate: "lesson-freight",
+    plate: "lesson-inventory",
     minutes: 5,
     concept: [
       "Service level is the share of demand met from stock. Safety stock is the extra inventory held above expected demand during the lead time, to cover the days when demand runs high or a shipment runs late. The stock needed rises with demand variability, with lead-time variability and, sharply, with the service level targeted.",
@@ -234,7 +234,7 @@ export const LESSONS: Lesson[] = [
     slug: "supplier-price-increases",
     title: "Supplier price increases",
     oneLiner: "What a supplier's increase does to your margin, how much to pass through, and what to ask before agreeing.",
-    plate: "lesson-margin",
+    plate: "lesson-price-steps",
     minutes: 5,
     concept: [
       "A supplier price increase arrives with a reason: feedstock, energy, currency, capacity or simply the market. The reason tells you how durable the increase is likely to be and whether competitors face it too, which decides how much can be passed on.",

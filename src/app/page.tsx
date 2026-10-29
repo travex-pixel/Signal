@@ -35,11 +35,7 @@ async function Today() {
 
   return (
     <div className="mx-auto w-full max-w-[1280px] px-4 md:px-8 pt-6 md:pt-7 pb-6 flex-1 flex flex-col">
-      <div className="flex items-baseline justify-between gap-4">
-        <h1 className="m-0 text-[13px] font-semibold uppercase tracking-[0.08em] text-ink-3">
-          Today&rsquo;s Signal <span className="text-ink-4 font-medium normal-case tracking-normal">· {todayLabel(now)}</span>
-        </h1>
-      </div>
+      <h1 className="sr-only">Today&rsquo;s Signal, {todayLabel(now)}</h1>
 
       {!lead || !analysis ? (
         <div className="mt-8">
@@ -53,21 +49,23 @@ async function Today() {
           </Empty>
         </div>
       ) : (
-        <div className="mt-5 md:mt-6 grid gap-10 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-16 flex-1">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-16 flex-1">
           {/* Lead */}
           <article className="min-w-0 rise">
-            <StoryMeta story={lead} now={now} />
-            <div className="mt-3 flex items-start gap-6">
-              <h2 className="m-0 text-[26px] md:text-[32px] leading-[1.12] font-semibold tracking-[-0.015em] text-ink text-balance max-w-[24ch]">
-                <Link href={`/stories/${lead.id}`} className="hover:text-navy-700 transition-colors duration-150">
-                  {lead.title}
-                </Link>
-              </h2>
-              <Plate name={`region-${lead.regions[0]}` as PlateName} width={128} priority className="hidden md:block flex-none -mt-4 -mr-2" />
+            <div className="flex items-start gap-8">
+              <div className="min-w-0 flex-1">
+                <StoryMeta story={lead} now={now} />
+                <h2 className="mt-3 mb-0 text-[26px] md:text-[32px] leading-[1.12] font-semibold tracking-[-0.015em] text-ink text-balance max-w-[24ch]">
+                  <Link href={`/stories/${lead.id}`} className="hover:text-navy-700 transition-colors duration-150">
+                    {lead.title}
+                  </Link>
+                </h2>
+                {lead.summary ? (
+                  <p className="mt-4 mb-0 font-serif text-[17px] leading-[1.55] text-ink-2 max-w-[62ch]">{truncateSentences(lead.summary, 3)}</p>
+                ) : null}
+              </div>
+              <Plate name={`region-${lead.regions[0]}` as PlateName} width={220} priority className="hidden lg:block flex-none -mt-6 -mr-4" />
             </div>
-            {lead.summary ? (
-              <p className="mt-4 mb-0 font-serif text-[17px] leading-[1.55] text-ink-2 max-w-[62ch]">{truncateSentences(lead.summary, 3)}</p>
-            ) : null}
 
             <section className="mt-6 max-w-[62ch]" aria-labelledby="why">
               <h3 id="why" className="m-0 text-[12px] font-semibold uppercase tracking-[0.07em] text-ink-3">
@@ -85,15 +83,35 @@ async function Today() {
               <Chain href={`/stories/${lead.id}`} region={lead.regions[0]} />
             </div>
 
-            <div className="mt-6 flex flex-wrap items-center gap-2.5">
+            <div className="mt-6 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:items-center">
               <ButtonLink href={`/stories/${lead.id}`} variant="primary">
                 Read the reasoning <IconArrow />
               </ButtonLink>
               <ButtonLink href={`/brief/${lead.id}`}>Meeting brief</ButtonLink>
-              <ButtonLink href={`/stories/${lead.id}#evidence`} variant="ghost">
+              <Link
+                href={`/stories/${lead.id}#evidence`}
+                className="col-span-2 sm:col-auto inline-flex items-center h-9 sm:px-2 text-[13.5px] font-semibold text-blue-text hover:text-navy transition-colors duration-150"
+              >
                 Source &amp; evidence
-              </ButtonLink>
+              </Link>
             </div>
+
+            <aside className="mt-8 pt-5 border-t border-hairline max-w-[62ch]" aria-labelledby="principle">
+              <h3 id="principle" className="m-0 text-[12px] font-semibold uppercase tracking-[0.07em] text-ink-3">
+                The principle behind it
+              </h3>
+              <p className="mt-2 mb-0 font-serif text-[15.5px] leading-[1.55] text-ink-2">
+                <strong className="font-semibold text-ink">{analysis.principle.title}.</strong> {analysis.principle.text}
+                {analysis.principle.lessonSlug ? (
+                  <>
+                    {" "}
+                    <Link href={`/learn/${analysis.principle.lessonSlug}`} className="font-sans text-[13px] font-semibold text-blue-text hover:text-navy whitespace-nowrap">
+                      Lesson <IconArrow className="inline -mt-0.5" />
+                    </Link>
+                  </>
+                ) : null}
+              </p>
+            </aside>
           </article>
 
           {/* Supporting column */}
@@ -158,10 +176,12 @@ async function Today() {
               </Link>
             </section>
 
-            <div className="mt-auto pt-6">
-              <Freshness sources={digest.sources} generatedAt={digest.generatedAt} storyCount={digest.stories.length} fixtures={digest.fixtures} />
-            </div>
           </aside>
+
+          <div className="lg:col-span-2 mt-auto pt-4 border-t border-hairline flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+            <p className="m-0 text-[12px] text-ink-3">{todayLabel(now)}</p>
+            <Freshness sources={digest.sources} generatedAt={digest.generatedAt} storyCount={digest.stories.length} fixtures={digest.fixtures} />
+          </div>
         </div>
       )}
     </div>

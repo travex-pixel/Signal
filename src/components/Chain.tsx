@@ -52,7 +52,7 @@ export function Chain({
               >
                 <span className="chain-bead" aria-hidden="true" />
                 <span
-                  className={`chain-label ${compact ? "text-[10px]" : "text-[11px]"} font-semibold tracking-[0.01em] md:uppercase md:tracking-[0.05em] transition-colors duration-150 ${
+                  className={`chain-label ${compact ? "text-[9.5px] md:text-[10px]" : "text-[10px] md:text-[11px]"} font-semibold tracking-[0.01em] md:uppercase md:tracking-[0.05em] transition-colors duration-150 ${
                     isActive ? "text-ink" : "text-ink-3 group-hover:text-ink"
                   }`}
                 >

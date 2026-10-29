@@ -11,6 +11,7 @@ import { Empty } from "@/components/Empty";
 import { Plate, type PlateName } from "@/components/Plate";
 import { RegionBeads } from "@/components/RegionBead";
 import { StoryMeta } from "@/components/StoryMeta";
+import { SyntheticBadge } from "@/components/SyntheticBadge";
 import { IconArrow } from "@/components/shell/icons";
 
 const VALID = new Set(REGIONS.map((r) => r.id));
@@ -87,6 +88,7 @@ async function RegionView({ params }: { params: Promise<{ region: string }> }) {
           <div className="min-w-0">
             <h1 className="m-0 text-[26px] md:text-[30px] leading-[1.15] font-semibold tracking-[-0.015em] text-ink">{meta.name}</h1>
             <p className="mt-2 mb-0 text-[14.5px] leading-[1.5] text-ink-2 max-w-[60ch]">{meta.description}</p>
+            <SyntheticBadge show={digest.fixtures} />
           </div>
           <Plate name={`region-${id}` as PlateName} width={140} className="hidden sm:block flex-none -mt-6" />
         </header>
@@ -144,12 +146,9 @@ async function RegionView({ params }: { params: Promise<{ region: string }> }) {
           ) : (
             <ul className="mt-2 m-0 p-0 list-none space-y-1.5">
               {topics.slice(0, 5).map((t) => (
-                <li key={t.id} className="flex items-center justify-between gap-3 text-[14px]">
+                <li key={t.id} className="flex items-baseline justify-between gap-3 text-[14px]">
                   <span className="text-ink">{TOPIC_BY_ID[t.id].name}</span>
-                  <span className="flex items-center gap-2">
-                    <span aria-hidden="true" className="h-[6px] rounded-full" style={{ width: `${Math.max(12, Math.round((t.count / (topics[0].count || 1)) * 72))}px`, background: `var(--region-${meta.hue})` }} />
-                    <span className="text-[12px] text-ink-3 tnum w-4 text-right">{t.count}</span>
-                  </span>
+                  <span className="text-[12.5px] text-ink-3">{t.count} {t.count === 1 ? "story" : "stories"}</span>
                 </li>
               ))}
             </ul>

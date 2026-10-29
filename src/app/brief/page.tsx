@@ -31,13 +31,11 @@ async function BriefIndex() {
     <div className="mx-auto w-full max-w-[1280px] px-4 md:px-8 pt-6 md:pt-8 pb-10">
       <div className="flex items-start justify-between gap-8">
         <div className="max-w-[56ch]">
-          <h1 className="m-0 text-[13px] font-semibold uppercase tracking-[0.08em] text-ink-3">Meeting briefs <span className="text-ink-4 font-medium normal-case tracking-normal">· {todayLabel(now)}</span></h1>
-          <p className="mt-3 mb-0 text-[22px] md:text-[26px] leading-[1.2] font-semibold tracking-[-0.01em] text-ink text-balance">
-            Pick a development. Get the issue, the evidence, the questions and a counterargument on one page.
+          <h1 className="m-0 text-[26px] md:text-[30px] leading-[1.15] font-semibold tracking-[-0.015em] text-ink">Meeting briefs</h1>
+          <p className="mt-3 mb-0 font-serif text-[17px] leading-[1.5] text-ink-2 text-pretty">
+            Pick a development. Get the issue, the evidence, the questions and a counterargument on one page, short by default and printable. Deeper reasoning stays one link away in the story view.
           </p>
-          <p className="mt-3 mb-0 text-[14.5px] leading-[1.5] text-ink-2">
-            Briefs are short by default and print cleanly. Deeper reasoning stays one link away in the story view.
-          </p>
+          <p className="mt-2 mb-0 text-[12.5px] text-ink-3">{todayLabel(now)}</p>
         </div>
         <Plate name="chain" width={220} className="hidden md:block flex-none -mt-6" />
       </div>

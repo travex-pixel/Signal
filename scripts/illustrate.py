@@ -77,38 +77,63 @@ def deform(mask: np.ndarray, rng: np.random.Generator, strength: float = 10.0, s
 # --------------------------------------------------------------------------
 def wash(canvas: np.ndarray, mask: np.ndarray, rgb: tuple[int, int, int], rng: np.random.Generator,
          layers: int = 4, opacity: float = 0.55, bleed: float = 12.0, granulation: float = 0.35) -> None:
-    """Paint a watercolour wash of `rgb` through `mask` onto an RGBA float canvas (0..1, premultiplied-free)."""
+    """Paint a watercolour wash of `rgb` through `mask` onto an RGBA float canvas.
+
+    The model: a first broad, pale wash with wandering edges; later layers
+    that pool as smaller blooms; pigment that collects at every wet edge
+    (a darker rim), granulates into the paper's tooth, and darkens where
+    layers overlap. Edges stay crisp: the softness of watercolour comes from
+    the pigment distribution, not from blur.
+    """
     h, w = mask.shape
     colour = np.array(rgb, np.float32) / 255.0
-    paper = fractal_noise(rng, w, h, 6, 24)
-    grain = fractal_noise(rng, w, h, 4, 64)
+    paper = fractal_noise(rng, w, h, 5, 96)          # fine tooth
+    grain = fractal_noise(rng, w, h, 3, 160)         # granulation speckle
+    speckle = np.clip((grain - 0.55) * 4.0, 0, 1)    # sparse dark pigment grains
+    flow = fractal_noise(rng, w, h, 4, 10)           # broad pooling
 
     for i in range(layers):
-        m = deform(mask, rng, strength=bleed * (0.6 + 0.4 * rng.random()), scale=5 + i)
-        # Each layer covers a slightly different area: shrink some, spread others.
-        k = int(rng.integers(3, 15))
-        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k))
-        m = cv2.erode(m, kernel) if rng.random() < 0.5 else cv2.dilate(m, kernel)
-        m = cv2.GaussianBlur(m, (0, 0), 1.5 + rng.random() * 2.5)
-        m = np.clip(m.astype(np.float32) / 255.0, 0, 1)
+        first = i == 0
+        m = deform(mask, rng, strength=bleed * (0.8 if first else 0.5 + 0.5 * rng.random()), scale=4 + i)
+        if first:
+            m = cv2.dilate(m, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5)))
+        else:
+            # Later layers pool into part of the shape: carve the mask with a pooling field.
+            pool = (flow > (0.42 + 0.1 * rng.random())).astype(np.uint8) * 255
+            pool = cv2.GaussianBlur(pool, (0, 0), 6)
+            m = cv2.bitwise_and(m, pool)
+            k = int(rng.integers(3, 9))
+            m = cv2.erode(m, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k)))
+        m = cv2.GaussianBlur(m, (0, 0), 0.9)
+        mf = np.clip(m.astype(np.float32) / 255.0, 0, 1)
+        if mf.max() <= 0:
+            continue
 
-        # Wet edge: pigment collects at the boundary of each wash.
-        dist = cv2.distanceTransform((m > 0.5).astype(np.uint8), cv2.DIST_L2, 5)
-        edge = np.exp(-dist / (6.0 + rng.random() * 6.0))
-        density = (0.55 + 0.45 * edge) * (0.75 + 0.5 * granulation * (grain - 0.5)) * (0.9 + 0.2 * paper)
-        alpha = np.clip(m * density * (opacity / layers) * 1.6, 0, 1)
+        # Wet edge: pigment collects in a narrow rim just inside the boundary.
+        inside = (mf > 0.5).astype(np.uint8)
+        dist = cv2.distanceTransform(inside, cv2.DIST_L2, 5)
+        rim = np.exp(-dist / (3.5 + rng.random() * 2.5))
+        halo = np.exp(-dist / (14.0 + rng.random() * 8.0))
+        body = 0.42 + 0.18 * flow
+        density = body + 0.55 * rim + 0.2 * halo
+        density *= 0.86 + 0.28 * paper                      # paper tooth
+        density += granulation * 0.9 * speckle              # granulation grains
+        density = np.clip(density, 0, 1.6)
+        alpha = np.clip(mf * density * (opacity / layers) * 1.9, 0, 1)
 
-        # Slight hue drift per layer keeps it from looking printed.
-        drift = (rng.random(3) - 0.5) * 0.06
-        layer_rgb = np.clip(colour + drift, 0, 1)
+        # Rim pigment is a little deeper and more saturated than the body.
+        deep = np.clip(colour * 0.72, 0, 1)
+        layer_rgb = colour[None, None, :] * (1 - 0.6 * rim[..., None]) + deep[None, None, :] * (0.6 * rim[..., None])
+        drift = (rng.random(3) - 0.5) * 0.05
+        layer_rgb = np.clip(layer_rgb + drift, 0, 1)
 
         a_dst = canvas[..., 3]
         a_out = alpha + a_dst * (1 - alpha)
         for c in range(3):
-            # Multiply-ish blend: pigment layers darken where they overlap.
-            src = layer_rgb[c]
+            src = layer_rgb[..., c]
             dst = canvas[..., c]
-            blended = np.where(a_dst > 0, dst * (1 - alpha) + src * dst * alpha * 0.55 + src * alpha * 0.45, src)
+            # Pigment multiplies: overlaps darken, as glazes do.
+            blended = np.where(a_dst > 0, dst * (1 - alpha) + (src * dst) * alpha * 0.7 + src * alpha * 0.3, src)
             canvas[..., c] = np.where(a_out > 0, (blended * a_out) / np.maximum(a_out, 1e-6), src)
         canvas[..., 3] = a_out
 
@@ -447,6 +472,47 @@ def plate_freight(name: str, seed: int) -> None:
     save(c, name, "stacked shipping containers in coral blue yellow and cyan, watercolour")
 
 
+def plate_cycle(name: str, seed: int) -> None:
+    """The cash conversion cycle: a ring of beads, navy and cyan, with one coral bead for the day cash returns."""
+    rng = np.random.default_rng(seed)
+    c = new_canvas()
+    ring = blank_mask()
+    cv2.ellipse(ring, (360, 270), (190, 150), 0, 0, 360, 255, 10)
+    wash(c, ring, HUES["slate"], rng, layers=2, opacity=0.45, bleed=4)
+    n = 12
+    for i in range(n):
+        a = i / n * math.tau
+        x = 360 + math.cos(a) * 190
+        y = 270 + math.sin(a) * 150
+        m = blank_mask()
+        ellipse(m, x, y, 24, 20, rng.random() * 90)
+        hue = "coral" if i == 0 else ("cyan" if i % 3 else "navy")
+        wash(c, m, HUES[hue], rng, layers=3, opacity=0.8, bleed=4, granulation=0.5)
+    save(c, name, "a ring of twelve beads, navy and cyan with one coral, the cash conversion cycle, watercolour")
+
+
+def plate_price_steps(name: str, seed: int) -> None:
+    """A supplier price increase: rising coral steps with a cyan selling-price line that must catch up."""
+    rng = np.random.default_rng(seed)
+    c = new_canvas()
+    heights = [120, 150, 190, 240, 300]
+    x = 110
+    for i, hgt in enumerate(heights):
+        m = blank_mask()
+        poly(m, [(x, 440), (x + 80, 440), (x + 80, 440 - hgt), (x, 440 - hgt)])
+        wash(c, m, HUES["coral"], rng, layers=3, opacity=0.6 + i * 0.06, bleed=6, granulation=0.45)
+        x += 100
+    line = blank_mask()
+    pts = [(100, 330), (230, 320), (330, 300), (440, 260), (560, 190), (620, 150)]
+    for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+        cv2.line(line, (x0, y0), (x1, y1), 255, 14)
+    wash(c, line, HUES["cyan"], rng, layers=3, opacity=0.85, bleed=3)
+    base = blank_mask()
+    poly(base, [(90, 440), (630, 440), (630, 448), (90, 448)])
+    wash(c, base, HUES["navy"], rng, layers=2, opacity=0.6, bleed=2)
+    save(c, name, "rising coral steps with a cyan line climbing to meet them, a supplier price increase, watercolour")
+
+
 def plate_masthead(name: str, seed: int) -> None:
     """A long horizontal pellet chain in the brand hues: the signal line."""
     rng = np.random.default_rng(seed)
@@ -477,6 +543,8 @@ def main() -> None:
     plate_fx("lesson-fx", 34)
     plate_freight("lesson-freight", 35)
     plate_scales("lesson-tradeoffs", 36)
+    plate_cycle("lesson-cycle", 37)
+    plate_price_steps("lesson-price-steps", 38)
     plate_masthead("chain", 41)
 
 

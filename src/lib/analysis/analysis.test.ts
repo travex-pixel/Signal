@@ -43,6 +43,12 @@ describe("mechanism library", () => {
     expect(sea.id).toBe("freight-lead-time");
     const none = matchMechanisms({ topics: [], regions: ["global"] });
     expect(none[0].id).toBe("geopolitical-uncertainty");
+    // A trade story without tariff language does not get the tariff mechanism.
+    const deficit = matchMechanisms({ topics: ["trade", "demand"], regions: ["usa"], text: "US goods trade deficit widens as demand pushes imports to a record" });
+    expect(deficit[0].id).toBe("trade-flows");
+    expect(deficit.some((m) => m.id === "tariff-landed-cost")).toBe(false);
+    const tariff = matchMechanisms({ topics: ["trade"], regions: ["usa"], text: "US to impose 25% tariff on polyethylene imports" });
+    expect(tariff[0].id).toBe("tariff-landed-cost");
   });
 });
 

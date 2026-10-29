@@ -70,7 +70,7 @@ export const SIMULATORS: Simulator[] = [
     slug: "supplier-price-change",
     title: "Supplier price change",
     question: "A supplier raises or cuts its price. What happens to margin, and what price holds it?",
-    plate: "lesson-margin",
+    plate: "lesson-price-steps",
     lesson: "supplier-price-increases",
     fields: [
       { id: "unitCost", label: "Current cost", unit: "$/t", min: 500, max: 5000, step: 10, value: 1500 },
@@ -314,7 +314,7 @@ export const SIMULATORS: Simulator[] = [
     slug: "working-capital",
     title: "Working capital and cash conversion",
     question: "How many days of cash does the business fund, and what does each day cost at today's rates?",
-    plate: "lesson-inventory",
+    plate: "lesson-cycle",
     lesson: "working-capital",
     fields: [
       { id: "revenue", label: "Annual revenue", unit: "$", min: 1000000, max: 500000000, step: 500000, value: 36500000 },

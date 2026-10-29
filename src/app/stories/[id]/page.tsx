@@ -12,6 +12,7 @@ import { Empty } from "@/components/Empty";
 import { SourcePanel } from "@/components/SourcePanel";
 import { StoryMeta } from "@/components/StoryMeta";
 import { ButtonLink } from "@/components/Button";
+import { SyntheticBadge } from "@/components/SyntheticBadge";
 import { IconArrow, IconExternal } from "@/components/shell/icons";
 
 export const metadata: Metadata = { title: "Story" };
@@ -45,10 +46,13 @@ async function StoryView({ params }: { params: Promise<{ id: string }> }) {
 
   return (
     <article className="mx-auto w-full max-w-[1280px] px-4 md:px-8 pt-6 md:pt-8 pb-10">
-      <nav aria-label="Breadcrumb" className="text-[12.5px] text-ink-3">
-        <Link href="/" className="hover:text-ink">Today</Link>
-        <span aria-hidden="true" className="mx-1.5">/</span>
-        <Link href={`/regions/${region}`} className="hover:text-ink">{regionMeta.name}</Link>
+      <nav aria-label="Breadcrumb" className="flex items-center gap-3 text-[12.5px] text-ink-3">
+        <span>
+          <Link href="/" className="hover:text-ink">Today</Link>
+          <span aria-hidden="true" className="mx-1.5">/</span>
+          <Link href={`/regions/${region}`} className="hover:text-ink">{regionMeta.name}</Link>
+        </span>
+        <SyntheticBadge show={digest.fixtures} />
       </nav>
 
       <div className="mt-5 grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-16">
@@ -64,7 +68,7 @@ async function StoryView({ params }: { params: Promise<{ id: string }> }) {
             </Link>
           </p>
 
-          <div className="mt-7 sticky top-0 z-10 -mx-4 px-4 py-3 md:mx-0 md:px-0 bg-ground/95 backdrop-blur-sm border-b border-hairline">
+          <div className="mt-7 sticky top-0 z-10 -mx-4 px-4 py-3 md:mx-0 md:px-0 bg-ground border-b border-hairline">
             <Chain href={`/stories/${story.id}`} region={region} compact />
           </div>
 
@@ -149,9 +153,11 @@ async function StoryView({ params }: { params: Promise<{ id: string }> }) {
               </div>
             </section>
 
-            <section className="mt-10 rounded-lg bg-navy text-white px-6 py-5">
-              <p className="!mb-1 font-sans text-[12px] font-semibold uppercase tracking-[0.06em] text-navy-200">The principle</p>
-              <p className="!mb-1 font-sans text-[17px] font-semibold text-white">{analysis.principle.title}</p>
+            <section className="mt-10 rounded-lg bg-navy text-white px-6 py-5" aria-label="The principle">
+              <p className="!mb-1 font-sans text-[17px] font-semibold text-white">
+                <span className="text-navy-200 font-medium">The principle: </span>
+                {analysis.principle.title}
+              </p>
               <p className="!mb-0 text-[15.5px] text-navy-100">{analysis.principle.text}</p>
               {analysis.principle.lessonSlug ? (
                 <Link href={`/learn/${analysis.principle.lessonSlug}`} className="mt-3 inline-flex items-center gap-1 font-sans text-[13.5px] font-semibold text-white underline underline-offset-4 decoration-coral hover:decoration-white">

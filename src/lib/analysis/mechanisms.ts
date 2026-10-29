@@ -20,6 +20,8 @@ export interface Mechanism {
   topics: TopicId[];
   /** Restrict to stories touching these regions; omit for any region. */
   regions?: RegionId[];
+  /** When present, the story text must match for the mechanism to apply; keeps "trade" from always meaning "tariff". */
+  triggers?: RegExp;
   /** Priority when several mechanisms match; higher wins the lead position. */
   priority: number;
   chain: string;
@@ -38,6 +40,7 @@ export const MECHANISMS: Mechanism[] = [
     id: "tariff-landed-cost",
     name: "Tariffs and landed cost",
     topics: ["trade"],
+    triggers: /tariff|duties|duty|anti-dumping|countervailing|quota|levy|levies|customs/i,
     priority: 9,
     chain:
       "A tariff is a cost added at the border. It raises the landed cost of affected goods in the importing country, shifts sourcing toward exempt origins, and can push displaced volume into other markets at lower prices.",
@@ -69,6 +72,7 @@ export const MECHANISMS: Mechanism[] = [
     id: "export-controls",
     name: "Export controls and sanctions",
     topics: ["trade", "geopolitics"],
+    triggers: /sanction|export control|export ban|import ban|embargo|blacklist|entity list/i,
     priority: 8,
     chain:
       "Export controls and sanctions restrict who may sell what to whom. They cut supply from a named origin, raise compliance cost for everyone trading near the restriction, and can trigger counter-measures that widen the affected product set.",
@@ -93,6 +97,36 @@ export const MECHANISMS: Mechanism[] = [
       title: "Compliance cost is a real cost",
       text: "Rules that never name your product can still slow your cash and your cargo. The time a payment or shipment spends waiting for a check is working capital and lead time, and both carry a price.",
       lessonSlug: "working-capital",
+    },
+  },
+  {
+    id: "trade-flows",
+    name: "Trade flows, demand and negotiations",
+    topics: ["trade"],
+    priority: 7,
+    chain:
+      "Trade statistics and trade negotiations show where demand is strong, where capacity is seeking a home, and where policy may move next. A widening import bill signals firm demand in the importing country; a surge in exports from a producing region signals surplus looking for buyers; talks and agreements change the rules that volumes flow under.",
+    implication:
+      "For an Australian importer the signal is about direction before it is about cost: strong demand in a large market tends to firm prices and tighten supplier capacity, while surplus seeking buyers tends to soften them. Trade talks matter through the measures they may produce, which are not yet in force.",
+    secondOrder: [
+      "Demand that is strong enough to widen a trade deficit tends to keep the importing country's currency and interest rates firmer, which reaches the Australian dollar and import costs.",
+      "Negotiations that stall are often followed by measures that redirect flows; the direction of the redirected volume is the thing to watch.",
+    ],
+    unknowns: [
+      "Which product categories drive the headline numbers and whether polymers are among them.",
+      "Whether the trend persists beyond one month's data.",
+    ],
+    options: [
+      { action: "Read the product breakdown behind the headline trade figure to see whether plastics, chemicals or packaging are moving.", tradeoff: "Official breakdowns lag and are revised; treat one month lightly." },
+      { action: "Ask suppliers in the exporting region whether order books reflect the trend the data shows.", tradeoff: "Anecdote, but earlier than statistics." },
+    ],
+    question: "Does this trade signal tell us demand is firming or surplus is building in a region we buy from, and which way would that move prices?",
+    counterpoint: "Monthly trade figures are volatile and often driven by a few categories, such as electronics or energy, with no bearing on polymers.",
+    indicator: "The next two monthly trade releases for the country, and supplier lead times from the region.",
+    principle: {
+      title: "Trade data is a demand signal",
+      text: "Imports rise where demand is strong and exports rise where surplus is building. Reading the direction tells you whether suppliers in a region are about to gain or lose pricing power, months before the price moves.",
+      lessonSlug: "demand-and-trade-offs",
     },
   },
   {

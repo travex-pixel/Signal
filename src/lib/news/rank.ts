@@ -25,6 +25,26 @@ export const DEFAULT_PREFERENCES: Preferences = {
   topicEmphasis: {},
 };
 
+/**
+ * Publishers whose business and trade reporting is reliable enough to earn
+ * extra weight when a story arrives through a discovery feed. Matching is a
+ * case-insensitive substring test on the publisher name.
+ */
+export const TRUSTED_PUBLISHERS = [
+  "reuters", "bloomberg", "financial times", "ft.com", "wall street journal", "wsj", "the economist", "nikkei",
+  "associated press", "ap news", "afp", "bbc", "abc news", "the guardian", "cnbc", "australian financial review", "afr",
+  "the age", "sydney morning herald", "the australian", "south china morning post", "caixin", "straits times",
+  "bangkok post", "the nation", "jakarta post", "the edge", "channel news asia", "cna", "the national", "arab news",
+  "gulf news", "al jazeera", "icis", "argus", "s&p global", "platts", "lloyd's list", "lloyds list", "freightwaves",
+  "the loadstar", "splash247", "seatrade", "plastics news", "packaging insights", "chemical week", "chemanalyst",
+  "reserve bank", "australian bureau of statistics", "department of foreign affairs",
+];
+
+export function publisherBonus(publisher: string): number {
+  const p = publisher.toLowerCase();
+  return TRUSTED_PUBLISHERS.some((t) => p.includes(t)) ? 1.5 : 0;
+}
+
 const TOPIC_BASE: Record<TopicId, number> = {
   polymers: 6,
   trade: 5,
@@ -95,6 +115,13 @@ export function scoreStory(
   if (evidence) {
     score += evidence;
     reasons.push(`${story.evidenceWeight === 3 ? "primary" : "reputable"} source (+${evidence})`);
+  }
+
+  // Publisher: known business and trade publishers earn a little more than unknown ones.
+  const pub = publisherBonus(story.publisher);
+  if (pub > 0 && story.discovery) {
+    score += pub;
+    reasons.push(`recognised publisher (+${pub})`);
   }
 
   // Materiality.

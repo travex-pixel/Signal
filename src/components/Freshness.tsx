@@ -2,6 +2,7 @@ import Link from "next/link";
 import { formatDateTime } from "@/lib/format";
 import type { SourceStatus } from "@/lib/news/types";
 import { IconAlert, IconCheck } from "./shell/icons";
+import { SyntheticBadge } from "./SyntheticBadge";
 
 /** The quiet source-and-refresh line that closes the overview. */
 export function Freshness({ sources, generatedAt, storyCount, fixtures = false }: { sources: SourceStatus[]; generatedAt: string; storyCount: number; fixtures?: boolean }) {
@@ -24,11 +25,7 @@ export function Freshness({ sources, generatedAt, storyCount, fixtures = false }
       <Link href="/sources" className="underline underline-offset-2 decoration-hairline-strong hover:decoration-current hover:text-ink">
         Source status
       </Link>
-      {fixtures ? (
-        <span className="inline-flex items-center rounded-sm bg-warn-100 text-warn px-1.5 py-[1px] text-[10.5px] font-semibold uppercase tracking-[0.06em]">
-          Development fixtures
-        </span>
-      ) : null}
+      <SyntheticBadge show={fixtures} />
     </p>
   );
 }

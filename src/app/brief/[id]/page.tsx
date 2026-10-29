@@ -10,6 +10,7 @@ import { Empty } from "@/components/Empty";
 import { RegionBeads } from "@/components/RegionBead";
 import { Wordmark } from "@/components/shell/Wordmark";
 import { PrintButton } from "@/components/PrintButton";
+import { SyntheticBadge } from "@/components/SyntheticBadge";
 import { IconArrow, IconExternal } from "@/components/shell/icons";
 
 export const metadata: Metadata = { title: "Meeting brief" };
@@ -53,18 +54,20 @@ async function Brief({ params }: { params: Promise<{ id: string }> }) {
       </div>
 
       <header className="mt-5 pb-5 border-b border-hairline">
-        <div className="hidden print:flex items-center justify-between mb-4">
+        <div className="hidden print:flex items-center justify-between gap-6 mb-4 pr-2">
           <Wordmark tone="dark" />
           <span className="text-[12px] text-ink-3">Meeting brief · {formatDate(new Date().toISOString())}</span>
         </div>
-        <p className="m-0 text-[12px] font-semibold uppercase tracking-[0.07em] text-ink-3">Meeting brief</p>
-        <h1 className="mt-2 mb-0 text-[24px] md:text-[30px] leading-[1.15] font-semibold tracking-[-0.01em] text-ink text-balance">{story.title}</h1>
+        <h1 className="m-0 text-[24px] md:text-[30px] leading-[1.15] font-semibold tracking-[-0.01em] text-ink text-balance">{story.title}</h1>
         <p className="mt-3 mb-0 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-ink-3">
+          <span className="font-semibold text-ink-2">Meeting brief</span>
+          <span aria-hidden="true">·</span>
           <RegionBeads regions={a.regionsImplicated} max={3} size="sm" />
           <span aria-hidden="true">·</span>
           <span>{story.publisher}{story.publishedAt ? `, ${formatDateTime(story.publishedAt, { year: "numeric" })}` : ""}</span>
           <span aria-hidden="true">·</span>
           <span className="capitalize">{a.confidence.level} confidence</span>
+          <SyntheticBadge show={digest.fixtures} />
         </p>
       </header>
 

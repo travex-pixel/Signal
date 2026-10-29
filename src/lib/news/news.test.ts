@@ -157,6 +157,34 @@ describe("itemsToStories + scoring", () => {
   });
 });
 
+describe("publisher and noise weighting", () => {
+  it("credits recognised publishers on discovery feeds and demotes off-topic sanctions stories", () => {
+    const base: Omit<Story, "relevance"> = {
+      id: "p",
+      title: "US imposes sanctions on a defense ministry over a conflict",
+      url: "https://x.test/p",
+      canonicalUrl: "https://x.test/p",
+      publisher: "Unknown Blog",
+      sourceId: "discovery-usa",
+      sourceType: "wire-discovery",
+      discovery: true,
+      evidenceWeight: 1,
+      publishedAt: NOW.toISOString(),
+      retrievedAt: NOW.toISOString(),
+      regions: ["usa"],
+      countries: ["United States"],
+      topics: ["trade"],
+    };
+    const c = classify(base.title);
+    const unknown = scoreStory(base, c, NOW);
+    const reuters = scoreStory({ ...base, publisher: "Reuters" }, c, NOW);
+    expect(reuters.score - unknown.score).toBeCloseTo(1.5, 5);
+    expect(unknown.reasons.some((r) => r.startsWith("off-topic"))).toBe(true);
+    const tariff: Omit<Story, "relevance"> = { ...base, title: "US imposes 25% tariff on polyethylene imports", topics: ["trade", "polymers"] };
+    expect(scoreStory(tariff, classify(tariff.title), NOW).score).toBeGreaterThan(unknown.score + 5);
+  });
+});
+
 describe("dedupe", () => {
   it("collapses near-identical headlines and prefers stronger evidence", async () => {
     const feed = await parseFeed(fixture("google-news.xml"));

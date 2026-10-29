@@ -21,8 +21,8 @@
   /* ink */
   --ink: #1c1a33;
   --ink-2: #4a4d66;
-  --ink-3: #6e7190;
-  --ink-4: #9a9db5;
+  --ink-3: #5c5f82;
+  --ink-4: #6b6e90;
 
   /* brand */
   --navy: #231e4b;
@@ -32,11 +32,11 @@
   --navy-100: #e8e7f1;
 
   --coral: #ee5f5b;
-  --coral-text: #c4433f;
+  --coral-text: #bf3f3b;
   --coral-100: #fde8e7;
 
   --cyan: #40c2d5;
-  --cyan-text: #157a8a;
+  --cyan-text: #127384;
   --cyan-100: #ddf4f7;
 
   --yellow: #fabb14;
@@ -48,7 +48,7 @@
   --blue-100: #dce7f6;
 
   --slate: #8187a3;
-  --slate-text: #5b6180;
+  --slate-text: #585e7c;
   --slate-100: #e9eaf0;
 
   /* region hues (mark, text-safe, tint) */
@@ -72,11 +72,11 @@
   --region-global-100: var(--slate-100);
 
   /* states */
-  --ok: #1f8a5b;
+  --ok: #197a4f;
   --ok-100: #e1f3ea;
-  --warn: #b7791f;
+  --warn: #946014;
   --warn-100: #fbefd6;
-  --danger: #c4433f;
+  --danger: #bf3f3b;
   --danger-100: #fde8e7;
 
   /* radii, elevation, motion */
@@ -193,8 +193,13 @@ a {
   background: transparent;
 }
 
-/* tabular figures for data */
+/* Lining figures inline; tabular figures only where columns must align.
+   (Schibsted Grotesk pads punctuation to figure width under tabular-nums,
+   so inline times and money stay proportional.) */
 .tnum {
+  font-variant-numeric: lining-nums;
+}
+.tabular {
   font-variant-numeric: tabular-nums lining-nums;
 }
 
@@ -262,6 +267,15 @@ a {
   --chain-color: var(--navy);
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+/* On narrow screens the chain keeps a readable minimum column and scrolls. */
+@media (max-width: 480px) {
+  .chain {
+    grid-template-columns: repeat(6, minmax(62px, 1fr));
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
 }
 .chain-step {
   position: relative;
@@ -366,6 +380,16 @@ a {
   background-size: 200% 100%;
   animation: shimmer 1.4s linear infinite;
   border-radius: var(--r-sm);
+}
+
+/* Print: the meeting brief */
+@media print {
+  body {
+    background: #fff;
+  }
+  main {
+    padding: 0 12mm !important;
+  }
 }
 
 /* View transitions between routes */

@@ -1,0 +1,9 @@
+{
+  "generator": "scripts/illustrate.py",
+  "method": "procedural watercolour (OpenCV/numpy)",
+  "prompt": "a ring of twelve beads, navy and cyan with one coral, the cash conversion cycle, watercolour",
+  "size": [
+    720,
+    540
+  ]
+}

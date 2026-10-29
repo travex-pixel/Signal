@@ -19,8 +19,10 @@ export function KnowledgeCheck({ check }: { check: Check }) {
         if (choice !== null) setRevealed(true);
       }}
     >
-      <p className="m-0 text-[12px] font-semibold uppercase tracking-[0.06em] text-ink-3">Knowledge check</p>
-      <p className="mt-2 mb-0 font-serif text-[16.5px] leading-[1.5] text-ink">{check.question}</p>
+      <h2 id={`${id}-q`} className="m-0 font-serif text-[17px] font-medium leading-[1.5] text-ink">
+        <span className="sr-only">Knowledge check: </span>
+        {check.question}
+      </h2>
       <div role="radiogroup" aria-labelledby={`${id}-q`} className="mt-4 space-y-2">
         {check.options.map((o, i) => {
           const state = revealed ? (i === check.answer ? "right" : i === choice ? "wrong" : "idle") : choice === i ? "chosen" : "idle";

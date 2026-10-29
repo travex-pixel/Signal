@@ -13,8 +13,8 @@ export const metadata: Metadata = { title: "Preferences" };
 export default function PreferencesPage({ searchParams }: { searchParams: Promise<{ saved?: string; reset?: string }> }) {
   return (
     <div className="mx-auto w-full max-w-[1280px] px-4 md:px-8 pt-6 md:pt-8 pb-10">
-      <h1 className="m-0 text-[13px] font-semibold uppercase tracking-[0.08em] text-ink-3">Preferences</h1>
-      <p className="mt-3 mb-0 text-[22px] md:text-[26px] leading-[1.2] font-semibold tracking-[-0.01em] text-ink max-w-[36ch] text-balance">
+      <h1 className="m-0 text-[26px] md:text-[30px] leading-[1.15] font-semibold tracking-[-0.015em] text-ink">Preferences</h1>
+      <p className="mt-3 mb-0 font-serif text-[17px] leading-[1.5] text-ink-2 max-w-[52ch] text-pretty">
         Tune how much weight each region and topic carries in the ranking.
       </p>
       <p className="mt-3 mb-0 text-[14.5px] leading-[1.5] text-ink-2 max-w-[62ch]">

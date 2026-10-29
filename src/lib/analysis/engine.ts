@@ -12,12 +12,14 @@ import type { Analysis, Claim, Confidence } from "./types";
  * ai.ts) can replace the prose, but the same labelling rules apply.
  */
 
-export function matchMechanisms(story: Pick<Story, "topics" | "regions">, limit = 3): Mechanism[] {
+export function matchMechanisms(story: Pick<Story, "topics" | "regions"> & { text?: string }, limit = 3): Mechanism[] {
   const scored = MECHANISMS.map((m) => {
     const topicHits = m.topics.filter((t) => story.topics.includes(t)).length;
     if (topicHits === 0) return { m, score: -1 };
     const regionOk = !m.regions || m.regions.some((r) => story.regions.includes(r));
     if (!regionOk) return { m, score: -1 };
+    // A trigger pattern narrows a broad topic to the mechanism it actually names.
+    if (m.triggers && story.text !== undefined && !m.triggers.test(story.text)) return { m, score: -1 };
     // Topic match order matters: the story's first topic is its strongest.
     const primaryBonus = story.topics[0] && m.topics.includes(story.topics[0]) ? 2 : 0;
     const regionBonus = m.regions ? 3 : 0;
@@ -106,7 +108,7 @@ export function countRelated(story: Story, digest?: Digest): number {
 }
 
 export function analyzeStory(story: Story, digest?: Digest): Analysis {
-  const mechanisms = matchMechanisms(story);
+  const mechanisms = matchMechanisms({ ...story, text: `${story.title} ${story.summary ?? ""}` });
   const lead = mechanisms[0];
   const supplierRegions = story.regions.filter((r) => SUPPLIER_REGIONS.includes(r));
   const regionsImplicated = story.regions;

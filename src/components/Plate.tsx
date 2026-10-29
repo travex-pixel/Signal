@@ -15,6 +15,8 @@ export type PlateName =
   | "lesson-fx"
   | "lesson-freight"
   | "lesson-tradeoffs"
+  | "lesson-cycle"
+  | "lesson-price-steps"
   | "chain";
 
 /**

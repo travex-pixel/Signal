@@ -152,8 +152,9 @@ export const TOPIC_TERMS: Record<TopicId, Term[]> = {
     t("trade deal", 2),
     t("trade agreement", 2),
     t("trade talks", 2),
-    t("sanction", 2),
-    t("sanctions", 2),
+    t("sanction", 1),
+    t("sanctions", 1),
+    t("sanctions on", 1),
     t("export control", 3),
     t("export controls", 3),
     t("export ban", 3),
@@ -365,6 +366,17 @@ export const TOPIC_TERMS: Record<TopicId, Term[]> = {
 
 /** Terms that mark a story as unlikely to carry commercial relevance for this reader. */
 export const NOISE_TERMS: Term[] = [
+  // Sanctions stories about defence, crime and politics far from trade in goods.
+  t("defense ministry", 2),
+  t("defence ministry", 2),
+  t("defrauding", 2),
+  t("fraud", 1),
+  t("cartel", 1),
+  t("human rights", 1),
+  t("asylum", 2),
+  t("migrants", 1),
+  t("shooting", 2),
+  t("hostage", 1),
   t("football", 3),
   t("soccer", 3),
   t("cricket", 3),
@@ -395,7 +407,7 @@ export const NOISE_TERMS: Term[] = [
 export const MATERIALITY_TERMS: Term[] = [
   t("tariff", 2),
   t("tariffs", 2),
-  t("sanctions", 2),
+  t("sanctions", 1),
   t("ban", 1),
   t("export controls", 2),
   t("record", 1),

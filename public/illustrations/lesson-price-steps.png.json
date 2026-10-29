@@ -1,0 +1,9 @@
+{
+  "generator": "scripts/illustrate.py",
+  "method": "procedural watercolour (OpenCV/numpy)",
+  "prompt": "rising coral steps with a cyan line climbing to meet them, a supplier price increase, watercolour",
+  "size": [
+    720,
+    540
+  ]
+}

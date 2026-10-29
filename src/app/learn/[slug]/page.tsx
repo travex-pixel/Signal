@@ -79,8 +79,7 @@ async function Lesson({ params }: { params: Promise<{ slug: string }> }) {
           {sim ? (
             <div className="mt-8 rounded-lg bg-navy text-white px-6 py-5 flex flex-wrap items-center justify-between gap-4">
               <div className="min-w-0 max-w-[48ch]">
-                <p className="m-0 text-[12px] font-semibold uppercase tracking-[0.06em] text-navy-200">Try it with your own numbers</p>
-                <p className="mt-1 mb-0 text-[16px] font-semibold">{sim.title}</p>
+                <p className="m-0 text-[16px] font-semibold">Try {sim.title.toLowerCase()} with your own numbers</p>
                 <p className="mt-1 mb-0 text-[13.5px] text-navy-100">{sim.question}</p>
               </div>
               <ButtonLink href={`/simulators/${sim.slug}`} variant="secondary">Open the simulator <IconArrow /></ButtonLink>
