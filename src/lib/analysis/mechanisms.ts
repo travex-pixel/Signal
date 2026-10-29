@@ -103,7 +103,7 @@ export const MECHANISMS: Mechanism[] = [
     id: "trade-flows",
     name: "Trade flows, demand and negotiations",
     topics: ["trade"],
-    priority: 7,
+    priority: 8,
     chain:
       "Trade statistics and trade negotiations show where demand is strong, where capacity is seeking a home, and where policy may move next. A widening import bill signals firm demand in the importing country; a surge in exports from a producing region signals surplus looking for buyers; talks and agreements change the rules that volumes flow under.",
     implication:

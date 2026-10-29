@@ -366,6 +366,22 @@ export const TOPIC_TERMS: Record<TopicId, Term[]> = {
 
 /** Terms that mark a story as unlikely to carry commercial relevance for this reader. */
 export const NOISE_TERMS: Term[] = [
+  // Consumer and leisure sectors with no bearing on polymer supply.
+  t("wine", 3),
+  t("winery", 3),
+  t("wineries", 3),
+  t("beer", 2),
+  t("tourism", 2),
+  t("tourists", 2),
+  t("airline", 1),
+  t("hotel", 1),
+  t("restaurant", 2),
+  t("fashion", 2),
+  t("womenswear", 3),
+  t("menswear", 3),
+  t("casino", 3),
+  t("gaming", 2),
+  t("streaming", 2),
   // Sanctions stories about defence, crime and politics far from trade in goods.
   t("defense ministry", 2),
   t("defence ministry", 2),

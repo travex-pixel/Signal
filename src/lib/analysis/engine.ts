@@ -22,7 +22,8 @@ export function matchMechanisms(story: Pick<Story, "topics" | "regions"> & { tex
     if (m.triggers && story.text !== undefined && !m.triggers.test(story.text)) return { m, score: -1 };
     // Topic match order matters: the story's first topic is its strongest.
     const primaryBonus = story.topics[0] && m.topics.includes(story.topics[0]) ? 2 : 0;
-    const regionBonus = m.regions ? 3 : 0;
+    // Region overlays earn a little for fit, but a mechanism the story actually names still leads.
+    const regionBonus = m.regions ? 1 : 0;
     return { m, score: m.priority + topicHits + primaryBonus + regionBonus };
   })
     .filter((x) => x.score >= 0)
