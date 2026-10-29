@@ -3,6 +3,11 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
 /**
+ * Generator for src/app/opengraph-image.png. To regenerate, copy this file
+ * and the fonts folder into src/app, run the app, save /opengraph-image as
+ * src/app/opengraph-image.png and move them back. The committed PNG is served
+ * as a static file so link previews never wait on a function.
+ *
  * The link preview. Navy ground, the bars-and-beads mark drawn large,
  * the wordmark and the three-part promise. Static apart from the fonts,
  * which are vendored static instances of Schibsted Grotesk (OFL, see
