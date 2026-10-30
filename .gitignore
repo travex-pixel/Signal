@@ -43,4 +43,5 @@ next-env.d.ts
 # impeccable working files and screenshots
 /.impeccable/questions
 /.impeccable/review
+/.impeccable/live
 .signal-editions/
