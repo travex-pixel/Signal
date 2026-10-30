@@ -6,6 +6,7 @@ import { editionsEnabled, loadEditionIndex } from "@/lib/editions/editions";
 import type { EditionSummary } from "@/lib/editions/types";
 import { REGION_BY_ID } from "@/lib/news/regions";
 import { EditionState } from "@/components/editions/EditionStates";
+import { TodayMark } from "@/components/editions/TodayMark";
 import { Plate } from "@/components/Plate";
 import { RegionBeads } from "@/components/RegionBead";
 import { IconArrow } from "@/components/shell/icons";
@@ -19,7 +20,7 @@ export default function EditionsPage() {
         <div className="max-w-[56ch]">
           <h1 className="m-0 text-[26px] md:text-[30px] leading-[1.15] font-semibold tracking-[-0.015em] text-ink">Past days</h1>
           <p className="mt-3 mb-0 font-serif text-[17px] leading-[1.5] text-ink-2 text-pretty">
-            Each evening SIGNAL keeps a copy of the day. Open one to read the stories and the reasoning exactly as they were.
+            SIGNAL keeps a copy of every day, first in the morning and again in the evening. Open a day to read its stories and reasoning exactly as they were.
           </p>
         </div>
         <Plate name="chain" width={200} className="hidden md:block flex-none -mt-6" />
@@ -77,21 +78,27 @@ function DayRow({ day }: { day: EditionSummary }) {
   return (
     <Link href={`/editions/${day.date}`} className="group grid grid-cols-[3.5rem_1fr_auto] items-start gap-x-4 py-4">
       <span className="flex flex-col items-center rounded-lg bg-surface-2 border border-hairline py-1.5 tnum" aria-hidden="true">
-        <span className="text-[10.5px] font-semibold uppercase tracking-[0.06em] text-ink-3">{weekday}</span>
+        <span className="text-[11px] font-semibold uppercase tracking-[0.06em] text-ink-3">{weekday}</span>
         <span className="text-[22px] leading-none font-semibold text-ink mt-0.5">{dayNum}</span>
-        <span className="text-[10.5px] font-medium text-ink-3 mt-0.5">{month}</span>
+        <span className="text-[11px] font-medium text-ink-3 mt-0.5">{month}</span>
       </span>
       <span className="min-w-0">
         <span className="sr-only">{noon.toLocaleDateString("en-AU", { timeZone: TZ, weekday: "long", day: "numeric", month: "long" })}: </span>
-        <span className="block text-[16px] leading-[1.35] font-medium text-ink group-hover:text-navy-700 transition-colors duration-150 text-pretty">
+        <TodayMark date={day.date} />
+        <span className="block mt-0.5 text-[16px] leading-[1.35] font-medium text-ink group-hover:text-navy-700 transition-colors duration-150 text-pretty">
           {day.leadTitle ?? "No story led this day"}
         </span>
         <span className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12.5px] text-ink-3">
           {region ? <RegionBeads regions={[region]} max={1} size="sm" /> : null}
-          {region && day.leadPublisher ? <span aria-hidden="true">·</span> : null}
-          {day.leadPublisher ? <span>{day.leadPublisher}</span> : null}
-          <span aria-hidden="true">·</span>
-          <span>Kept at {savedTime(day.savedAt)}</span>
+          {day.leadPublisher ? (
+            <span className="whitespace-nowrap">
+              {region ? <span aria-hidden="true">· </span> : null}
+              {day.leadPublisher}
+            </span>
+          ) : null}
+          <span className="whitespace-nowrap">
+            <span aria-hidden="true">· </span>Kept at {savedTime(day.savedAt)}
+          </span>
         </span>
       </span>
       <span className="pt-1 text-ink-4 group-hover:text-navy transition-colors duration-150" aria-hidden="true">

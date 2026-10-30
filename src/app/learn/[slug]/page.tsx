@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { LESSON_BY_SLUG, LESSONS } from "@/lib/learn/lessons";
 import { SIMULATOR_BY_SLUG } from "@/lib/learn/simulators";
 import { KnowledgeCheck } from "@/components/KnowledgeCheck";
+import { MarkLessonRead } from "@/components/LessonProgress";
 import { Plate } from "@/components/Plate";
 import { ButtonLink } from "@/components/Button";
 import { IconArrow } from "@/components/shell/icons";
@@ -37,6 +38,7 @@ async function Lesson({ params }: { params: Promise<{ slug: string }> }) {
 
   return (
     <article className="mx-auto w-full max-w-[1280px] px-4 md:px-8 pt-6 md:pt-8 pb-12">
+      <MarkLessonRead slug={lesson.slug} />
       <nav aria-label="Breadcrumb" className="text-[12.5px] text-ink-3">
         <Link href="/learn" className="hover:text-ink">Learn</Link>
         <span aria-hidden="true" className="mx-1.5">/</span>

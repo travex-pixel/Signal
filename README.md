@@ -16,16 +16,17 @@ designed for Vercel. The basic news experience needs no credentials.
 
 | View | Route | Purpose |
 |---|---|---|
-| Today's Signal | `/` | One lead story, up to three supporting stories, a cross-regional signal, one question. Fits a 1440×900 viewport without scrolling. |
-| Story | `/stories/[id]` | The reasoning chain: Event → Evidence → Mechanism → Implication → Options → Meeting, with every statement labelled fact, inference, hypothesis or unknown, a confidence rating and a Source & evidence panel. |
+| Today's Signal | `/` | One lead story with how much stands behind it (confidence and the other outlets that reported it), why it matters, one sentence to say in a meeting, up to three supporting stories, a cross-regional signal, one question. Fits a 1440×900 viewport without scrolling. |
+| Past days | `/editions`, `/editions/[date]` | Every saved day, morning and evening copies, read exactly as it was. |
+| Story | `/stories/[id]` | The reasoning chain (the news, how sure, how it works, what it means, what to do, in a meeting), with every statement labelled fact, our reading, possible or not known, the other outlets' reports as links, and source details. |
 | Regions | `/regions/[sea\|china\|usa\|middle-east\|australia\|global]` | Important developments, topic signals, possible implications, key unknowns and cross-regional links per region. A quiet region says so honestly. |
-| Meeting briefs | `/brief`, `/brief/[id]` | A one-page, printable brief: the issue, evidence, why it matters, questions, a counterargument, what to monitor, source notes. |
+| Meeting briefs | `/brief`, `/brief/[id]` | A printable, copyable brief in meeting order: one sentence to say, what happened, why it matters, a question, ideas to raise, the other view, what to watch, how sure, sources. |
 | Learn | `/learn`, `/learn/[slug]` | Eight financial-fluency lessons (gross margin and EBITDA, the three statements, working capital, inventory and service levels, FX exposure, freight and landed cost, supplier price increases, demand trade-offs), each with a knowledge check. |
 | Simulators | `/simulators/[slug]` | Seven interactive scenarios with visible assumptions and restrained charts: supplier price change, exchange rate, freight and landed cost, demand slowdown, inventory and stockouts, margin and EBITDA, working capital. |
-| Preferences | `/preferences` | Regional and topic emphasis, stored in a cookie. Changes ranking; never invents stories. |
+| Preferences | `/preferences` | Less, normal or more weight per region, with topics optional, stored in a cookie. Changes ranking; never invents stories. |
 | Sources | `/sources` | Every feed, its purpose, attribution, refresh policy and live/degraded status from the last refresh. |
 | JSON | `/api/digest` | The current digest. |
-| Refresh | `/api/refresh` | Revalidates the digest on demand (used by the Vercel cron). |
+| Refresh | `/api/refresh`, `/api/refresh/save` | The two-step refresh used by the Vercel crons (see Deployment). |
 
 ## How the intelligence works
 
@@ -107,7 +108,7 @@ Copy `.env.example`; every variable is optional.
 |---|---|
 | `ANTHROPIC_API_KEY` | Enables Ask SIGNAL and AI refinement of the analysis. Unset means fully rule-based, question box hidden. |
 | `SIGNAL_AI_MODEL` | Model for enrichment (default `claude-opus-5-5`). |
-| `CRON_SECRET` | Protects `/api/refresh`. Vercel sends it automatically for cron invocations. |
+| `CRON_SECRET` | Recommended. Protects the refresh. Vercel sends it automatically with cron calls. |
 | `SIGNAL_USER_AGENT` | Overrides the User-Agent sent to feed publishers. |
 | `SIGNAL_FIXTURE_DIR` | Development only: read feeds from local XML files. |
 
@@ -123,11 +124,19 @@ lexicons live in `src/lib/news/classify.ts`; business mechanisms in
 2. Optionally add `ANTHROPIC_API_KEY` and `CRON_SECRET` as environment
    variables.
 3. `vercel.json` schedules `/api/refresh` twice a day: at 20:00 UTC (6 to 7am
-   Sydney) so the digest is warm before a morning read, and at 12:30 UTC (10:30
-   to 11:30pm Sydney) to keep the day under Past days. Hobby plans allow only
-   daily cron jobs and may fire them anywhere within the hour; both windows
-   stay on the same Sydney day. The digest also revalidates on demand after 15
-   minutes, so the crons are a warm-up and an archive, not a requirement.
+   Sydney) so Today is fresh before a morning read, and at 11:30 UTC (9:30
+   to 10:30pm Sydney) to keep the evening copy under Past days. Hobby plans
+   allow only daily cron jobs and may fire them anywhere within the hour; both
+   windows stay on the same Sydney day. The refresh runs in two steps:
+   `/api/refresh` expires the digest and every page built from it, then calls
+   `/api/refresh/save` as a separate request, which rebuilds the digest once,
+   rebuilds Today, the regions, the brief index and Sources from it, enriches
+   the day's picks when AI is on, and saves the day from that same digest. A
+   day is not saved when no story led or most feeds failed.
+   Set `CRON_SECRET` (any long random string) in the project's environment
+   variables. Vercel sends it with each cron call and the refresh accepts
+   nothing else. Without it, production accepts only Vercel's cron user agent,
+   at most once every ten minutes per server.
    For Past days, open the project's Storage tab, create a Blob store (choose
    Private) and connect it. Vercel adds `BLOB_READ_WRITE_TOKEN` and redeploys.
    Without a store the Past days page says the feature is not switched on.

@@ -48,7 +48,7 @@ export const MECHANISMS: Mechanism[] = [
     chain:
       "A tariff is a tax paid at the border. It makes the affected goods dearer in the country that charges it. Buyers there look for other origins. Goods that can no longer get in look for other markets, often at lower prices.",
     implication:
-      "For an Australian importer, the direct effect depends on one thing: do your goods, your supplier's country and the destination match the ones in the story? Often they do not. The indirect effect is usually bigger. Goods shut out of one market go looking for a new home. That can mean lower prices and more supply in Australia. Suppliers who lose a market may also try to recover their margin elsewhere.",
+      "The bigger effect for an Australian importer is usually indirect. Goods shut out of one market look for a new home, which can mean more supply and lower prices here. The direct effect only applies if our product codes, origins and destination match the ones in the story. Suppliers who lose a market may also try to win back margin elsewhere.",
     secondOrder: [
       "Goods diverted from the tariffed market can arrive in Australia at discounted prices. That squeezes distributors still holding stock bought at higher prices.",
       "Suppliers in the affected country may route production through a third country. That changes lead times and the paperwork needed to prove where goods come from.",

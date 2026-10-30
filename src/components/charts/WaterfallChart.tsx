@@ -56,7 +56,11 @@ export function WaterfallChart({ steps, format, title, width = 560, height = 260
                 {format(labelValue)}
               </text>
               <text x={x + barW / 2} y={height - pad.bottom + 18} textAnchor="middle" fontSize="12.5" fill="var(--ink-3)">
-                {b.label}
+                {wrap(b.label, slot).map((line, li) => (
+                  <tspan key={li} x={x + barW / 2} dy={li === 0 ? 0 : 15}>
+                    {line}
+                  </tspan>
+                ))}
               </text>
             </g>
           );
@@ -64,4 +68,21 @@ export function WaterfallChart({ steps, format, title, width = 560, height = 260
       </svg>
     </figure>
   );
+}
+
+/** Splits a category label over two lines when it is wider than its slot (about 6.6px a character at 12.5px). */
+function wrap(label: string, slot: number): string[] {
+  if (label.length * 6.6 <= slot - 4) return [label];
+  const words = label.split(" ");
+  if (words.length < 2) return [label];
+  let best = 1;
+  let bestDiff = Infinity;
+  for (let i = 1; i < words.length; i++) {
+    const diff = Math.abs(words.slice(0, i).join(" ").length - words.slice(i).join(" ").length);
+    if (diff < bestDiff) {
+      bestDiff = diff;
+      best = i;
+    }
+  }
+  return [words.slice(0, best).join(" "), words.slice(best).join(" ")];
 }

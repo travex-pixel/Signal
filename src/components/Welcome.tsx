@@ -51,18 +51,16 @@ export function Welcome() {
     >
       <div className="min-w-0 flex-1">
         <p className="m-0 font-sans text-[15px] md:text-[16px] font-semibold leading-[1.35]">
-          Welcome. SIGNAL reads the business news for you every day.
+          Welcome. Each day SIGNAL picks the one story that matters most for the business.
         </p>
         <p className="mt-1.5 mb-0 font-sans text-[14px] leading-[1.5] text-navy-100">
-          It picks one story that matters for an Australian importer and explains it in plain words. Start with
-          the story below. Then follow the six steps, from what happened to what you could say in a meeting.
-          Five minutes is enough.
+          Read it below, with why it matters and a line you could use in a meeting. Five minutes is enough.
         </p>
       </div>
       <button
         type="button"
         onClick={dismiss}
-        className="flex-none -mr-1 -mt-1 inline-flex h-9 w-9 items-center justify-center rounded-md text-navy-200 hover:text-white hover:bg-white/10 transition-colors duration-150 focus-visible:outline-white"
+        className="flex-none -mr-2 -mt-2 inline-flex h-11 w-11 items-center justify-center rounded-md text-navy-200 hover:text-white hover:bg-white/10 transition-colors duration-150 focus-visible:outline-white"
         aria-label="Close welcome"
       >
         <IconClose />

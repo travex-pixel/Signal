@@ -12,7 +12,7 @@ export function KindTag({ kind }: { kind: ClaimKind }) {
   return (
     <span
       title={k.title}
-      className={`inline-block align-middle rounded-sm px-1.5 py-[1px] text-[10.5px] font-semibold uppercase tracking-[0.06em] leading-4 ${k.className}`}
+      className={`inline-block align-middle whitespace-nowrap rounded-sm px-1.5 py-[1px] font-sans text-[11px] font-semibold uppercase tracking-[0.05em] leading-4 ${k.className}`}
     >
       {k.label}
     </span>

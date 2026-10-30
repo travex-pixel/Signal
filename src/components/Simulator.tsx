@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { SIMULATOR_BY_SLUG } from "@/lib/learn/simulators";
 import { Button } from "./Button";
 import { LineChart } from "./charts/LineChart";
@@ -17,6 +17,25 @@ export function Simulator({ slug }: { slug: string }) {
   const [values, setValues] = useState<Record<string, number>>(defaults);
   const result = useMemo(() => def.compute(values), [def, values]);
   const dirty = def.fields.some((f) => values[f.id] !== f.value);
+
+  // Charts are drawn at the width they are shown at, so their labels stay
+  // readable on a phone instead of shrinking with a scaled drawing.
+  const chartRef = useRef<HTMLDivElement>(null);
+  const [chartW, setChartW] = useState(560);
+  useEffect(() => {
+    const el = chartRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([entry]) => setChartW(Math.max(280, Math.round(entry.contentRect.width))));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // Screen readers hear the reading once the reader stops moving a control, not on every step.
+  const [announced, setAnnounced] = useState(result.reading);
+  useEffect(() => {
+    const t = window.setTimeout(() => setAnnounced(result.reading), 800);
+    return () => window.clearTimeout(t);
+  }, [result.reading]);
 
   return (
     <div className="grid gap-8 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-12">
@@ -72,7 +91,8 @@ export function Simulator({ slug }: { slug: string }) {
         </div>
       </form>
 
-      <section className="min-w-0" aria-live="polite" aria-label="Results">
+      <section className="min-w-0" aria-label="Results">
+        <p className="sr-only" aria-live="polite">{announced}</p>
         <dl className="m-0 grid gap-x-8 gap-y-4 sm:grid-cols-2">
           {result.stats.map((s) => (
             <div key={s.label} className={s.lead ? "sm:col-span-2" : ""}>
@@ -88,9 +108,9 @@ export function Simulator({ slug }: { slug: string }) {
           ))}
         </dl>
         <p className="mt-5 mb-0 font-serif text-[16px] leading-[1.55] text-ink max-w-[62ch]">{result.reading}</p>
-        <div className="mt-6 rounded-lg bg-surface border border-hairline p-4 md:p-5">
+        <div ref={chartRef} className="mt-6">
           {result.chart.kind === "waterfall" ? (
-            <WaterfallChart steps={result.chart.steps} format={result.chart.format} title={result.chart.title} />
+            <WaterfallChart steps={result.chart.steps} format={result.chart.format} title={result.chart.title} width={chartW} height={chartW < 420 ? 240 : 260} />
           ) : (
             <LineChart
               points={result.chart.points}
@@ -101,6 +121,8 @@ export function Simulator({ slug }: { slug: string }) {
               formatX={result.chart.formatX}
               formatY={result.chart.formatY}
               hue={result.chart.hue}
+              width={chartW}
+              height={chartW < 420 ? 220 : 260}
             />
           )}
           <p className="mt-2 mb-0 text-[12px] text-ink-3">{result.chart.title}</p>

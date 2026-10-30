@@ -28,6 +28,9 @@
   --navy: #231e4b;
   --navy-800: #1a1638;
   --navy-700: #352f66;
+  /* Gloss stops: the lit top edge of the shell and of a hovered primary button. */
+  --navy-shell-top: #2b2559;
+  --navy-lift: #3d3774;
   --navy-200: #c9c6dd;
   --navy-100: #e8e7f1;
 
@@ -186,7 +189,7 @@ body {
     var(--shadow-float);
 }
 .topbar {
-  background: linear-gradient(180deg, #2b2559 0%, var(--navy) 100%);
+  background: linear-gradient(180deg, var(--navy-shell-top) 0%, var(--navy) 100%);
   box-shadow:
     inset 0 -1px 0 rgba(255, 255, 255, 0.06),
     0 8px 24px -16px rgba(35, 30, 75, 0.55);
@@ -201,7 +204,7 @@ body {
     0 8px 18px -10px rgba(35, 30, 75, 0.55);
 }
 .btn-primary:hover {
-  background: linear-gradient(180deg, #3d3774 0%, var(--navy-700) 100%);
+  background: linear-gradient(180deg, var(--navy-lift) 0%, var(--navy-700) 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
     0 2px 4px rgba(35, 30, 75, 0.2),
@@ -260,57 +263,61 @@ a {
 /* ------------------------------------------------------------------
    Reading column (long-form story, brief, lessons)
    ------------------------------------------------------------------ */
-.prose-signal {
-  font-family: var(--font-reading), Georgia, serif;
-  font-size: 1.0625rem; /* 17px */
-  line-height: 1.6;
-  color: var(--ink);
-  max-width: 68ch;
-}
-.prose-signal p {
-  margin-block: 0 1em;
-}
-.prose-signal p:last-child {
-  margin-bottom: 0;
-}
-.prose-signal strong {
-  font-weight: 600;
-}
-.prose-signal h2 {
-  font-family: var(--font-ui), ui-sans-serif, system-ui, sans-serif;
-  font-weight: 600;
-  font-size: 0.8125rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  margin: 2.25rem 0 0.75rem;
-}
-.prose-signal > h2:first-child,
-.prose-signal > :first-child > h2:first-child {
-  margin-top: 0;
-}
-.prose-signal ul,
-.prose-signal ol {
-  padding-left: 1.25em;
-  margin: 0 0 1em;
-}
-.prose-signal li {
-  margin: 0.25em 0;
-}
-.prose-signal li::marker {
-  color: var(--ink-3);
-}
-.prose-signal p a,
-.prose-signal li a,
-.prose-signal dd a {
-  color: var(--blue-text);
-  text-decoration: underline;
-  text-decoration-color: var(--navy-200);
-}
-.prose-signal p a:hover,
-.prose-signal li a:hover,
-.prose-signal dd a:hover {
-  text-decoration-color: currentColor;
+/* In the components layer so utility classes on elements inside the column
+   (a list with no padding, a sans tag) win over these element rules. */
+@layer components {
+  .prose-signal {
+    font-family: var(--font-reading), Georgia, serif;
+    font-size: 1.0625rem; /* 17px */
+    line-height: 1.6;
+    color: var(--ink);
+    max-width: 68ch;
+  }
+  .prose-signal p {
+    margin-block: 0 1em;
+  }
+  .prose-signal p:last-child {
+    margin-bottom: 0;
+  }
+  .prose-signal strong {
+    font-weight: 600;
+  }
+  .prose-signal h2 {
+    font-family: var(--font-ui), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 2.25rem 0 0.75rem;
+  }
+  .prose-signal > h2:first-child,
+  .prose-signal > :first-child > h2:first-child {
+    margin-top: 0;
+  }
+  .prose-signal ul,
+  .prose-signal ol {
+    padding-left: 1.25em;
+    margin: 0 0 1em;
+  }
+  .prose-signal li {
+    margin: 0.25em 0;
+  }
+  .prose-signal li::marker {
+    color: var(--ink-3);
+  }
+  .prose-signal p a,
+  .prose-signal li a,
+  .prose-signal dd a {
+    color: var(--blue-text);
+    text-decoration: underline;
+    text-decoration-color: var(--navy-200);
+  }
+  .prose-signal p a:hover,
+  .prose-signal li a:hover,
+  .prose-signal dd a:hover {
+    text-decoration-color: currentColor;
+  }
 }
 
 /* ------------------------------------------------------------------
@@ -321,15 +328,6 @@ a {
   --chain-color: var(--navy);
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-}
-/* On narrow screens the chain keeps a readable minimum column and scrolls. */
-@media (max-width: 480px) {
-  .chain {
-    grid-template-columns: repeat(6, minmax(78px, 1fr));
-    overflow-x: auto;
-    padding-bottom: 2px;
-    scrollbar-width: none;
-  }
 }
 .chain-step {
   position: relative;
@@ -395,12 +393,16 @@ a {
   padding-right: 8px;
   line-height: 1.2;
 }
-/* Narrow columns let a two-word label wrap rather than clip. */
+
+/* On phones the six columns stay on one row and the labels wrap to two lines,
+   so the whole chain is visible without sideways scrolling. */
 @media (max-width: 480px) {
   .chain-label {
     white-space: normal;
+    padding-right: 4px;
   }
 }
+
 
 /* ------------------------------------------------------------------
    Motion

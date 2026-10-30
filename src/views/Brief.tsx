@@ -7,6 +7,8 @@ import { AskSignal } from "@/components/AskSignal";
 import { RegionBeads } from "@/components/RegionBead";
 import { Wordmark } from "@/components/shell/Wordmark";
 import { PrintButton } from "@/components/PrintButton";
+import { CopyButton } from "@/components/CopyButton";
+import { EvidenceLine } from "@/components/Evidence";
 import { SyntheticBadge } from "@/components/SyntheticBadge";
 import { IconArrow, IconExternal } from "@/components/shell/icons";
 
@@ -41,7 +43,10 @@ export function BriefArticle({
             </span>
           ))}
         </nav>
-        <PrintButton />
+        <div className="flex items-center gap-1">
+          <CopyButton text={briefText(story, a)} label="Copy brief" />
+          <PrintButton />
+        </div>
       </div>
 
       <div className="mt-5 paper px-5 py-6 md:px-8 md:py-8 print:shadow-none print:border-0 print:p-0 print:rounded-none">
@@ -53,55 +58,47 @@ export function BriefArticle({
         <h1 className="m-0 text-[24px] md:text-[30px] leading-[1.15] font-semibold tracking-[-0.01em] text-ink text-balance">{story.title}</h1>
         <p className="mt-3 mb-0 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-ink-3">
           <span className="font-semibold text-ink-2">Meeting brief</span>
-          <span aria-hidden="true">·</span>
           <RegionBeads regions={a.regionsImplicated} max={3} size="sm" />
-          <span aria-hidden="true">·</span>
-          <span>{story.publisher}{story.publishedAt ? `, ${formatDateTime(story.publishedAt, { year: "numeric" })}` : ""}</span>
-          <span aria-hidden="true">·</span>
-          <span className="capitalize">{a.confidence.level} confidence</span>
+          <span className="whitespace-nowrap">{story.publisher}{story.publishedAt ? `, ${formatDateTime(story.publishedAt, { year: "numeric" })}` : ""}</span>
           <SyntheticBadge show={fixtures} />
         </p>
+        <EvidenceLine story={story} confidence={a.confidence} className="mt-2" />
       </header>
 
       <div className="prose-signal mt-6 max-w-none">
         <section>
-          <h2>What happened, in plain words</h2>
-          <p>{a.event[0].text}</p>
-          {a.event[1] ? <p>{a.event[1].text}</p> : null}
+          <h2>In one sentence</h2>
+          <p className="!text-[19px] !leading-[1.45] text-ink">{a.meeting.observation}</p>
         </section>
 
         <section>
-          <h2>What the source shows</h2>
-          <ul>
-            {a.evidence.establishes.map((e, i) => <li key={i}>{e}</li>)}
-          </ul>
-          <p className="font-sans text-[14px] text-ink-3">The source does not show: {lowerFirst(a.evidence.doesNotEstablish[0])}</p>
+          <h2>What happened</h2>
+          <p>{a.event[0]?.text}</p>
+          {a.event.slice(1).map((c, i) => <p key={i}>{c.text}</p>)}
         </section>
 
         <section>
-          <h2>Why it matters for the business</h2>
-          <p>{a.mechanisms[0].chain}</p>
-          <p>{a.implication[0].text}</p>
+          <h2>Why it matters for us</h2>
+          <p>{a.implication[0]?.text}</p>
+          {a.implication[1] ? <p className="text-ink-2">{a.implication[1].text}</p> : null}
         </section>
 
         <section>
-          <h2>What it means by region</h2>
-          <p>{a.implication[1].text}</p>
+          <h2>A question to ask</h2>
+          <p>{a.meeting.question}</p>
         </section>
 
         <section>
-          <h2>Risks and chances</h2>
-          <ul>
-            {a.secondOrder.filter((c) => c.kind === "hypothesis").map((c, i) => <li key={i}>{c.text}</li>)}
-          </ul>
-        </section>
-
-        <section>
-          <h2>Questions to ask</h2>
-          <ol>
-            <li>{a.meeting.question}</li>
-            {a.options.slice(0, 2).map((o, i) => (
-              <li key={i}>Should we {lowerFirst(o.action).replace(/\.$/, "")}? (The cost: {lowerFirst(o.tradeoff)})</li>
+          <h2>Ideas you could raise</h2>
+          <ol className="!pl-0 list-none space-y-3">
+            {a.options.slice(0, 3).map((o, i) => (
+              <li key={i} className="grid grid-cols-[1.5rem_1fr] gap-x-2">
+                <span className="font-sans text-[13px] font-semibold text-ink-4 tnum pt-[4px]">{i + 1}</span>
+                <span>
+                  <span className="block">{o.action}</span>
+                  <span className="block mt-1 font-sans text-[14px] text-ink-3">The cost: {lowerFirst(o.tradeoff)}</span>
+                </span>
+              </li>
             ))}
           </ol>
         </section>
@@ -117,10 +114,12 @@ export function BriefArticle({
         </section>
 
         <section>
-          <h2>If someone asks what you think</h2>
-          <p className="italic">{a.meeting.observation}</p>
-          <p className="font-sans text-[13.5px] text-ink-3">
-            Confidence is {a.confidence.level}: {a.confidence.reason}
+          <h2>How sure we are</h2>
+          <p className="font-sans !text-[15px] text-ink-2">
+            <strong className="font-semibold text-ink">{LEVEL_WORD[a.confidence.level]}.</strong> {a.confidence.reason}
+          </p>
+          <p className="font-sans !text-[15px] text-ink-2">
+            The source does not show {lowerFirst(a.evidence.doesNotEstablish[0] ?? "").replace(/\.$/, "")}.
           </p>
         </section>
 
@@ -128,18 +127,29 @@ export function BriefArticle({
           <h2>Sources</h2>
           <ul className="font-sans text-[14px]">
             <li>
-              {story.publisher}: <a href={story.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1">{story.title} <IconExternal /></a>
+              {story.publisher}: <a href={story.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1">{story.title} <IconExternal className="flex-none" /></a>
               {story.publishedAt ? ` (${formatDateTime(story.publishedAt, { year: "numeric" })})` : ""}
             </li>
-            {related.map((r) => (
-              <li key={r.id}>
-                {r.publisher}: <a href={r.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1">{r.title} <IconExternal /></a>
-                {r.publishedAt ? ` (${formatDateTime(r.publishedAt, { year: "numeric" })})` : ""}
+            {(story.alsoReportedBy ?? []).filter((r) => r.url).map((r) => (
+              <li key={r.url}>
+                {r.publisher}: <a href={r.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1">{r.title} <IconExternal className="flex-none" /></a>
               </li>
             ))}
           </ul>
+          {related.length > 0 ? (
+            <>
+              <h3 className="!mt-5 !mb-2 font-sans text-[13px] font-semibold text-ink-3">Related reading</h3>
+              <ul className="font-sans text-[14px]">
+                {related.map((r) => (
+                  <li key={r.id}>
+                    {r.publisher}: <a href={r.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1">{r.title} <IconExternal className="flex-none" /></a>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : null}
           <p className="font-sans text-[13px] text-ink-3">
-            The evidence section quotes the source. Everything else is SIGNAL&rsquo;s reading. Nothing here asserts a connection to a specific supplier, contract or shipment.
+            &ldquo;What happened&rdquo; quotes the source. Everything else is SIGNAL&rsquo;s reading. Nothing here asserts a connection to a specific supplier, contract or shipment.
           </p>
         </section>
       </div>
@@ -165,6 +175,37 @@ export function relatedStories(stories: Story[], story: Story): Story[] {
   return stories
     .filter((s) => s.id !== story.id && s.topics.some((t) => story.topics.includes(t)) && s.regions.some((r) => story.regions.includes(r)))
     .slice(0, 3);
+}
+
+const LEVEL_WORD = { high: "High confidence", medium: "Medium confidence", low: "Low confidence" } as const;
+
+/** The brief as plain text, for the clipboard. */
+function briefText(story: Story, a: Analysis): string {
+  const lines = [
+    `MEETING BRIEF: ${story.title}`,
+    `${story.publisher}${story.publishedAt ? `, ${formatDateTime(story.publishedAt, { year: "numeric" })}` : ""}`,
+    "",
+    "In one sentence",
+    a.meeting.observation,
+    "",
+    "Why it matters for us",
+    a.implication[0]?.text ?? "",
+    "",
+    "A question to ask",
+    a.meeting.question,
+    "",
+    "Ideas you could raise",
+    ...a.options.slice(0, 3).map((o, i) => `${i + 1}. ${o.action} (The cost: ${lowerFirst(o.tradeoff)})`),
+    "",
+    "The other view",
+    a.meeting.counterpoint,
+    "",
+    "What to watch",
+    a.meeting.indicator,
+    "",
+    `${LEVEL_WORD[a.confidence.level]}. Source: ${story.url}`,
+  ];
+  return lines.join("\n");
 }
 
 function lowerFirst(s: string) {

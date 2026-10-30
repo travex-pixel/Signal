@@ -64,6 +64,9 @@ export interface Simulator {
 }
 
 const money = (v: number) => fmtMoney(v, { compact: true });
+/** A change shows its direction: "+$64k" and "−$12k", so a rise never reads as a level. */
+const change = (v: number) => (v > 0 ? `+${money(v)}` : money(v));
+const changePct = (v: number, digits?: number) => (v > 0 ? `+${fmtPct(v, digits)}` : fmtPct(v, digits));
 
 export const SIMULATORS: Simulator[] = [
   {
@@ -84,7 +87,7 @@ export const SIMULATORS: Simulator[] = [
       const delta = o.monthlyProfitChange;
       return {
         stats: [
-          { label: "Monthly gross profit change", value: money(delta), lead: true, tone: delta < 0 ? "bad" : delta > 0 ? "good" : "neutral" },
+          { label: "Monthly gross profit change", value: change(delta), lead: true, tone: delta < 0 ? "bad" : delta > 0 ? "good" : "neutral" },
           { label: "Gross margin before → after", value: `${fmtPct(o.marginBeforePct)} → ${fmtPct(o.marginAfterPct)}` },
           { label: "New cost", value: fmtMoney(o.newUnitCost) + "/t" },
           { label: "Price to hold margin %", value: fmtMoney(o.priceToHoldMarginPct) + "/t" },
@@ -130,10 +133,10 @@ export const SIMULATORS: Simulator[] = [
       });
       return {
         stats: [
-          { label: "Monthly spend change", value: money(o.monthlyImpact), lead: true, tone: o.monthlyImpact > 0 ? "bad" : o.monthlyImpact < 0 ? "good" : "neutral" },
+          { label: "Monthly spend change", value: change(o.monthlyImpact), lead: true, tone: o.monthlyImpact > 0 ? "bad" : o.monthlyImpact < 0 ? "good" : "neutral" },
           { label: "AUD cost now → scenario", value: `${fmtMoney(o.audCostNow)} → ${fmtMoney(o.audCostScenario)}/t` },
           { label: "Effective cost after hedging", value: fmtMoney(o.audCostEffective) + "/t" },
-          { label: "Change in unit cost", value: fmtPct(o.pctChange) },
+          { label: "Change in unit cost", value: changePct(o.pctChange) },
         ],
         chart: {
           kind: "line",
@@ -211,9 +214,9 @@ export const SIMULATORS: Simulator[] = [
       const volumeEffect = gp * (v.volumeChangePct / 100);
       return {
         stats: [
-          { label: "EBITDA change", value: money(o.ebitdaChange), lead: true, tone: o.ebitdaChange < 0 ? "bad" : o.ebitdaChange > 0 ? "good" : "neutral" },
+          { label: "EBITDA change", value: change(o.ebitdaChange), lead: true, tone: o.ebitdaChange < 0 ? "bad" : o.ebitdaChange > 0 ? "good" : "neutral" },
           { label: "EBITDA before → after", value: `${money(o.ebitdaBefore)} → ${money(o.ebitdaAfter)}` },
-          { label: "Break-even volume change", value: fmtPct(o.breakEvenVolumeChangePct, 0) },
+          { label: "Break-even volume change", value: changePct(o.breakEvenVolumeChangePct, 0) },
           { label: "Revenue after", value: money(o.revenueAfter) },
         ],
         chart: {

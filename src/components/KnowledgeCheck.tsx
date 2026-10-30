@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { KnowledgeCheck as Check } from "@/lib/learn/lessons";
 import { Button } from "./Button";
 import { IconCheck } from "./shell/icons";
@@ -10,6 +10,11 @@ export function KnowledgeCheck({ check }: { check: Check }) {
   const [choice, setChoice] = useState<number | null>(null);
   const [revealed, setRevealed] = useState(false);
   const correct = revealed && choice === check.answer;
+  // The "Check answer" button goes away once pressed, so focus moves to the result instead of dropping to the page.
+  const resultRef = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    if (revealed) resultRef.current?.focus();
+  }, [revealed]);
 
   return (
     <form
@@ -29,7 +34,7 @@ export function KnowledgeCheck({ check }: { check: Check }) {
           return (
             <label
               key={i}
-              className={`flex items-start gap-3 rounded-md border px-3.5 py-2.5 cursor-pointer transition-colors duration-150 ${
+              className={`flex items-start gap-3 rounded-md border px-3.5 py-3 min-h-11 cursor-pointer transition-colors duration-150 ${
                 state === "right"
                   ? "border-ok bg-ok-100"
                   : state === "wrong"
@@ -58,7 +63,7 @@ export function KnowledgeCheck({ check }: { check: Check }) {
           Check answer
         </Button>
       ) : (
-        <p role="status" className="mt-4 mb-0 text-[14.5px] leading-[1.5] text-ink">
+        <p ref={resultRef} tabIndex={-1} role="status" className="mt-4 mb-0 text-[14.5px] leading-[1.5] text-ink focus:outline-none">
           <span className={`inline-flex items-center gap-1 font-semibold ${correct ? "text-ok" : "text-danger"}`}>
             {correct ? <IconCheck /> : null}
             {correct ? "Right." : "Not quite."}

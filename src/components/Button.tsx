@@ -12,7 +12,7 @@ const styles: Record<Variant, string> = {
 };
 
 const base =
-  "inline-flex items-center justify-center gap-1.5 h-9 px-3.5 rounded-md text-[13.5px] font-semibold whitespace-nowrap transition-[background-color,border-color,box-shadow,transform] duration-150 active:translate-y-px disabled:opacity-50 disabled:pointer-events-none";
+  "inline-flex items-center justify-center gap-1.5 h-11 sm:h-9 px-4 sm:px-3.5 rounded-md font-sans text-[14px] sm:text-[13.5px] font-semibold whitespace-nowrap transition-[background-color,border-color,box-shadow,transform] duration-150 active:translate-y-px disabled:opacity-50 disabled:pointer-events-none";
 
 export function ButtonLink({ variant = "secondary", className = "", children, ...rest }: ComponentProps<typeof Link> & { variant?: Variant; children: ReactNode }) {
   return (

@@ -47,7 +47,7 @@ export function TabLinks() {
             <Link
               href={item.href}
               aria-current={current ? "page" : undefined}
-              className={`flex flex-col items-center justify-center gap-0.5 h-14 text-[11px] font-medium transition-colors duration-150 ${
+              className={`flex flex-col items-center justify-center gap-0.5 h-14 text-[11.5px] font-medium transition-colors duration-150 ${
                 current ? "text-navy" : "text-ink-3"
               }`}
             >

@@ -163,7 +163,7 @@ export function analyzeStory(story: Story, digest?: Digest): Analysis {
     },
   ];
   if (mechanisms[1]) {
-    implication.push({ kind: "inference", text: `A second mechanism may also apply (${lcName(mechanisms[1].name)}): ${mechanisms[1].implication}` });
+    implication.push({ kind: "inference", text: `Another channel may also apply: ${lcName(mechanisms[1].name)}. ${mechanisms[1].implication}` });
   }
 
   const secondOrder: Claim[] = [

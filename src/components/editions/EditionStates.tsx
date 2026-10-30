@@ -20,8 +20,8 @@ export function EditionState({ state, date }: { state: "off" | "error" | "missin
       );
     case "empty":
       return (
-        <Empty title="The first day will be kept this evening" action={back}>
-          Each evening SIGNAL keeps a copy of the day. Come back tomorrow and today will be here.
+        <Empty title="The first day will be kept at the next refresh" action={back}>
+          SIGNAL keeps a copy of each day in the morning and again in the evening. Come back tomorrow and today will be here.
         </Empty>
       );
     case "missing":

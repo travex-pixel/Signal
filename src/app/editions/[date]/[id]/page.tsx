@@ -52,6 +52,7 @@ async function View({ params }: { params: Promise<{ date: string; id: string }> 
         { href: `/editions/${date}`, label: editionLabel(date) },
       ]}
       ask={false}
+      absoluteTimes
     />
   );
 }

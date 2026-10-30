@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Literata, Schibsted_Grotesk } from "next/font/google";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import { TopBar } from "@/components/shell/TopBar";
 import { TabBar } from "@/components/shell/TabBar";
+import { Footer } from "@/components/shell/Footer";
 import "./globals.css";
 
 const ui = Schibsted_Grotesk({
@@ -62,6 +63,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <TopBar />
         <main id="main" className="flex-1 flex flex-col pb-20 md:pb-0">
           {children}
+          <Suspense fallback={null}>
+            <Footer />
+          </Suspense>
         </main>
         <TabBar />
       </body>

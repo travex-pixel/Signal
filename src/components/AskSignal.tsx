@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Button } from "./Button";
 import { KindTag } from "./Claims";
 import { IconArrow } from "./shell/icons";
@@ -31,6 +31,8 @@ export function AskSignal({
   const [state, setState] = useState<"idle" | "streaming" | "done" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+  // Leaving the page stops the answer, so the model does not keep generating for no one.
+  useEffect(() => () => abortRef.current?.abort(), []);
 
   async function ask(q: string) {
     const text = q.trim();
@@ -119,7 +121,7 @@ export function AskSignal({
       ) : null}
 
       {asked ? (
-        <div className="mt-4" aria-live="polite">
+        <div className="mt-4" aria-busy={state === "streaming"}>
           <p className="m-0 text-[13px] font-medium text-ink-2">{asked}</p>
           {state === "error" ? (
             <p role="alert" className="mt-2 mb-0 text-[14px] text-danger">
@@ -129,8 +131,10 @@ export function AskSignal({
             <div className="mt-2">
               <div className="flex items-center gap-2">
                 <KindTag kind="inference" />
-                <span className="text-[12px] text-ink-3">Answered from today&rsquo;s stories. Not advice.</span>
+                <span className="text-[12.5px] text-ink-3">Answered from today&rsquo;s stories. Not advice.</span>
               </div>
+              {/* Announced once, when the answer is complete, rather than word by word. */}
+              <p className="sr-only" aria-live="polite">{state === "done" ? answer : ""}</p>
               <p className="mt-2 mb-0 font-serif text-[16px] leading-[1.55] text-ink whitespace-pre-wrap">
                 {answer}
                 {state === "streaming" ? <span aria-hidden="true" className="inline-block w-[2px] h-[1em] align-text-bottom bg-navy animate-pulse ml-0.5" /> : null}

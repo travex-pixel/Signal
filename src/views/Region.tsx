@@ -11,22 +11,31 @@ import { IconArrow } from "@/components/shell/icons";
 
 export const VALID_REGIONS = new Set<string>(REGIONS.map((r) => r.id));
 
+/** Shorter names where two would not fit a phone column. */
+const PHONE_NAME: Partial<Record<RegionId, string>> = { sea: "SE Asia", global: "Global" };
+
 export function RegionTabs({ current }: { current: RegionId }) {
   return (
-    <nav aria-label="Regions" className="-mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto">
-      <ul className="m-0 p-0 list-none flex gap-1 border-b border-hairline min-w-max">
+    <nav aria-label="Regions">
+      {/* Phones: all six regions visible as a 3 by 2 grid. Wider screens: one ruled row of tabs. */}
+      <ul className="m-0 p-0 list-none grid grid-cols-3 gap-1.5 sm:flex sm:gap-1 sm:border-b sm:border-hairline">
         {REGIONS.map((r) => {
           const active = r.id === current;
           return (
-            <li key={r.id}>
+            <li key={r.id} className="min-w-0">
               <Link
                 href={`/regions/${r.id}`}
                 aria-current={active ? "page" : undefined}
-                className={`relative inline-flex items-center gap-2 px-3 py-2.5 text-[13.5px] font-semibold whitespace-nowrap transition-colors duration-150 ${active ? "text-ink" : "text-ink-3 hover:text-ink"}`}
+                className={`relative flex items-center justify-center sm:justify-start gap-1.5 min-h-11 px-2 sm:px-3 rounded-lg sm:rounded-none text-[13px] sm:text-[13.5px] font-semibold whitespace-nowrap transition-[color,background-color,box-shadow] duration-150 ${
+                  active ? "bg-surface shadow-1 text-ink sm:bg-transparent sm:shadow-none" : "text-ink-3 hover:text-ink"
+                }`}
               >
-                <span aria-hidden="true" className="w-2 h-2 rounded-full" style={{ background: `var(--region-${r.hue})` }} />
-                {r.name}
-                {active ? <span aria-hidden="true" className="absolute left-3 right-3 -bottom-px h-[2px] rounded-full" style={{ background: `var(--region-${r.hue})` }} /> : null}
+                <span aria-hidden="true" className="flex-none w-2 h-2 rounded-full" style={{ background: `var(--region-${r.hue})` }} />
+                <span className="truncate sm:hidden">{PHONE_NAME[r.id] ?? r.name}</span>
+                <span className="hidden sm:inline">{r.name}</span>
+                {active ? (
+                  <span aria-hidden="true" className="hidden sm:block absolute left-3 right-3 -bottom-px h-[2px] rounded-full" style={{ background: `var(--region-${r.hue})` }} />
+                ) : null}
               </Link>
             </li>
           );

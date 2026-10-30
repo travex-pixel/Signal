@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ReadCount, ReadMark } from "@/components/LessonProgress";
 import Link from "next/link";
 import { LESSONS } from "@/lib/learn/lessons";
 import { SIMULATORS } from "@/lib/learn/simulators";
@@ -22,7 +23,7 @@ export default function LearnPage() {
 
       <div className="mt-7 paper px-5 py-5 md:px-8 md:py-7">
       <section aria-labelledby="lessons">
-        <h2 id="lessons" className="m-0 text-[12px] font-semibold uppercase tracking-[0.07em] text-ink-3">Lessons</h2>
+        <h2 id="lessons" className="m-0 text-[12px] font-semibold uppercase tracking-[0.07em] text-ink-3">Lessons<ReadCount slugs={LESSONS.map((l) => l.slug)} /></h2>
         <ol className="mt-2 m-0 p-0 list-none grid md:grid-cols-2 gap-x-10">
           {LESSONS.map((l, i) => (
             <li key={l.slug} className="border-t border-hairline">
@@ -31,7 +32,10 @@ export default function LearnPage() {
                 <span className="min-w-0 flex-1">
                   <span className="block text-[16px] font-medium text-ink group-hover:text-navy-700 transition-colors duration-150">{l.title}</span>
                   <span className="block mt-1 text-[13.5px] leading-[1.45] text-ink-2 text-pretty">{l.oneLiner}</span>
-                  <span className="block mt-1.5 text-[12px] text-ink-3 tnum">{l.minutes} min read · knowledge check</span>
+                  <span className="mt-1.5 flex flex-wrap items-center gap-2 text-[12.5px] text-ink-3 tnum">
+                    {l.minutes} min read · knowledge check
+                    <ReadMark slug={l.slug} />
+                  </span>
                 </span>
                 <Plate name={l.plate} width={72} className="flex-none -my-1 opacity-90 group-hover:opacity-100 transition-opacity" />
               </Link>

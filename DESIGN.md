@@ -14,6 +14,8 @@ colors:
   navy: "#231e4b"
   navy-800: "#1a1638"
   navy-700: "#352f66"
+  navy-shell-top: "#2b2559"
+  navy-lift: "#3d3774"
   navy-200: "#c9c6dd"
   navy-100: "#e8e7f1"
   coral: "#ee5f5b"
@@ -97,9 +99,56 @@ typography:
     fontSize: "12.5px"
     fontWeight: 400
     lineHeight: 1.5
+  title-lg:
+    fontFamily: "Schibsted Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "16px"
+    fontWeight: 500
+    lineHeight: 1.35
+  reading-sm:
+    fontFamily: "Literata, Georgia, serif"
+    fontSize: "16px"
+    fontWeight: 400
+    lineHeight: 1.55
+  lede-region:
+    fontFamily: "Schibsted Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "19px"
+    fontWeight: 500
+    lineHeight: 1.35
+  date-tile:
+    fontFamily: "Schibsted Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "22px"
+    fontWeight: 600
+    lineHeight: 1
+  headline-index:
+    fontFamily: "Schibsted Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "30px"
+    fontWeight: 600
+    lineHeight: 1.15
+    letterSpacing: "-0.015em"
+  headline-brief-sm:
+    fontFamily: "Schibsted Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "24px"
+    fontWeight: 600
+    lineHeight: 1.15
+  headline-lesson-sm:
+    fontFamily: "Schibsted Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "28px"
+    fontWeight: 600
+    lineHeight: 1.12
+  display-story:
+    fontFamily: "Schibsted Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "34px"
+    fontWeight: 600
+    lineHeight: 1.12
+    letterSpacing: "-0.015em"
+  figure-sm:
+    fontFamily: "Schibsted Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "30px"
+    fontWeight: 600
+    lineHeight: 1.1
   tag:
     fontFamily: "Schibsted Grotesk, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "10.5px"
+    fontSize: "11px"
     fontWeight: 600
     lineHeight: 1.5
     letterSpacing: "0.06em"
@@ -116,9 +165,11 @@ typography:
     lineHeight: 1
     letterSpacing: "0.14em"
 rounded:
+  bar: "2px"
   sm: "4px"
   md: "8px"
   lg: "12px"
+  paper: "16px"
   full: "999px"
 spacing:
   "1": "4px"
@@ -247,7 +298,7 @@ components:
 
 **Creative North Star: "Spec Sheet and Sample Bag"**
 
-SIGNAL borrows its materials from a polymer distributor's own world: the product datasheet and the sample bag of pellets. Primaplas's bars-and-beads mark becomes the reasoning chain (Event · Evidence · Mechanism · Implication · Options · Meeting), a bar with six beads that the reader can walk. The datasheet's property/value rhythm sets every piece of metadata: publisher · time · region on one quiet line, the Source & evidence panel as a two-column definition list, inputs and results in a simulator as labelled figures. Colour is pellet colour: six region hues taken from the brand bars, used on beads, bars and chart series, never as wash.
+SIGNAL borrows its materials from a polymer distributor's own world: the product datasheet and the sample bag of pellets. Primaplas's bars-and-beads mark becomes the reasoning chain (The news · How sure · How it works · What it means · What to do · In a meeting), a bar with six beads that the reader can walk and that follows her down a story. The datasheet's property/value rhythm sets every piece of metadata: publisher · time · region on one quiet line, the Source & evidence panel as a two-column definition list, inputs and results in a simulator as labelled figures. Colour is pellet colour: six region hues taken from the brand bars, used on beads, bars and chart series, never as wash.
 
 The surface is calm and dense in the way a good sheet is dense. One navy shell at the top; a cool tinted ground; white only where something is a discrete object (a card, a button, a chart plate). Hairlines, not boxes, divide content. The headline is the only large type on a page; everything else is either long-form reading in Literata or a small, firm Schibsted Grotesk label. Watercolour plates (pellets, cargo, islands, scales) appear small beside headlines as editorial marks, never as banners, and are hidden from assistive technology because they carry nothing the text does not.
 
@@ -312,9 +363,9 @@ A navy-and-paper palette with six pellet hues from the Primaplas site, each spli
 - **Body UI** (400, 14.5px, 1.5, `ink-2`): explanatory sans paragraphs, assumptions, option trade-offs, empty-state copy.
 - **Label** (600, 12px, uppercase, 0.07em, `ink-3`): every section heading inside a working surface ("Why it matters", "Also today", "Inputs", "Assumptions", simulator stat labels, `dt` in the meeting contribution). Inside `.prose-signal`, `h2` is this label at 13px/0.04em with 36px above and 12px below.
 - **Page title** (600, 13px, uppercase, 0.08em, `ink-3`): the `h1` of Today, Preferences, Sources and Learn; on Today it carries the date in `ink-4`, medium, normal case.
-- **Control** (600, 13.5px): buttons, inline action links with an arrow, lesson prev/next, source table body. The top-bar nav is the same size at 500; the mobile tab labels are 11px at 500.
-- **Meta** (400, 12.5px, `ink-3`): the datasheet line under headlines (publisher · time · beads), breadcrumbs, input hints. Region bead labels are 12px/600; the Freshness line is 12px with lining figures.
-- **Tag** (600, 10.5px, uppercase, 0.06em, 1px 6px, 4px radius): claim-kind tags and status tags; 11px for the confidence tag inside the story.
+- **Control** (600, 13.5px; 14px on phones): buttons, inline action links with an arrow, lesson prev/next, source table body. The top-bar nav is the same size at 500; the mobile tab labels are 11.5px at 500.
+- **Meta** (400, 12.5px, `ink-3`): the datasheet line under headlines (publisher · time · beads), breadcrumbs, input hints. Region bead labels are 12px/600; the evidence line under a lead headline is 13px, its confidence label 600 in the state colour.
+- **Tag** (600, 11px, uppercase, 0.05em, 1px 6px, 4px radius, always the UI face even inside the reading column): claim-kind tags and status tags. 11px is the floor for any text in the product.
 - **Figure** (600, 30px → 36px, 1.1, -0.01em, lining): the lead result in a simulator; secondary results are 17px/1.3.
 
 ### Named Rules
@@ -326,13 +377,15 @@ A navy-and-paper palette with six pellet hues from the Primaplas site, each spli
 
 ## Layout
 
-The page is a 1280px container with 16px gutters on phones and 32px from md (768px). The top bar is 56px of navy with wordmark left, five destinations centred, Preferences right; on phones the destinations move to a 56px bottom tab bar (`position: fixed`, safe-area padded) and `main` takes 80px of bottom padding to clear it. Breakpoints are Tailwind's defaults: sm 640px, md 768px, lg 1024px.
+The page is a 1280px container with 16px gutters on phones and 32px from md (768px). The top bar is 56px of navy with wordmark left, five destinations centred (Today, Past days, Regions, Briefs, Learn), Preferences right; on phones the destinations move to a 56px bottom tab bar (`position: fixed`, safe-area padded) and `main` takes 80px of bottom padding to clear it. Breakpoints are Tailwind's defaults: sm 640px, md 768px, lg 1024px.
 
 Working pages are two columns from lg: a fluid reading column and a fixed aside separated by a 64px gap and a left hairline with 40px padding. The aside width is the one value that moves with the page: 360px on Today, 320px on a region, 300px on a story, 280px on a lesson. Simulators invert it: inputs in a 340px column on the left, results fluid on the right, 48px gap. The meeting brief is a single 760px column because it prints.
 
 The reading measure is 68ch in `.prose-signal` and 62ch for the serif paragraphs on Today and region pages; sans ledes sit at 36–60ch. Vertical rhythm uses Tailwind's 4px scale: 8–12px between a label and its value, 16–24px between sections (section labels sit 24px below the previous block, or 16px plus a hairline in the aside), 32px above a major block, 40px above a page-ending nav. Lists are `divide-y` hairlines with 12–14px of padding per row and never cards.
 
-Today is built to fit 1440×900 without scrolling: lead left (bead line, headline, summary, "Why it matters", the chain, three actions), aside right (three supporting stories numbered, "Across regions", "One question for today", the Freshness line pinned to the bottom with `mt-auto`). On the story page the chain becomes a sticky bar under the headline (`top: 0`, ground at 95% with blur, hairline below) and each section has `scroll-margin-top: 7rem` so a bead click lands under it.
+Today is built to fit 1440×900 without scrolling. A dateline sits above the sheet ("Today's Signal · Friday 30 October", with "Updated 9:41 pm" at the right). Lead left: bead line, headline, the evidence line, summary when the feed has one, "Why it matters" in one paragraph, "In a meeting, you could say" as one quoted Literata sentence, the chain, three actions, and a one-line "The idea behind it" with its lesson. Aside right: three supporting stories numbered (publisher and "and N more" when other outlets reported it), "Across regions", "One question for today". Source health lives on the Sources page, reached from the footer, Preferences and every story's evidence; Today carries no status line. On the story page the chain becomes a sticky bar under the headline (`top: 0`, surface at 95% with blur, hairline below) that fills the step being read, and each section has `scroll-margin-top: 7rem`; a client effect brings a `#section` link to its target after the content streams in and opens the source details when the link names them.
+
+Every tap target is at least 44px tall on phones: buttons grow from 36px to 44px below sm, inline action links carry `min-h-11`, region tabs become a 3 by 2 grid of 44px pills, and the day buttons on a past day are 40px pills. Pages other than Today end with a quiet footer (where the news comes from, Preferences).
 
 ## Elevation & Depth
 
@@ -365,7 +418,7 @@ Compact, firm, text-first. Three variants share one frame: 36px tall, 14px side 
 
 ### Chips
 Claim-kind and status tags are the chip in this system; there are no filter chips.
-- **Style:** 10.5px/600 uppercase 0.06em, 1px 6px padding, 4px radius, a 100-tint field with the matching text tint. Fact `navy-100`/`navy`; Inference `blue-100`/`blue-text`; Hypothesis `yellow-100`/`yellow-text`; Unknown `slate-100`/`slate-text`; Development fixtures and Illustrative values `warn-100`/`warn`; confidence `navy-100`/`navy` at 11px.
+- **Style:** 11px/600 uppercase 0.05em, 1px 6px padding, 4px radius, a 100-tint field with the matching text tint. Fact `navy-100`/`navy`; Inference `blue-100`/`blue-text`; Hypothesis `yellow-100`/`yellow-text`; Unknown `slate-100`/`slate-text`; Development fixtures and Illustrative values `warn-100`/`warn`; confidence `navy-100`/`navy` at 11px.
 - **State:** static; the `title` attribute explains the kind on hover. In a claim list the tag sits in a left margin column on sm and up and inline above the text on phones.
 - **Region bead:** a 10px dot in the region's raw hue beside a 12px/600 label in the region's text tint; `RegionBeads` shows up to two (short names) separated by 12px. The bead is the chain's atom and appears in the datasheet line under every headline, in list rows, in region tabs and in Preferences.
 
@@ -373,7 +426,7 @@ Claim-kind and status tags are the chip in this system; there are no filter chip
 Cards are rare: they mark an object that is not part of the reading flow.
 - **Corner Style:** 12px (`lg`); 8px for the inline business-relevance box
 - **Background:** `surface` on `ground`
-- **Shadow Strategy:** none (see The Hairline Rule)
+- **Shadow Strategy:** only the paper sheet casts one (see The One Sheet Rule); a card inside the sheet is a `surface-2` field with a hairline.
 - **Border:** 1px `hairline`; dashed `hairline-strong` for the empty state
 - **Internal Padding:** 16px, 20px at md (chart plate); 20px 24px (knowledge check, principle callout); 32px 24px (empty state)
 - **Navy callout:** `navy` field, 12px radius, 20px 24px, white 17px/600 title, `navy-200` 12px label, `navy-100` body, a white link underlined in `coral`. Used once per page at most: "The principle" at the end of a story, "Try it with your own numbers" at the end of a lesson.
@@ -388,17 +441,20 @@ Simulator inputs are datasheet rows: label left, value right, a slider underneat
 - **Error / Disabled:** disabled controls drop to 50% opacity and lose pointer events; there is no error styling beyond the knowledge check.
 
 ### Navigation
-- **Top bar:** 56px `navy`; wordmark (three bars and beads in coral and cyan beside SIGNAL at 15px/700/0.14em white) left; five links (Today, Regions, Briefs, Learn, Sources) at 13.5px/500 in `navy-200` with 12px side padding and 8px radius, hovering to white on white at 8%; the current link is white with a 3px `coral` bar under it; Preferences right with a tune icon. Focus rings on the shell are white.
+- **Top bar:** 56px `navy`; wordmark (three bars and beads in coral and cyan beside SIGNAL at 15px/700/0.14em white) left; five links (Today, Past days, Regions, Briefs, Learn) at 13.5px/500 in `navy-200` with 12px side padding and 8px radius, hovering to white on white at 8%; the current link is white with a 3px `coral` bar under it; Preferences right with a tune icon. Focus rings on the shell are white.
 - **Bottom tab bar (phones):** 56px, `surface` at 95% with blur, hairline on top, five equal columns, 20px line icons over 11px/500 labels; the current tab is `navy` with its icon in a 36×24 `navy-100` pill, the rest `ink-3`.
 - **Region tabs:** a hairline-ruled row of 13.5px/600 links each led by its region bead; the current tab is `ink` with a 2px underline in the region's hue.
 - **Breadcrumbs:** 12.5px `ink-3` separated by a slash, darkening to `ink` on hover.
 - **Icons:** one inline set at 24 viewBox, 1.75 stroke, round caps, `currentColor`, 16–20px; nothing is loaded from a library and no icon stands without a label except the Preferences tune icon on phones (which keeps an `sr-only` label).
 
 ### The Chain
-The signature component. Six equal grid columns; a 3px bar runs from each bead to the next through the bead row; a 13px ring bead sits at the start of each column with the step label beneath (11px/600, uppercase with 0.05em tracking from md, 10px in the compact story-page variant). Unwalked bars and beads are `hairline-strong`; the chain colour is `navy` by default and the lead story's region hue when a region is given (`--chain-color`). On a reading page, steps before the current one are "done" (bar and ring in the chain colour) and the current bead is filled. Every bead is a link to the matching section of the story (`#event` … `#meeting`), the bead scales 1.3× on hover and the label darkens to `ink`. The same bar-and-bead grammar draws the wordmark, and the region bead is a single bead with its label.
+The signature component. Six equal grid columns; a 3px bar runs from each bead to the next through the bead row; a 13px ring bead sits at the start of each column with the step label beneath (11.5px/600 on phones, where labels wrap to two lines so all six fit without scrolling; 12.5px from md, 12px in the compact story-page variant). Unwalked bars and beads are `hairline-strong`; the chain colour is `navy` by default and the lead story's region hue when a region is given (`--chain-color`). On a reading page, steps before the current one are "done" (bar and ring in the chain colour) and the current bead is filled. Every bead is a link to the matching section of the story (`#event` … `#meeting`), the bead scales 1.3× on hover and the label darkens to `ink`. The same bar-and-bead grammar draws the wordmark, and the region bead is a single bead with its label.
+
+### Evidence line
+One datasheet line under every lead headline (Today, a story, a brief, a saved day): a coloured dot and confidence label (High in `ok`, Medium in `navy`, Low in `warn`), then one plain sentence: "Also reported by Bloomberg, The Standard and 2 more." or "No other outlet has reported it yet.", plus "Only the headline is available." when the feed carried no summary. On phones the label and the sentence stack. The other outlets' reports are listed as links in "How sure we are", which is the corroboration itself.
 
 ### Datasheet (Source & evidence)
-A native `details` disclosure with a 13px/600 uppercase summary and a chevron that rotates 180° when open. Inside, a definition list in two columns (`minmax(110px,160px) 1fr`, 24px column gap, 12px row gap, 14px/1.5): property in `ink-3` medium on the left, value in `ink` on the right, lists as bulleted `ul`, the original headline quoted in Literata, the URL as a `blue-text` link with an external icon. The same property/value grammar sets the meeting contribution (`dt` label over `dd` value) and the simulator results.
+A native `details` disclosure (`#sources`) inside "How sure we are", with a 13.5px/600 sentence summary and the inline chevron icon turning when open. Long redirect links are shown as "news.google.com (redirects to the article)". Inside, a definition list in two columns (`minmax(110px,160px) 1fr`, 24px column gap, 12px row gap, 14px/1.5): property in `ink-3` medium on the left, value in `ink` on the right, lists as bulleted `ul`, the original headline quoted in Literata, the URL as a `blue-text` link with an external icon. The same property/value grammar sets the meeting contribution (`dt` label over `dd` value) and the simulator results.
 
 ### Charts
 Two restrained SVG charts, each `role="img"` with a title and a 12px caption beneath on a chart plate (surface card, 16–20px padding).
@@ -424,7 +480,7 @@ Procedural watercolour PNGs (720×540) generated by `scripts/illustrate.py`, eac
 - **Do** keep one primary button per view, 36px tall, navy with `shadow-1`, and use ghost for tertiary actions.
 - **Do** draw charts in SVG with direct labels, hairline gridlines, brand-hue series and a caption, and label every illustrative figure as such.
 - **Do** place a watercolour plate small beside a headline (72–200px), `alt=""`, with its `.png.json` provenance sidecar committed.
-- **Do** write honest empty and degraded states (what is missing, what to do) in the dashed empty-state container or the Freshness line.
+- **Do** write honest empty and degraded states (what is missing, what to do) in the empty-state container, and show how much stands behind a lead story with the evidence line.
 - **Do** keep transitions at 150ms (colour) and 220ms (entrance) on `--ease-out`, and respect `prefers-reduced-motion`.
 
 ### Don't:
@@ -432,7 +488,7 @@ Procedural watercolour PNGs (720×540) generated by `scripts/illustrate.py`, eac
 - **Don't** use a raw brand hue for running text or as a background wash; use the `-text` and `-100` tints.
 - **Don't** add a second large type size to a page; section structure is labels and hairlines.
 - **Don't** invent gauges, scores, KPIs, sparklines or decorative charts; the only charts are the waterfall and the line, inside simulators.
-- **Don't** cast shadows on cards, lists or inputs; `shadow-1` is the primary button, `shadow-2` is floating UI.
+- **Don't** cast shadows on lists, inputs or anything inside the sheet; shadows belong to the paper sheet, buttons and glossy navy objects.
 - **Don't** load an icon library or an icon font; icons are the inline 1.75-stroke set in `shell/icons.tsx`.
 - **Don't** let a plate become a banner, a hero or a background, and never ship a raster without its provenance sidecar.
 - **Don't** put more than one navy block in the content area of a page.

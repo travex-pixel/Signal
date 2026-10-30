@@ -16,7 +16,7 @@ export function TopBar() {
         </Suspense>
         <Link
           href="/preferences"
-          className="inline-flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[13.5px] font-medium text-navy-200 hover:text-white hover:bg-white/8 transition-colors duration-150 focus-visible:outline-white"
+          className="inline-flex items-center justify-center gap-2 min-h-11 min-w-11 md:min-h-0 md:min-w-0 px-2.5 py-1.5 rounded-md text-[13.5px] font-medium text-navy-200 hover:text-white hover:bg-white/8 transition-colors duration-150 focus-visible:outline-white"
         >
           <IconTune width={18} height={18} />
           <span className="hidden md:inline">Preferences</span>
