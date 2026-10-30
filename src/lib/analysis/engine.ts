@@ -60,6 +60,7 @@ function regionList(regions: RegionId[]): string {
 export function assessConfidence(story: Story, related: number): Confidence {
   let points = 0;
   const reasons: string[] = [];
+  const corroboratedBy = (story.alsoReportedBy ?? []).map((r) => r.publisher);
   if (story.evidenceWeight === 3) {
     points += 3;
     reasons.push("a primary source");
@@ -74,14 +75,14 @@ export function assessConfidence(story: Story, related: number): Confidence {
     points -= 1;
     reasons.push("the original article URL could not be recovered");
   }
-  if (related >= 2) {
-    points += 2;
-    reasons.push(`${related} other stories in today's digest touch the same topic and region`);
-  } else if (related === 1) {
+  if (corroboratedBy.length > 0) {
+    points += corroboratedBy.length >= 2 ? 3 : 2;
+    reasons.push(`${listNames(corroboratedBy)} also reported it`);
+  } else if (related >= 2) {
     points += 1;
-    reasons.push("one other story corroborates the theme");
+    reasons.push(`no other outlet reported this exact event, but ${related} other stories in the digest touch the same topic and region`);
   } else {
-    reasons.push("no corroborating story in today's digest");
+    reasons.push("no other outlet in the feeds SIGNAL reads reported it");
   }
   if (story.relevance.recencyHours !== undefined && story.relevance.recencyHours > 48) {
     points -= 1;
@@ -94,8 +95,17 @@ export function assessConfidence(story: Story, related: number): Confidence {
   const level: Confidence["level"] = points >= 5 ? "high" : points >= 3 ? "medium" : "low";
   return {
     level,
+    corroboratedBy,
+    headlineOnly: !story.summary,
     reason: `The fact rests on ${reasons[0]}. ${reasons.slice(1).map((r) => r[0].toUpperCase() + r.slice(1)).join(". ")}. The commercial reading is SIGNAL's own, drawn from named mechanisms. It is not something the source states.`,
   };
+}
+
+function listNames(names: string[]): string {
+  const shown = names.slice(0, 3);
+  const more = names.length - shown.length;
+  const head = shown.length <= 1 ? shown.join("") : `${shown.slice(0, -1).join(", ")} and ${shown[shown.length - 1]}`;
+  return more > 0 ? `${shown.join(", ")} and ${more} more` : head;
 }
 
 export function countRelated(story: Story, digest?: Digest): number {
@@ -122,7 +132,10 @@ export function analyzeStory(story: Story, digest?: Digest): Analysis {
     },
   ];
   if (story.summary) event.push({ kind: "fact", text: story.summary });
-  if (story.countries.length > 0) {
+  const others = story.alsoReportedBy ?? [];
+  if (others.length > 0) {
+    event.push({ kind: "fact", text: `${listNames(others.map((o) => o.publisher))} also reported it.` });
+  } else if (story.countries.length > 1) {
     event.push({ kind: "fact", text: `Places named in the report: ${story.countries.join(", ")}.` });
   }
 
@@ -133,7 +146,7 @@ export function analyzeStory(story: Story, digest?: Digest): Analysis {
       : "Only what the headline states. No further detail was available in the feed.",
   ];
   const doesNotEstablish = [
-    "Any effect on a particular supplier, contract, price or shipment. Those are SIGNAL's readings, below.",
+    "Any effect on a particular supplier, contract, price or shipment.",
     ...lead.unknowns,
   ];
 
@@ -177,7 +190,7 @@ export function analyzeStory(story: Story, digest?: Digest): Analysis {
     secondOrder,
     options: lead.options.slice(0, 3),
     meeting: {
-      observation: `${story.publisher} reported${story.publishedAt ? ` on ${dayOf(story.publishedAt)}` : ""}: “${story.title}”. The mechanism that matters for us is ${lcName(lead.name)}: ${firstSentence(lead.chain)}`,
+      observation: lead.say,
       question: lead.question,
       counterpoint: lead.counterpoint,
       indicator: lead.indicator,
@@ -208,11 +221,6 @@ export function lcName(name: string): string {
 function firstSentence(s: string): string {
   const m = s.match(/^[^.]+\./);
   return m ? m[0] : s;
-}
-
-/** The day a story was published, Sydney time, as said aloud: "29 October". No clock is read, so prerendered pages stay pure. */
-function dayOf(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-AU", { timeZone: "Australia/Sydney", day: "numeric", month: "long" });
 }
 
 /**

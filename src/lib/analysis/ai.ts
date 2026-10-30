@@ -54,57 +54,130 @@ export function aiEnabled(): boolean {
   return Boolean(process.env.ANTHROPIC_API_KEY);
 }
 
-export async function enrichAnalysis(story: Story, base: Analysis): Promise<Analysis> {
-  // Remote so one paid model call serves every server instance, not one per instance.
+/**
+ * The fields of a story that identify it for enrichment. Deliberately leaves
+ * out everything that changes when the digest is rebuilt (retrieval time,
+ * recency, ranking reasons, related-story counts), so one paid model call
+ * serves every rebuild of the same story instead of one per rebuild.
+ */
+export interface EnrichKey {
+  id: string;
+  title: string;
+  summary?: string;
+  publisher: string;
+  publishedAt?: string;
+  url: string;
+  regions: Story["regions"];
+  topics: Story["topics"];
+  countries: string[];
+  discovery: boolean;
+  evidenceWeight: Story["evidenceWeight"];
+  alsoReportedBy?: string[];
+}
+
+export function enrichKey(s: Story): EnrichKey {
+  return {
+    id: s.id,
+    title: s.title,
+    summary: s.summary,
+    publisher: s.publisher,
+    publishedAt: s.publishedAt,
+    url: s.url,
+    regions: s.regions,
+    topics: s.topics,
+    countries: s.countries,
+    discovery: s.discovery,
+    evidenceWeight: s.evidenceWeight,
+    alsoReportedBy: s.alsoReportedBy?.map((r) => r.publisher),
+  };
+}
+
+type Enrichment = z.infer<typeof enrichmentSchema>;
+
+/**
+ * One model call per story, cached remotely and shared by every server.
+ * Returns null when the model declines or its output does not validate; that
+ * outcome is cached on purpose. A transport failure (rate limit, overload,
+ * timeout) throws instead, so it is not cached and the next call retries.
+ */
+export async function enrichAnalysis(key: EnrichKey): Promise<Enrichment | null> {
   "use cache: remote";
-  cacheLife({ stale: 3600, revalidate: 86400, expire: 7 * 86400 });
+  cacheLife({ stale: 3600, revalidate: 7 * 86400, expire: 30 * 86400 });
+  if (!aiEnabled()) return null;
+  const story: Story = {
+    ...key,
+    canonicalUrl: key.url,
+    sourceId: "",
+    sourceType: "publisher",
+    retrievedAt: "",
+    relevance: { score: 0, reasons: [] },
+    alsoReportedBy: key.alsoReportedBy?.map((publisher) => ({ publisher, url: "", title: "" })),
+  };
+  const base = analyzeStory(story);
+  const client = new Anthropic();
+  const response = await client.messages.parse({
+    model: process.env.SIGNAL_AI_MODEL || "claude-opus-5-5",
+    max_tokens: 4000,
+    system: SYSTEM,
+    messages: [
+      {
+        role: "user",
+        content: [
+          `Story (publisher: ${story.publisher}; published: ${story.publishedAt ?? "unknown"}):`,
+          `Headline: ${story.title}`,
+          `Summary: ${story.summary ?? "(none)"}`,
+          key.alsoReportedBy?.length ? `Also reported by: ${key.alsoReportedBy.join(", ")}.` : "",
+          `Regions tagged: ${story.regions.join(", ")}. Topics tagged: ${story.topics.join(", ")}.`,
+          "",
+          "Rule-based draft to improve (keep what is right, sharpen what is generic, keep the labels):",
+          JSON.stringify(
+            {
+              mechanisms: base.mechanisms.map((m) => ({ name: m.name, chain: m.chain })),
+              implication: base.implication,
+              secondOrder: base.secondOrder,
+              options: base.options,
+              meeting: base.meeting,
+            },
+            null,
+            2,
+          ),
+        ].join("\n"),
+      },
+    ],
+    output_config: { format: zodOutputFormat(enrichmentSchema) },
+  });
+  if (response.stop_reason === "refusal" || !response.parsed_output) return null;
+  const parsed = enrichmentSchema.safeParse(response.parsed_output);
+  return parsed.success ? parsed.data : null;
+}
+
+/** Folds an enrichment into the rule-based analysis built from the current digest. */
+export function applyEnrichment(base: Analysis, out: Enrichment | null): Analysis {
+  if (!out) return base;
+  // Guard against the model relabelling inferences as facts.
+  const sanitize = (claims: { kind: string; text: string }[]) =>
+    claims.map((c) => ({ ...c, kind: c.kind === "fact" ? "inference" : c.kind })) as Analysis["implication"];
+  const ai = sanitize(out.implication);
+  // Keep the rule-based region claim second: pages rely on it, and it is the one
+  // statement about which supplier regions are implicated.
+  const implication = [ai[0], ...(base.implication[1] ? [base.implication[1]] : []), ...ai.slice(1, 3)];
+  return {
+    ...base,
+    generatedBy: "ai",
+    implication,
+    secondOrder: sanitize(out.secondOrder),
+    options: out.options,
+    meeting: out.meeting,
+    confidence: { ...base.confidence, reason: `${base.confidence.reason} ${out.confidenceReason}` },
+  };
+}
+
+/** Enrichment that never throws: a failure leaves the rule-based analysis. */
+export async function enrichedAnalysis(story: Story, digest?: Digest): Promise<Analysis> {
+  const base = analyzeStory(story, digest);
   if (!aiEnabled()) return base;
   try {
-    const client = new Anthropic();
-    const response = await client.messages.parse({
-      model: process.env.SIGNAL_AI_MODEL || "claude-opus-5-5",
-      max_tokens: 4000,
-      system: SYSTEM,
-      messages: [
-        {
-          role: "user",
-          content: [
-            `Story (publisher: ${story.publisher}; published: ${story.publishedAt ?? "unknown"}):`,
-            `Headline: ${story.title}`,
-            `Summary: ${story.summary ?? "(none)"}`,
-            `Regions tagged: ${story.regions.join(", ")}. Topics tagged: ${story.topics.join(", ")}.`,
-            "",
-            "Rule-based draft to improve (keep what is right, sharpen what is generic, keep the labels):",
-            JSON.stringify(
-              {
-                mechanisms: base.mechanisms.map((m) => ({ name: m.name, chain: m.chain })),
-                implication: base.implication,
-                secondOrder: base.secondOrder,
-                options: base.options,
-                meeting: base.meeting,
-              },
-              null,
-              2,
-            ),
-          ].join("\n"),
-        },
-      ],
-      output_config: { format: zodOutputFormat(enrichmentSchema) },
-    });
-    if (response.stop_reason === "refusal" || !response.parsed_output) return base;
-    const out = enrichmentSchema.parse(response.parsed_output);
-    // Guard against the model relabelling inferences as facts.
-    const sanitize = (claims: { kind: string; text: string }[]) =>
-      claims.map((c) => ({ ...c, kind: c.kind === "fact" ? "inference" : c.kind })) as Analysis["implication"];
-    return {
-      ...base,
-      generatedBy: "ai",
-      implication: sanitize(out.implication),
-      secondOrder: sanitize(out.secondOrder),
-      options: out.options,
-      meeting: out.meeting,
-      confidence: { ...base.confidence, reason: `${base.confidence.reason} ${out.confidenceReason}` },
-    };
+    return applyEnrichment(base, await enrichAnalysis(enrichKey(story)));
   } catch {
     return base;
   }
@@ -119,10 +192,14 @@ export async function enrichAnalysis(story: Story, base: Analysis): Promise<Anal
 export async function getAnalysis(story: Story, digest?: Digest, budgetMs = 2500): Promise<Analysis> {
   const base = analyzeStory(story, digest);
   if (!aiEnabled()) return base;
-  const pending = enrichAnalysis(story, base);
-  const timer = new Promise<undefined>((resolve) => setTimeout(() => resolve(undefined), budgetMs));
-  const result = await Promise.race([pending, timer]);
-  if (result) return result;
+  const pending = enrichAnalysis(enrichKey(story));
+  const timer = new Promise<"timeout">((resolve) => setTimeout(() => resolve("timeout"), budgetMs));
+  try {
+    const result = await Promise.race([pending, timer]);
+    if (result !== "timeout") return applyEnrichment(base, result);
+  } catch {
+    return base;
+  }
   after(() => pending.catch(() => undefined));
   return base;
 }

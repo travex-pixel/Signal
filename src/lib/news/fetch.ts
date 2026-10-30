@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { cleanPublisher } from "./publishers";
 import { classify } from "./classify";
 import { parseFeed } from "./parse";
 import { scoreStory, type Preferences } from "./rank";
@@ -122,9 +123,9 @@ export function itemsToStories(
       url = unwrapped ?? url;
     }
     const canonicalUrl = canonicalizeUrl(url);
-    const publisher =
-      item.publisher?.trim() ||
-      (source.discovery ? hostnameOf(url) ?? source.publisher : source.publisher);
+    const publisher = cleanPublisher(
+      item.publisher?.trim() || (source.discovery ? hostnameOf(url) ?? source.publisher : source.publisher),
+    );
 
     // Discovery feeds scoped to one publisher only count items from that publisher.
     if (source.publisherMatch) {

@@ -366,6 +366,17 @@ export const TOPIC_TERMS: Record<TopicId, Term[]> = {
 
 /** Terms that mark a story as unlikely to carry commercial relevance for this reader. */
 export const NOISE_TERMS: Term[] = [
+  // Tenders and project notices: announcements of work to be bought, not developments.
+  t("rfp", 6),
+  t("request for tender", 6),
+  t("request for proposal", 6),
+  t("request for quotation", 6),
+  t("expression of interest", 5),
+  t("terms of reference", 5),
+  t("stocktaking", 5),
+  t("work plan development", 6),
+  t("consultancy", 3),
+  t("grant round", 4),
   // Consumer and leisure sectors with no bearing on polymer supply.
   t("wine", 3),
   t("winery", 3),

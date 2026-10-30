@@ -287,3 +287,52 @@ describe("headline echoes", () => {
     expect(items[0].summary).toBeUndefined();
   });
 });
+
+describe("same-event grouping", () => {
+  it("merges two outlets' reports of one event and records the other outlet", async () => {
+    const { dedupeStories } = await import("./dedupe");
+    const base = {
+      canonicalUrl: "",
+      sourceId: "x",
+      sourceType: "wire-discovery" as const,
+      discovery: true,
+      evidenceWeight: 2 as const,
+      retrievedAt: "2026-10-30T00:00:00Z",
+      regions: ["china" as const],
+      countries: [],
+      topics: ["energy" as const],
+      relevance: { score: 10, reasons: [] },
+    };
+    const a = { ...base, id: "a", canonicalUrl: "https://a/1", url: "https://a/1", publisher: "Reuters", publishedAt: "2026-10-29T10:00:00Z", title: "China Refiners Tap African, Brazilian Oil as Freight Rates Fall" };
+    const b = { ...base, id: "b", canonicalUrl: "https://b/1", url: "https://b/1", publisher: "Bloomberg", publishedAt: "2026-10-29T12:00:00Z", title: "China's Refiners Turn to Africa and Brazil Crude as Freight Rates Ease" };
+    const c = { ...base, id: "c", canonicalUrl: "https://c/1", url: "https://c/1", publisher: "Reuters", publishedAt: "2026-10-29T12:00:00Z", title: "BP profits jump as Middle East conflict drives up oil refining margins" };
+    const d = { ...base, id: "d", canonicalUrl: "https://d/1", url: "https://d/1", publisher: "CNBC", publishedAt: "2026-10-29T12:00:00Z", title: "Sinopec's third-quarter profit jumps 57% on higher oil prices, refining margins" };
+    const out = dedupeStories([a, b, c, d]);
+    expect(out).toHaveLength(3);
+    const merged = out.find((s) => s.id === "a" || s.id === "b")!;
+    expect(merged.alsoReportedBy?.map((r) => r.publisher)).toEqual([merged.publisher === "Reuters" ? "Bloomberg" : "Reuters"]);
+    // Two profit stories share a theme but not an event.
+    expect(out.some((s) => s.id === "c") && out.some((s) => s.id === "d")).toBe(true);
+  });
+
+  it("does not merge reports more than three days apart", async () => {
+    const { sameEvent, headlineSignature } = await import("./dedupe");
+    const mkS = (title: string, publishedAt: string) => ({ sig: headlineSignature(title), story: { publishedAt } as never });
+    const t = "Kuwait Petroleum signs first naphtha term deal as Hormuz disrupts loadings";
+    expect(sameEvent(mkS(t, "2026-10-01T00:00:00Z"), mkS(t + " today", "2026-10-02T00:00:00Z"))).toBe(true);
+    expect(sameEvent(mkS(t, "2026-10-01T00:00:00Z"), mkS(t + " today", "2026-10-09T00:00:00Z"))).toBe(false);
+  });
+});
+
+describe("publisher names", () => {
+  it("tidies web addresses and known names, and spots press releases", async () => {
+    const { cleanPublisher, isBareDomain, isPressRelease } = await import("./publishers");
+    expect(cleanPublisher("ing think")).toBe("ING Think");
+    expect(cleanPublisher("https://news.brgbuildingsolutions.com/")).toBe("brgbuildingsolutions.com");
+    expect(cleanPublisher("www.marketscreener.com")).toBe("MarketScreener");
+    expect(cleanPublisher("Reuters")).toBe("Reuters");
+    expect(isBareDomain("thecradle.co")).toBe(true);
+    expect(isBareDomain("Reuters")).toBe(false);
+    expect(isPressRelease("EIN Presswire")).toBe(true);
+  });
+});

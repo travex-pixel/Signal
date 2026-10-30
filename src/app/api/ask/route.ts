@@ -15,6 +15,8 @@ const bodySchema = z.object({
 const hits = new Map<string, number[]>();
 function limited(key: string): boolean {
   const now = Date.now();
+  // Forget addresses that have been quiet for a minute, so the map cannot grow without bound.
+  if (hits.size > 500) for (const [k, ts] of hits) if (ts.every((t) => now - t >= 60_000)) hits.delete(k);
   const recent = (hits.get(key) ?? []).filter((t) => now - t < 60_000);
   recent.push(now);
   hits.set(key, recent);
@@ -40,14 +42,18 @@ export async function POST(request: Request) {
   const story = body.storyId ? findStory(digest, body.storyId) : undefined;
   const context = buildAskContext(digest, story);
   const encoder = new TextEncoder();
+  // Stops the model when the reader leaves mid-answer, so it does not keep generating.
+  const abort = new AbortController();
+  request.signal.addEventListener("abort", () => abort.abort());
 
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       try {
-        for await (const chunk of streamAnswer(body.question, context)) {
+        for await (const chunk of streamAnswer(body.question, context, abort.signal)) {
           controller.enqueue(encoder.encode(chunk));
         }
       } catch (err) {
+        if (abort.signal.aborted) return;
         const message =
           err instanceof Anthropic.RateLimitError
             ? "The answering service is busy. Try again in a minute."
@@ -58,8 +64,15 @@ export async function POST(request: Request) {
                 : "The answering service could not be reached.";
         controller.enqueue(encoder.encode(`\n\n[${message}]`));
       } finally {
-        controller.close();
+        try {
+          controller.close();
+        } catch {
+          // Already closed because the reader went away.
+        }
       }
+    },
+    cancel() {
+      abort.abort();
     },
   });
 

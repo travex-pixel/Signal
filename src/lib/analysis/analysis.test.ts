@@ -75,10 +75,19 @@ describe("analyzeStory", () => {
 
   it("confidence rises with primary sources and corroboration", () => {
     const low = assessConfidence(mk({ evidenceWeight: 1, summary: undefined, discovery: true, url: "https://news.google.com/x" }), 0);
-    const high = assessConfidence(mk({ evidenceWeight: 3 }), 2);
+    const themeOnly = assessConfidence(mk({ evidenceWeight: 3 }), 2);
+    const high = assessConfidence(
+      mk({ evidenceWeight: 3, alsoReportedBy: [{ publisher: "Bloomberg", url: "https://bloomberg.com/x", title: "x" }] }),
+      2,
+    );
     expect(low.level).toBe("low");
+    expect(low.headlineOnly).toBe(true);
+    // Stories on the same theme are not corroboration of the same event.
+    expect(themeOnly.level).toBe("medium");
     expect(high.level).toBe("high");
     expect(high.reason).toContain("primary source");
+    expect(high.reason).toContain("Bloomberg also reported it");
+    expect(high.corroboratedBy).toEqual(["Bloomberg"]);
   });
 });
 

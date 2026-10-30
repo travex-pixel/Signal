@@ -31,6 +31,8 @@ export interface Mechanism {
   unknowns: string[];
   options: StrategicOption[];
   question: string;
+  /** One sentence she could say aloud in a meeting: plain, under about 22 words, no quoted headline. */
+  say: string;
   counterpoint: string;
   indicator: string;
   principle: Principle;
@@ -61,6 +63,7 @@ export const MECHANISMS: Mechanism[] = [
       { action: "Wait one cycle before buying ahead of a tariff that may not apply to this category.", tradeoff: "Waiting risks a price move if the tariff does land." },
     ],
     question: "Which of our supplier lanes, if any, cross the border this tariff applies to? Have we checked the product codes rather than assuming?",
+    say: "The question for us is whether our product codes and origins fall under this tariff, and what it adds to landed cost.",
     counterpoint: "Announced tariffs are often narrowed, delayed or exempted before they take effect. The direct exposure for this category may be zero.",
     indicator: "The published tariff schedule and product-code list, and the first offer prices from suppliers in the affected country.",
     principle: {
@@ -92,6 +95,7 @@ export const MECHANISMS: Mechanism[] = [
       { action: "Ask the most exposed supplier how they document origin, and whether their banks have changed their requirements.", tradeoff: "This is a relationship question. Frame it as planning, not suspicion." },
     ],
     question: "Has anyone checked whether these measures reach into the companies, banks or ports we use, rather than assuming they are about someone else?",
+    say: "We should check whether these measures reach the companies, banks or ports we actually use.",
     counterpoint: "Most sanctions are narrowly targeted. After an initial period of caution, the day-to-day effect on unrelated commodity trade is often small.",
     indicator: "Official lists and guidance from the relevant trade authority, and whether banks begin asking for extra documents.",
     principle: {
@@ -122,6 +126,7 @@ export const MECHANISMS: Mechanism[] = [
       { action: "Ask suppliers in the exporting region whether their order books match what the data shows.", tradeoff: "Anecdote, but earlier than statistics." },
     ],
     question: "Does this tell us demand is firming or surplus is building in a region we buy from? Which way would that move prices?",
+    say: "Trade figures like these show where demand is strong, and that usually reaches supplier prices a few months later.",
     counterpoint: "Monthly trade figures are volatile. A few categories, such as electronics or energy, often drive them, with no bearing on polymers.",
     indicator: "The next two monthly trade releases for the country, and supplier lead times from the region.",
     principle: {
@@ -152,6 +157,7 @@ export const MECHANISMS: Mechanism[] = [
       { action: "Compare suppliers by their home currency. A weaker supplier currency may create room to negotiate.", tradeoff: "Suppliers price in US dollars partly to avoid this conversation. Expect resistance." },
     ],
     question: "What does a five-cent move in the Australian dollar do to our landed cost next quarter, and how much of that is already hedged?",
+    say: "We buy in US dollars and sell in Australian dollars, so a move like this changes our costs straight away.",
     counterpoint: "Currency moves go both ways and often reverse. Reacting to each move costs more than a steady hedging policy.",
     indicator: "The AUD/USD rate against the level assumed in current pricing, and the RBA's next statement.",
     principle: {
@@ -182,6 +188,7 @@ export const MECHANISMS: Mechanism[] = [
       { action: "Review payment terms and overdue invoices with the credit team. A new rate environment changes customer behaviour.", tradeoff: "Tightening terms can cost volume." },
     ],
     question: "How much does a one-point change in rates add to our cost of carrying inventory, and does our stock policy reflect it?",
+    say: "Higher rates make our stock more expensive to hold, and they slow our customers' demand a few months later.",
     counterpoint: "Demand in packaging-heavy sectors such as food is not very sensitive to rates. The main effect may be on financing cost rather than volume.",
     indicator: "The cash rate, short-term bank bill yields, and monthly retail and building-approval data.",
     principle: {
@@ -213,6 +220,7 @@ export const MECHANISMS: Mechanism[] = [
       { action: "Ask the forwarder for current spot and contract rates, and whether surcharges are being applied to Australian lanes.", tradeoff: "Asking about spot rates can prompt a rate review." },
     ],
     question: "Which of our inbound shipments are on this route, and what do the new arrival dates do to our stock cover over the next eight weeks?",
+    say: "For us this is a lead-time question first: which shipments are on this route, and how much stock cover we have.",
     counterpoint: "Carriers and forwarders adapt quickly. Most disruptions end up as a few extra days and a surcharge rather than a shortage.",
     indicator: "Container freight-rate indices for Asia to Australia lanes, and the forwarder's weekly schedule-reliability report.",
     principle: {
@@ -244,6 +252,7 @@ export const MECHANISMS: Mechanism[] = [
       { action: "Review how much supply depends on the affected waterway, and whether an alternative origin exists for critical lines.", tradeoff: "A second source adds complexity and may cost more." },
     ],
     question: "How much of our supply passes through this waterway, and what is our fallback if transit from the Gulf lengthens by two weeks?",
+    say: "If this route gets slower or more expensive, we feel it in freight, insurance and stock cover.",
     counterpoint: "Shipping has operated through long periods of elevated risk in the region. The market often prices the risk without any loss of supply.",
     indicator: "War-risk insurance premiums for the area, carrier routing notices, and the Brent crude price.",
     principle: {
@@ -274,6 +283,7 @@ export const MECHANISMS: Mechanism[] = [
       { action: "Time larger purchases with the lag in mind. Offer prices usually follow crude by several weeks.", tradeoff: "Timing the market is uncertain. The lag is a tendency, not a rule." },
     ],
     question: "Given the move in crude, which origins should we expect to raise prices first, and have we locked anything in ahead of that?",
+    say: "Resin prices tend to follow oil a few weeks later, so this is an early signal for supplier offers.",
     counterpoint: "Polymer prices are set by supply and demand as much as by feedstock. In an oversupplied market, producers absorb energy moves rather than pass them on.",
     indicator: "Brent crude and the Asian naphtha price, alongside the next round of supplier offers.",
     principle: {
@@ -304,6 +314,7 @@ export const MECHANISMS: Mechanism[] = [
       { action: "Review the mix of contract and spot purchasing. A softening market favours shorter commitments. A tightening one favours cover.", tradeoff: "Shorter commitments trade price certainty for flexibility." },
     ],
     question: "Does this change the supply balance for the grades we buy most, and should it change how far ahead we commit?",
+    say: "This changes the supply balance for some grades, which affects how far ahead we should commit.",
     counterpoint: "Headline capacity or outage numbers often overstate the effect on any one grade or region. Local balances can differ from the global picture.",
     indicator: "Independent polymer price assessments for Southeast Asia, and the next supplier offer round.",
     principle: {
@@ -334,6 +345,7 @@ export const MECHANISMS: Mechanism[] = [
       { action: "Check the financial health of smaller suppliers in a weakening region.", tradeoff: "Due diligence takes time and can strain relationships if handled bluntly." },
     ],
     question: "Is this a sector-wide slowdown, or one that touches our suppliers specifically? What does it do to their appetite for our business?",
+    say: "The question is whether this is a general slowdown, or one that touches our own suppliers' capacity.",
     counterpoint: "Manufacturing indices are noisy month to month. One reading rarely changes a supplier's position.",
     indicator: "The next two PMI readings for the region, and suppliers' quoted lead times.",
     principle: {
@@ -364,6 +376,7 @@ export const MECHANISMS: Mechanism[] = [
       { action: "Ask suppliers about recycled-content and certification capability before customers ask.", tradeoff: "Early commitments to new grades carry price and supply risk." },
     ],
     question: "Which of our customers will this rule touch first, and can our suppliers document what those customers will need to prove?",
+    say: "Our customers will need to prove they comply, so we should know which suppliers can give us the documents.",
     counterpoint: "Regulatory timelines slip, and enforcement is often lighter than the law suggests. Demand can shift more slowly than announced.",
     indicator: "The published regulation and its compliance dates, and customer enquiries about certified or recycled grades.",
     principle: {
@@ -394,6 +407,7 @@ export const MECHANISMS: Mechanism[] = [
       { action: "Review slow-moving stock and the price needed to clear it before the next buying cycle.", tradeoff: "Clearing stock at lower margin protects cash but can set a price reference with customers." },
     ],
     question: "Are our customers' orders moving with this demand signal? Is it destocking, or a real change in consumption?",
+    say: "We should check whether our customers' orders are moving the same way, or whether this is just destocking.",
     counterpoint: "Packaging demand for food and essentials is steadier than headline consumer sentiment suggests.",
     indicator: "Weekly order intake against the same period last year, and days of inventory on hand by product line.",
     principle: {
@@ -425,6 +439,7 @@ export const MECHANISMS: Mechanism[] = [
       { action: "Weigh the quality and reputation questions of moving volume to the lowest-cost origin, not only the price.", tradeoff: "Quality assurance and customer acceptance take time to establish." },
     ],
     question: "Is Chinese export pressure on this grade rising or easing, and what does that do to the price gap between our origins?",
+    say: "Chinese export prices set a ceiling for other origins, so this matters for the price gaps between our suppliers.",
     counterpoint: "Chinese producers face feedstock and policy limits too. Export surges tend to come in episodes rather than last.",
     indicator: "Chinese monthly polymer export volumes, and the price gap between Chinese and Southeast Asian offers.",
     principle: {
@@ -456,6 +471,7 @@ export const MECHANISMS: Mechanism[] = [
       { action: "Check the latest ABS trade data for the relevant product codes to see import trends by origin.", tradeoff: "Official data arrives several weeks late." },
     ],
     question: "What does this do to the two Australian numbers that matter most to us: the dollar and our customers' demand?",
+    say: "What matters for us is what this does to the Australian dollar and to our customers' demand.",
     counterpoint: "Single data releases are often revised. Policy is set on trends, not on one figure.",
     indicator: "The RBA's statement and forecasts, the AUD/USD rate, and monthly retail trade and building approvals.",
     principle: {
@@ -487,6 +503,7 @@ export const MECHANISMS: Mechanism[] = [
       { action: "Ask regional suppliers how the development affects their output, lead times and pricing.", tradeoff: "A conversation, not a commitment." },
     ],
     question: "Which country and which producers does this touch, and are they ones we rely on?",
+    say: "We should know which country and which producers this touches, and whether we rely on them.",
     counterpoint: "The region is diverse. A shock in one country is often absorbed by neighbours with spare capacity.",
     indicator: "Regional PMI readings, naphtha prices and supplier lead-time quotes.",
     principle: {
@@ -518,6 +535,7 @@ export const MECHANISMS: Mechanism[] = [
       { action: "Watch the AUD/USD reaction. Update the currency assumption in current pricing if the move lasts.", tradeoff: "Reacting to a short move can whipsaw pricing." },
     ],
     question: "Through which channel does this US development reach us: diverted trade, the dollar, or US export pricing?",
+    say: "A US move like this reaches us through diverted trade, the US dollar, or US export prices.",
     counterpoint: "US policy announcements are often softened in practice, and markets often reverse their first reaction.",
     indicator: "The US dollar index and AUD/USD, and the official notice that puts the measure into effect.",
     principle: {
@@ -547,6 +565,7 @@ export const MECHANISMS: Mechanism[] = [
       { action: "Note which suppliers are investing in the technology described. Revisit the supplier assessment on that point.", tradeoff: "A long-horizon judgement with little short-term payoff." },
     ],
     question: "Does this change who the low-cost, reliable supplier will be in five years, and are we building relationships there?",
+    say: "This is a long-term shift in who the low-cost supplier will be. It is worth watching, not acting on yet.",
     counterpoint: "Technology stories tend to run ahead of adoption. The commercial effect may be years away.",
     indicator: "Investment announcements by key suppliers, and changes in their quoted lead times and service.",
     principle: {
@@ -575,6 +594,7 @@ export const MECHANISMS: Mechanism[] = [
       { action: "Check whether any supplier, route or customer is in the affected area before deciding whether the story needs action.", tradeoff: "Most geopolitical stories will not need action. The check prevents both overreaction and neglect." },
     ],
     question: "Does this touch a route, a supplier or a currency we depend on, or is it context rather than exposure?",
+    say: "For now this is background, unless it touches a route, a supplier or a currency we depend on.",
     counterpoint: "Most geopolitical events have little lasting effect on commodity trade. Markets adjust and routes reopen.",
     indicator: "The AUD/USD rate, war-risk insurance notices for affected areas, and supplier shipping updates.",
     principle: {

@@ -85,6 +85,8 @@ export interface Story {
   countries: string[];
   topics: TopicId[];
   relevance: RelevanceScore;
+  /** Other outlets that reported the same event, merged into this story by deduplication. */
+  alsoReportedBy?: { publisher: string; url: string; title: string }[];
   /** Lexicon match strengths kept so preference re-ranking is cheap. */
   scores?: { regions: Partial<Record<RegionId, number>>; topics: Partial<Record<TopicId, number>> };
 }

@@ -29,7 +29,8 @@ const parser = new Parser<Record<string, unknown>, Custom>({
 
 const itemSchema = z.object({
   title: z.string().trim().min(4).max(400),
-  link: z.string().trim().url(),
+  // Only web links: a feed must not be able to put a javascript: or data: link in front of the reader.
+  link: z.string().trim().url().refine((u) => /^https?:\/\//i.test(u)),
   isoDate: z.string().optional(),
   pubDate: z.string().optional(),
   "dc:date": z.string().optional(),

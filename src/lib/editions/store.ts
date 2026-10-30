@@ -34,12 +34,20 @@ function blobStore(): EditionStore {
     kind: "blob",
     async read(pathname) {
       assertSafe(pathname);
-      for (const access of [blobAccess, other(blobAccess)]) {
-        const res = await get(pathname, { access, useCache: false });
-        if (res && res.statusCode === 200 && res.stream) {
-          blobAccess = access;
-          return new Response(res.stream).text();
+      const res = await get(pathname, { access: blobAccess, useCache: false });
+      if (res && res.statusCode === 200 && res.stream) return new Response(res.stream).text();
+      if (res) return undefined;
+      // Not found under the configured access. A store has one access level, so
+      // only probe the other one once, quietly, in case the store was created that way.
+      try {
+        const alt = other(blobAccess);
+        const retry = await get(pathname, { access: alt, useCache: false });
+        if (retry && retry.statusCode === 200 && retry.stream) {
+          blobAccess = alt;
+          return new Response(retry.stream).text();
         }
+      } catch {
+        // The other host refused: the configured access was right and the file is missing.
       }
       return undefined;
     },

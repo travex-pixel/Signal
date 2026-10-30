@@ -1,76 +1,45 @@
 import { revalidateTag } from "next/cache";
-import { aiEnabled, enrichAnalysis } from "@/lib/analysis/ai";
-import { analyzeStory } from "@/lib/analysis/engine";
-import { selectEditionPicks } from "@/lib/editions/build";
-import { EDITIONS_TAG, editionsEnabled, saveEdition } from "@/lib/editions/editions";
-import { buildDigest, getDigest } from "@/lib/news/pipeline";
+import { after } from "next/server";
+import { sydneyDate } from "@/lib/editions/dates";
+import { DIGEST_TAG } from "@/lib/news/pipeline";
+import { authorizeRefresh, INTERNAL_HEADER, internalToken } from "@/lib/refresh-auth";
 
 /**
- * The daily refresh, called by the two Vercel crons in vercel.json (morning
- * and evening, Sydney time) and usable manually. Protected by CRON_SECRET when
- * one is configured; Vercel sends it as a bearer token automatically.
+ * The refresh, called by the two Vercel crons in vercel.json (morning and
+ * evening, Sydney time). It runs in two steps.
  *
- * 1. Reads the shared digest. If it is older than its 15-minute window this
- *    starts a background rebuild, so the next reader gets fresh news without
- *    waiting. The digest tag is deliberately not expired: expiring it would
- *    make the next reader wait for a rebuild.
- * 2. Uses that digest if it is fresh, or builds one directly, for the day's
- *    copy, and enriches the day's picks when AI enrichment is on.
- * 3. When storage is connected, keeps a copy of the day under Past days.
- *    The morning run writes the day's first copy and the evening run
- *    replaces it, so a past day reads as it stood at the end of the day.
+ * Step 1 (this route) expires the shared digest and every page built from it
+ * (Today, the regions, the brief index, Sources), records the Sydney date,
+ * and returns. Expiry only takes effect when this request ends, so the work
+ * that needs fresh data cannot happen in this same request.
+ *
+ * Step 2 (/api/refresh/save, called after this response) is a new request,
+ * so it sees the expiry: it rebuilds the digest once and stores it, saves
+ * the day under Past days from exactly that digest, enriches the day's picks
+ * when AI is on, and requests the main pages so they are rebuilt before the
+ * first reader arrives.
  */
 export const maxDuration = 120;
 
-const FRESH_MS = 20 * 60 * 1000;
+/** Gives step 1's expiry time to land before step 2 reads the cache. */
+const SETTLE_MS = 1500;
 
 export async function GET(request: Request) {
-  const secret = process.env.CRON_SECRET;
-  if (secret) {
-    const auth = request.headers.get("authorization");
-    if (auth !== `Bearer ${secret}`) return new Response("Unauthorized", { status: 401 });
-  }
-  const started = Date.now();
-  const run = new URL(request.url).searchParams.get("run") ?? "manual";
-  const cached = await getDigest();
-  const fresh = Date.now() - Date.parse(cached.generatedAt) < FRESH_MS;
-  const digest = fresh ? cached : await buildDigest();
+  const denied = authorizeRefresh(request);
+  if (denied) return denied;
+  const url = new URL(request.url);
+  const run = url.searchParams.get("run") ?? "manual";
+  // The day is fixed now: an evening run that finishes after midnight still files under its own day.
+  const date = sydneyDate(new Date());
+  revalidateTag(DIGEST_TAG, { expire: 0 });
 
-  const byId = new Map(digest.stories.map((s) => [s.id, s]));
-  const { pickIds } = selectEditionPicks(digest);
-  let warmed = 0;
-  if (aiEnabled()) {
-    await Promise.allSettled(
-      pickIds.map(async (id) => {
-        const story = byId.get(id);
-        if (!story) return;
-        await enrichAnalysis(story, analyzeStory(story, digest));
-        warmed += 1;
-      }),
-    );
-  }
-
-  let edition: { saved: string; picks: number } | { error: string } | "off" = "off";
-  if (editionsEnabled()) {
-    try {
-      const summary = await saveEdition(digest);
-      if (summary) edition = { saved: summary.date, picks: summary.picks };
-      revalidateTag(EDITIONS_TAG, { expire: 0 });
-    } catch (err) {
-      edition = { error: err instanceof Error ? err.message : String(err) };
-    }
-  }
-
-  return Response.json({
-    ok: true,
-    run,
-    at: new Date().toISOString(),
-    digest: fresh ? "shared cache" : "built for this run",
-    generatedAt: digest.generatedAt,
-    stories: digest.stories.length,
-    sourcesOk: digest.sources.filter((s) => s.ok).length,
-    analysesWarmed: warmed,
-    edition,
-    ms: Date.now() - started,
+  after(async () => {
+    await new Promise((r) => setTimeout(r, SETTLE_MS));
+    await fetch(`${url.origin}/api/refresh/save?date=${date}&run=${encodeURIComponent(run)}`, {
+      headers: { [INTERNAL_HEADER]: internalToken() },
+      cache: "no-store",
+    }).catch(() => undefined);
   });
+
+  return Response.json({ ok: true, run, date, expired: DIGEST_TAG, next: "/api/refresh/save" });
 }

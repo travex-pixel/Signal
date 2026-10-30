@@ -27,7 +27,7 @@ export default function SimulatorPage({ params }: { params: Promise<{ slug: stri
 
 async function SimulatorView({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const def = SIMULATOR_BY_SLUG[slug];
+  const def = Object.hasOwn(SIMULATOR_BY_SLUG, slug) ? SIMULATOR_BY_SLUG[slug] : undefined;
   if (!def) notFound();
   const lesson = LESSON_BY_SLUG[def.lesson];
   const others = SIMULATORS.filter((s) => s.slug !== slug);

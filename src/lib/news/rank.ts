@@ -1,4 +1,5 @@
 import { findTerms, MATERIALITY_TERMS, NOISE_TERMS } from "./classify";
+import { isBareDomain, isPressRelease } from "./publishers";
 import { SUPPLIER_REGIONS } from "./regions";
 import type { RegionId, RelevanceScore, Story, TopicId } from "./types";
 
@@ -37,7 +38,7 @@ export const TRUSTED_PUBLISHERS = [
   "bangkok post", "the nation", "jakarta post", "the edge", "channel news asia", "cna", "the national", "arab news",
   "gulf news", "al jazeera", "icis", "argus", "s&p global", "platts", "lloyd's list", "lloyds list", "freightwaves",
   "the loadstar", "splash247", "seatrade", "plastics news", "packaging insights", "chemical week", "chemanalyst",
-  "reserve bank", "australian bureau of statistics", "department of foreign affairs",
+  "reserve bank", "australian bureau of statistics", "department of foreign affairs", "dfat",
 ];
 
 export function publisherBonus(publisher: string): number {
@@ -124,6 +125,23 @@ export function scoreStory(
     reasons.push(`recognised publisher (+${pub})`);
   }
 
+  // Press-release wires and publishers known only by a web address are weaker evidence.
+  if (isPressRelease(story.publisher)) {
+    score -= 4;
+    reasons.push("press release, not reporting (−4)");
+  } else if (story.discovery && isBareDomain(story.publisher)) {
+    score -= 1.5;
+    reasons.push("publisher known only by its web address (−1.5)");
+  }
+
+  // Corroboration: other outlets reporting the same event (merged by deduplication).
+  const others = story.alsoReportedBy?.length ?? 0;
+  if (others > 0) {
+    const add = Math.min(others, 3);
+    score += add;
+    reasons.push(`also reported by ${others} other outlet${others === 1 ? "" : "s"} (+${add})`);
+  }
+
   // Materiality.
   const material = findTerms(text, MATERIALITY_TERMS);
   if (material.length > 0) {
@@ -163,6 +181,13 @@ export function rankStories(stories: Story[]): Story[] {
   });
 }
 
+const LEAD_TOLERANCE = 3;
+
+/** A story with more than a lone headline behind it. */
+export function hasEvidence(s: Story): boolean {
+  return Boolean(s.summary) || s.evidenceWeight === 3 || (s.alsoReportedBy?.length ?? 0) > 0;
+}
+
 /**
  * Selects the lead and supporting stories for Today's Signal with regional
  * balance: no region appears twice while another region has a candidate
@@ -177,7 +202,18 @@ export function selectForToday(
   const tolerance = options.tolerance ?? 4;
 
   const candidates = ranked.filter((s) => s.relevance.score >= minScore);
-  const lead = candidates[0];
+  // The lead should be a story SIGNAL can say something solid about. Among the
+  // stories within a few points of the top, prefer one with a summary, a
+  // primary source, or other outlets reporting it, over a lone headline.
+  const top = candidates[0];
+  const solid = top
+    ? candidates.find((s) => top.relevance.score - s.relevance.score <= LEAD_TOLERANCE && hasEvidence(s))
+    : undefined;
+  const lead = solid ?? top;
+  if (lead && lead !== top) {
+    candidates.splice(candidates.indexOf(lead), 1);
+    candidates.unshift(lead);
+  }
   if (!lead) return { supporting: [] };
 
   const chosen: Story[] = [lead];

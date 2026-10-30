@@ -28,7 +28,7 @@ export default function LessonPage({ params }: { params: Promise<{ slug: string 
 
 async function Lesson({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const lesson = LESSON_BY_SLUG[slug];
+  const lesson = Object.hasOwn(LESSON_BY_SLUG, slug) ? LESSON_BY_SLUG[slug] : undefined;
   if (!lesson) notFound();
   const index = LESSONS.findIndex((l) => l.slug === slug);
   const prev = LESSONS[index - 1];

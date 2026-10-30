@@ -24,7 +24,8 @@ export async function buildDigest(now = new Date()): Promise<Digest> {
   }
   const results = await Promise.all(ACTIVE_SOURCES.map((s) => fetchSource(s, { now, fetchImpl })));
   const all = results.flatMap((r) => r.stories);
-  const deduped = dedupeStories(all);
+  // Merging same-event reports adds corroboration, so merged stories are scored again.
+  const deduped = dedupeStories(all).map((s) => (s.alsoReportedBy?.length ? rescore(s, now) : s));
   const stories = rankStories(deduped).slice(0, 160);
   return {
     stories,
@@ -43,7 +44,23 @@ export async function getDigest(): Promise<Digest> {
   // and brief pages would refetch every feed. The remote cache is shared.
   cacheLife({ stale: 900, revalidate: 900, expire: 7 * 86400 });
   cacheTag(DIGEST_TAG);
-  return buildDigest();
+  const digest = await buildDigest();
+  // If every feed failed (a network blip), throwing keeps the previous good
+  // digest in place instead of caching an empty one. The build keeps the
+  // empty digest so a deploy never fails on a feed outage.
+  if (digest.sources.length > 0 && digest.sources.every((s) => !s.ok) && process.env.NEXT_PHASE !== "phase-production-build") {
+    throw new Error("No source answered; keeping the previous digest.");
+  }
+  return digest;
+}
+
+function rescore(s: Story, now: Date, prefs?: Preferences): Story {
+  const classification = s.scores
+    ? { topicScores: s.scores.topics, regionScores: s.scores.regions }
+    : classify(`${s.title} ${s.summary ?? ""}`, [s.regions[0]]);
+  const { relevance: _ignored, ...rest } = s;
+  void _ignored;
+  return { ...rest, relevance: scoreStory(rest, classification, now, prefs) } as Story;
 }
 
 /** Re-ranks a cached digest for the reader's preferences without refetching. */
@@ -52,16 +69,7 @@ export function applyPreferences(digest: Digest, prefs: Preferences): Digest {
     Object.keys(prefs.regionEmphasis).length > 0 || Object.keys(prefs.topicEmphasis).length > 0;
   if (!customised) return digest;
   const now = new Date(digest.generatedAt);
-  const stories = digest.stories
-    .map((s) => {
-      const classification = s.scores
-        ? { topicScores: s.scores.topics, regionScores: s.scores.regions }
-        : classify(`${s.title} ${s.summary ?? ""}`, [s.regions[0]]);
-      const { relevance: _ignored, ...rest } = s;
-      void _ignored;
-      return { ...rest, relevance: scoreStory(rest, classification, now, prefs) } as Story;
-    })
-    .filter((s) => s.relevance.score > -100);
+  const stories = digest.stories.map((s) => rescore(s, now, prefs)).filter((s) => s.relevance.score > -100);
   return { ...digest, stories: rankStories(stories) };
 }
 

@@ -38,6 +38,10 @@ export interface MeetingContribution {
 export interface Confidence {
   level: "high" | "medium" | "low";
   reason: string;
+  /** Other outlets that reported the same event. Optional so older saved days still parse. */
+  corroboratedBy?: string[];
+  /** True when the feed carried only a headline. */
+  headlineOnly?: boolean;
 }
 
 export interface Principle {

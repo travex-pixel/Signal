@@ -54,22 +54,25 @@ export function buildAskContext(digest: Digest, story?: Story): string {
 }
 
 /** Streams the answer's text deltas. Throws on API failure; the route turns that into a readable error. */
-export async function* streamAnswer(question: string, context: string): AsyncGenerator<string> {
+export async function* streamAnswer(question: string, context: string, signal?: AbortSignal): AsyncGenerator<string> {
   const client = new Anthropic();
-  const stream = client.messages.stream({
-    model: process.env.SIGNAL_ASK_MODEL || "claude-sonnet-5-5",
-    max_tokens: 900,
-    system: [{ type: "text", text: ASK_SYSTEM, cache_control: { type: "ephemeral" } }],
-    messages: [
-      {
-        role: "user",
-        content: [
-          { type: "text", text: context, cache_control: { type: "ephemeral" } },
-          { type: "text", text: `Question: ${question}` },
-        ],
-      },
-    ],
-  });
+  const stream = client.messages.stream(
+    {
+      model: process.env.SIGNAL_ASK_MODEL || "claude-sonnet-5-5",
+      max_tokens: 900,
+      system: [{ type: "text", text: ASK_SYSTEM, cache_control: { type: "ephemeral" } }],
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: context, cache_control: { type: "ephemeral" } },
+            { type: "text", text: `Question: ${question}` },
+          ],
+        },
+      ],
+    },
+    { signal },
+  );
   for await (const event of stream) {
     if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
       yield event.delta.text;

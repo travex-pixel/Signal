@@ -10,7 +10,7 @@
     },
     {
       "path": "/api/refresh?run=evening",
-      "schedule": "30 12 * * *"
+      "schedule": "30 11 * * *"
     }
   ]
 }
